@@ -1,6 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { redactSecrets } from "./security.js";
 export const EXPECTED_FUTURE_MCP_TOOLS = [
     "azure_boards_package_health",
     "azure_boards_auth_environment_check"
@@ -47,7 +46,7 @@ export function packageHealthCheck(root = process.cwd()) {
         result.issues.push("package name is missing.");
     if (result.moduleType !== "module")
         result.issues.push("package type should be module.");
-    return redactSecrets({ ...result, ok: result.issues.length === 0 });
+    return { ...result, ok: result.issues.length === 0 };
 }
 export function authEnvironmentCheck(env = process.env) {
     const variables = {
@@ -73,13 +72,13 @@ export function authEnvironmentCheck(env = process.env) {
     if (authModes.includes("oauth-device-code") && !variables.AZURE_BOARDS_TENANT_ID.configured) {
         issues.push("AZURE_BOARDS_TENANT_ID is not set; Microsoft common tenant will be used.");
     }
-    return redactSecrets({
+    return {
         ok: authModes.length > 0,
         configured: authModes.length > 0,
         authModes,
         variables,
         issues
-    });
+    };
 }
 function readJson(path) {
     try {

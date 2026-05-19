@@ -1,4 +1,19 @@
 import { buildFieldPatch } from "./azureDevOps.js";
+export { planApprovedActions, summarizeApplyResults } from "./applyWorkflow.js";
+export {
+  attachmentEvidenceSummary,
+  bulkClosePreview,
+  businessValueEstimate,
+  closeCandidates,
+  parentChildCleanup,
+  wsjfConsistencyCheck
+} from "./bulkGovernance.js";
+export { deliverySystemCorrelation } from "./correlationAnalytics.js";
+export { synthesizeReport } from "./llmSynthesis.js";
+export { createWatchdogSnapshot, deleteNamedArtifact, listNamedArtifacts, loadNamedArtifact, saveNamedArtifact } from "./localStore.js";
+export { authEnvironmentCheck, packageHealthCheck } from "./packageHealth.js";
+export { validatePolicyPack } from "./policyPack.js";
+export { redactSecrets, safeErrorMessage } from "./security.js";
 import { briefExport as baseBriefExport } from "./briefExport.js";
 import {
   createProcessBaseline as baseCreateProcessBaseline,

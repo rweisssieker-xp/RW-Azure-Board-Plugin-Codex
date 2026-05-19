@@ -158,7 +158,7 @@ export class AzureDevOpsClient {
     const project = requiredString(input.project, "project");
     const id = requiredNumber(input.id, "id");
     const text = requiredString(input.text, "text");
-    return this.request(this.url(organization, project, `_apis/wit/workItems/${id}/comments`), {
+    return this.request(this.url(organization, project, `_apis/wit/workItems/${id}/comments`, "7.1-preview"), {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ text })
@@ -179,7 +179,7 @@ export class AzureDevOpsClient {
       {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ids, fields, $expand: "relations" })
+        body: JSON.stringify({ ids, fields })
       }
     );
     return response.value || [];
@@ -189,8 +189,8 @@ export class AzureDevOpsClient {
     return `https://dev.azure.com/${encodeURIComponent(organization)}/${path}?api-version=${API_VERSION}`;
   }
 
-  private url(organization: string, project: string, path: string): string {
-    return `https://dev.azure.com/${encodeURIComponent(organization)}/${encodeURIComponent(project)}/${path}?api-version=${API_VERSION}`;
+  private url(organization: string, project: string, path: string, apiVersion = API_VERSION): string {
+    return `https://dev.azure.com/${encodeURIComponent(organization)}/${encodeURIComponent(project)}/${path}?api-version=${apiVersion}`;
   }
 
   private releaseUrl(organization: string, project: string, path: string): string {

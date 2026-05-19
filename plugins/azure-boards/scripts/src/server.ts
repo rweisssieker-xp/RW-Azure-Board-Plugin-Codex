@@ -1,5 +1,28 @@
 import { AzureBoardsAuth } from "./auth.js";
 import { AzureDevOpsClient, toSummary } from "./azureDevOps.js";
+import { planApprovedActions, summarizeApplyResults } from "./applyWorkflow.js";
+import {
+  attachmentEvidenceSummary,
+  bulkClosePreview,
+  businessValueEstimate,
+  closeCandidates,
+  parentChildCleanup,
+  wsjfConsistencyCheck,
+  type BulkClosePreview,
+  type BulkCloseTarget
+} from "./bulkGovernance.js";
+import { deliverySystemCorrelation } from "./correlationAnalytics.js";
+import { synthesizeReport } from "./llmSynthesis.js";
+import {
+  createWatchdogSnapshot,
+  deleteNamedArtifact,
+  listNamedArtifacts,
+  loadNamedArtifact,
+  saveNamedArtifact
+} from "./localStore.js";
+import { authEnvironmentCheck, packageHealthCheck } from "./packageHealth.js";
+import { validatePolicyPack } from "./policyPack.js";
+import { safeErrorMessage } from "./security.js";
 import {
   auditEvidencePack,
   bottleneckMining,
@@ -46,6 +69,7 @@ interface ToolDef {
 
 const auth = new AzureBoardsAuth();
 const azure = new AzureDevOpsClient(auth);
+const packageRoot = process.cwd().endsWith("scripts") ? process.cwd() : `${process.cwd()}/scripts`;
 
 const baseQuerySchema = {
   type: "object",
@@ -70,6 +94,21 @@ const tools: ToolDef[] = [
     description: "Show local Azure Boards OAuth configuration and token-cache status.",
     inputSchema: { type: "object", properties: {} },
     handler: async () => auth.status()
+  },
+  {
+    name: "azure_boards_package_health",
+    description: "Check local plugin package health without exposing secrets.",
+    inputSchema: {
+      type: "object",
+      properties: { root: { type: "string" } }
+    },
+    handler: (args) => packageHealthCheck(optionalString(args.root) || packageRoot)
+  },
+  {
+    name: "azure_boards_auth_environment_check",
+    description: "Check configured auth modes without returning token or PAT values.",
+    inputSchema: { type: "object", properties: {} },
+    handler: () => authEnvironmentCheck()
   },
   {
     name: "azure_boards_whoami",
@@ -381,6 +420,173 @@ const tools: ToolDef[] = [
     handler: (args) => briefExport((Array.isArray(args.reports) ? args.reports : objectArg(args.report)) as never, objectArg(args.options))
   },
   {
+    name: "azure_boards_ai_synthesize_report",
+    description: "Optionally synthesize one or more reports with OpenAI, falling back to deterministic local synthesis when not configured.",
+    inputSchema: {
+      type: "object",
+      properties: { report: { type: "object" }, reports: { type: "array" }, options: { type: "object" } }
+    },
+    handler: (args) => synthesizeReport((Array.isArray(args.reports) ? args.reports : objectArg(args.report)) as never, objectArg(args.options) as never)
+  },
+  {
+    name: "azure_boards_validate_policy_pack",
+    description: "Validate and normalize an Azure Boards policy pack. Does not write.",
+    inputSchema: {
+      type: "object",
+      properties: { policyPack: { type: "object" } },
+      required: ["policyPack"]
+    },
+    handler: (args) => validatePolicyPack(objectArg(args.policyPack))
+  },
+  {
+    name: "azure_boards_ai_plan_approved_actions",
+    description: "Turn an AI Action Plan into approved patch batches. Requires explicit approved:true and does not call Azure DevOps.",
+    inputSchema: {
+      type: "object",
+      properties: { actionPlanReport: { type: "object" }, selection: { type: "object" } },
+      required: ["actionPlanReport"]
+    },
+    handler: (args) => planApprovedActions(objectArg(args.actionPlanReport) as never, objectArg(args.selection) as never)
+  },
+  {
+    name: "azure_boards_ai_summarize_apply_results",
+    description: "Summarize apply or planned-apply results without exposing secrets.",
+    inputSchema: {
+      type: "object",
+      properties: { results: { type: "array" } },
+      required: ["results"]
+    },
+    handler: (args) => summarizeApplyResults(recordArrayArg(args.results, "results") as never)
+  },
+  {
+    name: "azure_boards_ai_close_candidates",
+    description: "Find close candidates from Work Item evidence using stale age, weak Description, low priority, and low WSJF. Does not write.",
+    inputSchema: {
+      type: "object",
+      properties: { workItems: { type: "array" }, options: { type: "object" } },
+      required: ["workItems"]
+    },
+    handler: (args) => closeCandidates(readRawItems(args), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_ai_wsjf_consistency_check",
+    description: "Check WSJF fields against Description, state, priority, and business-risk signals. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" } }, required: ["workItems"] },
+    handler: (args) => wsjfConsistencyCheck(readRawItems(args))
+  },
+  {
+    name: "azure_boards_ai_business_value_estimate",
+    description: "Estimate annual Euro benefit ranges from Description, WSJF, state, priority, and business signals. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" } }, required: ["workItems"] },
+    handler: (args) => businessValueEstimate(readRawItems(args))
+  },
+  {
+    name: "azure_boards_ai_attachment_evidence_summary",
+    description: "Summarize attachment evidence from Work Item relations and optional extracted attachment text snippets. Does not write.",
+    inputSchema: {
+      type: "object",
+      properties: { workItems: { type: "array" }, attachmentTexts: { type: "array" } },
+      required: ["workItems"]
+    },
+    handler: (args) => attachmentEvidenceSummary(readRawItems(args), recordArrayArg(args.attachmentTexts || [], "attachmentTexts"))
+  },
+  {
+    name: "azure_boards_ai_parent_child_cleanup",
+    description: "Find open Tasks whose parent Requirement is already terminal. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" } }, required: ["workItems"] },
+    handler: (args) => parentChildCleanup(readRawItems(args))
+  },
+  {
+    name: "azure_boards_ai_bulk_close_preview",
+    description: "Create an auditable bulk-close plan with target states, comments, patch previews, child impact, skipped items, and approval requirement. Does not write.",
+    inputSchema: {
+      type: "object",
+      properties: { workItems: { type: "array" }, options: { type: "object" } },
+      required: ["workItems"]
+    },
+    handler: (args) => bulkClosePreview(readRawItems(args), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_apply_bulk_close_plan",
+    description: "Apply an explicitly approved bulk-close preview by adding comments then updating states. Requires approved:true and confirmPhrase APPLY_BULK_CLOSE.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        organization: { type: "string" },
+        project: { type: "string" },
+        preview: { type: "object" },
+        approved: { type: "boolean" },
+        confirmPhrase: { type: "string" }
+      },
+      required: ["organization", "project", "preview", "approved", "confirmPhrase"]
+    },
+    handler: (args) => applyBulkClosePlan(args)
+  },
+  {
+    name: "azure_boards_ai_delivery_system_correlation",
+    description: "Correlate Work Items with PR, build, pipeline, and release evidence.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        workItems: { type: "array" },
+        evidence: { type: "object" },
+        options: { type: "object" }
+      },
+      required: ["workItems"]
+    },
+    handler: (args) => deliverySystemCorrelation(readItems(args), objectArg(args.evidence), objectArg(args.options) as never)
+  },
+  {
+    name: "azure_boards_store_save",
+    description: "Save a JSON artifact to the user-local Azure Boards store.",
+    inputSchema: {
+      type: "object",
+      properties: { kind: { type: "string" }, name: { type: "string" }, data: { type: "object" } },
+      required: ["kind", "name", "data"]
+    },
+    handler: (args) => saveNamedArtifact(requiredString(args.kind, "kind"), requiredString(args.name, "name"), args.data)
+  },
+  {
+    name: "azure_boards_store_load",
+    description: "Load a JSON artifact from the user-local Azure Boards store.",
+    inputSchema: {
+      type: "object",
+      properties: { kind: { type: "string" }, name: { type: "string" } },
+      required: ["kind", "name"]
+    },
+    handler: (args) => loadNamedArtifact(requiredString(args.kind, "kind"), requiredString(args.name, "name"))
+  },
+  {
+    name: "azure_boards_store_list",
+    description: "List JSON artifacts from the user-local Azure Boards store.",
+    inputSchema: {
+      type: "object",
+      properties: { kind: { type: "string" } },
+      required: ["kind"]
+    },
+    handler: (args) => listNamedArtifacts(requiredString(args.kind, "kind"))
+  },
+  {
+    name: "azure_boards_store_delete",
+    description: "Delete a JSON artifact from the user-local Azure Boards store.",
+    inputSchema: {
+      type: "object",
+      properties: { kind: { type: "string" }, name: { type: "string" } },
+      required: ["kind", "name"]
+    },
+    handler: (args) => deleteNamedArtifact(requiredString(args.kind, "kind"), requiredString(args.name, "name"))
+  },
+  {
+    name: "azure_boards_store_watchdog_snapshot",
+    description: "Save a proactive watchdog report snapshot to the user-local Azure Boards store.",
+    inputSchema: {
+      type: "object",
+      properties: { name: { type: "string" }, report: { type: "object" } },
+      required: ["name", "report"]
+    },
+    handler: (args) => createWatchdogSnapshot(requiredString(args.name, "name"), objectArg(args.report) as never)
+  },
+  {
     name: "azure_boards_ai_governance_score",
     description: "Score process governance quality for Process Owners.",
     inputSchema: aiPolicySchema(),
@@ -499,6 +705,92 @@ function readItems(args: Record<string, unknown>): WorkItemSummary[] {
   });
 }
 
+function readRawItems(args: Record<string, unknown>): Record<string, unknown>[] {
+  const raw = args.workItems;
+  if (!Array.isArray(raw)) {
+    throw new Error("workItems must be an array.");
+  }
+  return raw.map((item, index) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) {
+      throw new Error(`workItems[${index}] must be an object.`);
+    }
+    return item as Record<string, unknown>;
+  });
+}
+
+async function applyBulkClosePlan(args: Record<string, unknown>): Promise<Record<string, unknown>> {
+  if (args.approved !== true || args.confirmPhrase !== "APPLY_BULK_CLOSE") {
+    throw new Error("Bulk close writes require approved:true and confirmPhrase APPLY_BULK_CLOSE.");
+  }
+  const organization = requiredString(args.organization, "organization");
+  const project = requiredString(args.project, "project");
+  const preview = objectArg(args.preview) as unknown as BulkClosePreview;
+  if (preview.writePerformed !== false || preview.title !== "Bulk Close Preview" || preview.approvalRequired !== true) {
+    throw new Error("preview must be a Bulk Close Preview generated by azure_boards_ai_bulk_close_preview.");
+  }
+  const targets = flattenBulkCloseTargets(Array.isArray(preview.targets) ? preview.targets : []);
+  const results: Array<Record<string, unknown>> = [];
+  for (const target of targets) {
+    try {
+      await azure.addComment({ organization, project, id: target.id, text: target.comment || target.rationale });
+      const updated = await azure.updateWorkItem({
+        organization,
+        project,
+        id: target.id,
+        patch: Array.isArray(target.patchPreview) && target.patchPreview.length
+          ? target.patchPreview
+          : [{ op: "replace", path: "/fields/System.State", value: target.targetState || "Closed" }]
+      });
+      results.push({
+        id: target.id,
+        title: target.title,
+        type: target.type,
+        success: true,
+        targetState: target.targetState,
+        actualState: (updated.fields || {})["System.State"],
+        patch: target.patchPreview
+      });
+    } catch (error) {
+      results.push({
+        id: target.id,
+        title: target.title,
+        type: target.type,
+        success: false,
+        error: safeErrorMessage(error),
+        patch: target.patchPreview
+      });
+    }
+  }
+  const succeeded = results.filter((result) => result.success === true).length;
+  const failed = results.length - succeeded;
+  return {
+    title: "Bulk Close Apply Results",
+    generatedAt: new Date().toISOString(),
+    writePerformed: true,
+    summary: `${succeeded} item(s) updated, ${failed} failed.`,
+    metrics: { requestedTargets: targets.length, succeeded, failed },
+    results
+  };
+}
+
+function flattenBulkCloseTargets(targets: BulkCloseTarget[]): BulkCloseTarget[] {
+  const flattened: BulkCloseTarget[] = [];
+  const seen = new Set<number>();
+  for (const target of targets) {
+    for (const child of target.childImpact || []) {
+      if (!seen.has(child.id)) {
+        flattened.push(child);
+        seen.add(child.id);
+      }
+    }
+    if (!seen.has(target.id)) {
+      flattened.push(target);
+      seen.add(target.id);
+    }
+  }
+  return flattened;
+}
+
 function objectArg(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
 }
@@ -581,7 +873,7 @@ async function handle(request: Record<string, unknown>): Promise<Record<string, 
       id,
       error: {
         code: -32000,
-        message: error instanceof Error ? error.message : String(error)
+        message: safeErrorMessage(error)
       }
     };
   }
