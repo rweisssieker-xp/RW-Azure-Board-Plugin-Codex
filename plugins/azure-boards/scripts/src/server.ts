@@ -14,6 +14,19 @@ import {
 import { deliverySystemCorrelation } from "./correlationAnalytics.js";
 import { cioRequirementRiskView, evidenceFirstRequirementReview, requirementDecisionCockpit } from "./decisionEngine.js";
 import { auditDecisionLog, boardHygieneAutomationPreview, closureGovernanceLedger, evidencePackCompleteness } from "./evidenceLedger.js";
+import {
+  aiExceptionRegister,
+  autonomousBoardAuditor,
+  benefitRealizationFollowup,
+  cleanupCampaignManager,
+  decisionMeetingCopilot,
+  dependencyBlockerGraph,
+  financialBacklogLedger,
+  migrationCutoverReadiness,
+  processOwnerControlTower,
+  requirementConfidenceScore,
+  requirementRewriteStudio
+} from "./governanceOperatingSystem.js";
 import { synthesizeReport } from "./llmSynthesis.js";
 import {
   createWatchdogSnapshot,
@@ -765,6 +778,72 @@ const tools: ToolDef[] = [
       required: ["workItems"]
     },
     handler: (args) => policyAsCodeEvaluation(readRawItems(args), objectArg(args.policy), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_ai_autonomous_board_auditor",
+    description: "Run a no-write autonomous audit for owner, Description, acceptance, stale, and benefit evidence gaps.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => autonomousBoardAuditor(readRawItems(args), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_ai_requirement_rewrite_studio",
+    description: "Generate better Requirement Description and Acceptance Criteria patch previews. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" } }, required: ["workItems"] },
+    handler: (args) => requirementRewriteStudio(readRawItems(args))
+  },
+  {
+    name: "azure_boards_ai_decision_meeting_copilot",
+    description: "Prepare a decision meeting agenda and minutes draft from Work Item evidence. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" } }, required: ["workItems"] },
+    handler: (args) => decisionMeetingCopilot(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"))
+  },
+  {
+    name: "azure_boards_ai_cleanup_campaign_manager",
+    description: "Plan board cleanup campaigns such as low-value, missing-description, orphan-task, or closed-evidence campaigns. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => cleanupCampaignManager(readRawItems(args), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_ai_financial_backlog_ledger",
+    description: "Create a financial ledger with expected benefit, realized benefit, implementation cost, delay cost, and net value. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => financialBacklogLedger(readRawItems(args), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_ai_requirement_confidence_score",
+    description: "Score whether Requirements are ready, need clarification, or are not investable. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" } }, required: ["workItems"] },
+    handler: (args) => requirementConfidenceScore(readRawItems(args))
+  },
+  {
+    name: "azure_boards_ai_dependency_blocker_graph",
+    description: "Build a no-write dependency and blocker graph from parent/child links, artifacts, comments, and risk terms.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, comments: { type: "array" } }, required: ["workItems"] },
+    handler: (args) => dependencyBlockerGraph(readRawItems(args), recordArrayArg(args.comments || [], "comments"))
+  },
+  {
+    name: "azure_boards_ai_process_owner_control_tower",
+    description: "Create a Process Owner control tower across Area Paths with governance score, open work, and policy gaps. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, policy: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => processOwnerControlTower(readRawItems(args), objectArg(args.policy))
+  },
+  {
+    name: "azure_boards_ai_migration_cutover_readiness",
+    description: "Score ERP migration cutover readiness with Go/Conditional-Go/No-Go signals from open critical work, missing evidence, and blockers.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => migrationCutoverReadiness(readRawItems(args), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_ai_exception_register",
+    description: "Detect exception, waiver, or deferred-decision candidates and produce an audit-ready exception register. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" } }, required: ["workItems"] },
+    handler: (args) => aiExceptionRegister(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"))
+  },
+  {
+    name: "azure_boards_ai_benefit_realization_followup",
+    description: "Find closed high-benefit items that need realized-benefit follow-up after a configurable lag. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => benefitRealizationFollowup(readRawItems(args), objectArg(args.options))
   },
   {
     name: "azure_boards_store_save",

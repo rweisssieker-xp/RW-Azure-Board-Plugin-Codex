@@ -11,6 +11,19 @@ export {
 export { deliverySystemCorrelation } from "./correlationAnalytics.js";
 export { cioRequirementRiskView, evidenceFirstRequirementReview, requirementDecisionCockpit } from "./decisionEngine.js";
 export { auditDecisionLog, boardHygieneAutomationPreview, closureGovernanceLedger, evidencePackCompleteness } from "./evidenceLedger.js";
+export {
+  aiExceptionRegister,
+  autonomousBoardAuditor,
+  benefitRealizationFollowup,
+  cleanupCampaignManager,
+  decisionMeetingCopilot,
+  dependencyBlockerGraph,
+  financialBacklogLedger,
+  migrationCutoverReadiness,
+  processOwnerControlTower,
+  requirementConfidenceScore,
+  requirementRewriteStudio
+} from "./governanceOperatingSystem.js";
 export { synthesizeReport } from "./llmSynthesis.js";
 export { createWatchdogSnapshot, deleteNamedArtifact, listNamedArtifacts, loadNamedArtifact, saveNamedArtifact } from "./localStore.js";
 export { authEnvironmentCheck, packageHealthCheck } from "./packageHealth.js";

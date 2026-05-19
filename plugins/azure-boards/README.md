@@ -1,6 +1,6 @@
 # Azure Boards Codex Plugin
 
-Repo-local Codex plugin for Azure Boards with individual Microsoft Entra login or token access, Work Item operations, and explainable AI/KI tools for delivery and process management.
+Repo-local Codex plugin for Azure Boards with individual Microsoft Entra login or token access, Work Item operations, and explainable AI tools for delivery and process management.
 
 ## Setup
 
@@ -54,7 +54,7 @@ npm run build
 
 The plugin includes a static no-write cockpit at `plugins/azure-boards/ui/index.html`.
 
-Use it to paste or upload Work Item JSON, preview key AI/KI reports, inspect tables, review Bulk Close Preview output, and export local Markdown/JSON artifacts. The UI is browser-only: it does not call Azure DevOps, does not handle tokens, and does not perform writes. Real Azure Boards changes still require the MCP preview/apply workflow.
+Use it to paste or upload Work Item JSON, preview key AI reports, inspect tables, review Bulk Close Preview output, and export local Markdown/JSON artifacts. The UI is browser-only: it does not call Azure DevOps, does not handle tokens, and does not perform writes. Real Azure Boards changes still require the MCP preview/apply workflow.
 
 ## Verify Auth Mode
 
@@ -70,7 +70,7 @@ The plugin supports three explicit authentication modes so teams can choose the 
 
 Use `azure_boards_auth_status` before troubleshooting access issues. It reports the active mode without exposing secrets.
 
-## AI/KI Feature Areas
+## AI Feature Areas
 
 The Azure Boards plugin is intended to go beyond basic Work Item lookup. The documentation and skill guidance should preserve these user-facing USP areas:
 
@@ -94,11 +94,11 @@ The Azure Boards plugin is intended to go beyond basic Work Item lookup. The doc
 - **Optional LLM synthesis**: `azure_boards_ai_synthesize_report` uses deterministic fallback by default and only calls OpenAI when `OPENAI_API_KEY` and `AZURE_BOARDS_LLM_MODE=openai` are set.
 - **Package and auth health checks**: `azure_boards_package_health` and `azure_boards_auth_environment_check` help diagnose local setup without returning secret values.
 - **Safe write-preview workflow**: change-producing tools must show a proposed JSON Patch or field-level preview before any write is executed.
-- **WSJF and business-value governance**: `azure_boards_ai_wsjf_consistency_check` checks WSJF fields against Description signals, `azure_boards_ai_business_value_estimate` provides conservative annual Euro benefit ranges, and `azure_boards_ai_close_candidates` identifies likely closure candidates without writing.
+- **WSJF and business-value governance**: `azure_boards_ai_wsjf_consistency_check` checks WSJF fields against Description signals, `azure_boards_ai_business_value_estimate` provides conservative annual EUR-denominated benefit ranges, and `azure_boards_ai_close_candidates` identifies likely closure candidates without writing.
 - **Attachment evidence review**: `azure_boards_ai_attachment_evidence_summary` summarizes attachment metadata and optional extracted text snippets so business decisions can cite Description plus supporting documents.
 - **Parent/child cleanup**: `azure_boards_ai_parent_child_cleanup` finds open Tasks whose parent Requirement is already terminal.
 - **Bulk close preview/apply**: `azure_boards_ai_bulk_close_preview` creates an auditable no-write close plan with comments, patches, child impact, skipped items, and risk. `azure_boards_apply_bulk_close_plan` applies only a generated preview and requires `approved:true` plus `confirmPhrase: "APPLY_BULK_CLOSE"`.
-- **Requirement Decision Engine**: `azure_boards_ai_requirement_decision_cockpit`, `azure_boards_ai_evidence_first_requirement_review`, and `azure_boards_ai_cio_requirement_risk_view` turn board evidence into accelerate/review/park/close decision support for Product Owners, Projekt Leads, and CIO review.
+- **Requirement Decision Engine**: `azure_boards_ai_requirement_decision_cockpit`, `azure_boards_ai_evidence_first_requirement_review`, and `azure_boards_ai_cio_requirement_risk_view` turn board evidence into accelerate/review/park/close decision support for Product Owners, Project Leads, and CIO review.
 - **Portfolio rationalization and benefit realization**: `azure_boards_ai_portfolio_rationalization`, `azure_boards_ai_benefit_realization_tracking`, and `azure_boards_ai_cost_avoidance_by_closure` classify keep/kill/merge/rework decisions, track expected versus realized benefits, and estimate avoided spend from closed or de-scoped work.
 - **ERP domain impact scoring**: `azure_boards_ai_erp_domain_impact_scoring` scores Finance, Production, Compliance, Integration, Customer, Master Data, and Automation impact so ERP work can be prioritized by business-process value.
 - **Audit/Governance Evidence Ledger**: `azure_boards_ai_closure_governance_ledger`, `azure_boards_ai_audit_decision_log`, `azure_boards_ai_board_hygiene_automation_preview`, and `azure_boards_ai_evidence_pack_completeness` create no-write audit previews, decision logs, hygiene action previews, and evidence completeness scores.
@@ -172,7 +172,7 @@ Bulk closure has stricter rules:
 5. Apply the plan only through `azure_boards_apply_bulk_close_plan` with `approved:true` and `confirmPhrase: "APPLY_BULK_CLOSE"`.
 6. Re-query after applying and report remaining counts.
 
-Decision, portfolio, outcome, steering-pack, policy-as-code, and evidence-ledger tools are advisory/export tools. They must distinguish actual Azure Boards evidence from inferred status, cite assumptions for Euro, ROI, cost-avoidance, and benefit-realization values, and must not create audit evidence, close Work Items, or change state without the explicit write-preview/apply workflow above.
+Decision, portfolio, outcome, steering-pack, policy-as-code, and evidence-ledger tools are advisory/export tools. They must distinguish actual Azure Boards evidence from inferred status, cite assumptions for EUR-denominated values, ROI, cost avoidance, and benefit realization, and must not create audit evidence, close Work Items, or change state without the explicit write-preview/apply workflow above.
 
 Operational Azure DevOps notes learned from live use:
 
@@ -183,4 +183,4 @@ Operational Azure DevOps notes learned from live use:
 
 ## Safety Model
 
-AI/KI tools are explainable and assistive. Tools that propose Work Item changes return patch previews and do not write unless a write-specific tool is called.
+AI tools are explainable and assistive. Tools that propose Work Item changes return patch previews and do not write unless a write-specific tool is called.
