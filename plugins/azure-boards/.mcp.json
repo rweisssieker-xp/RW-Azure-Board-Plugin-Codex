@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "azure-boards": {
+      "command": "node",
+      "args": [
+        "./scripts/dist/server.js"
+      ],
+      "env": {
+        "AZURE_BOARDS_TENANT_ID": "common"
+      },
+      "note": "Local Azure Boards MCP server. Set AZURE_BOARDS_PAT for token access, or set AZURE_BOARDS_CLIENT_ID to use Microsoft Entra device-code login."
+    }
+  }
+}

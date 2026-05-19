@@ -1,0 +1,61 @@
+{
+  "$schema": "./policy-pack.schema.json",
+  "kind": "azureBoards.policyPack",
+  "version": 1,
+  "id": "audit",
+  "name": "Audit Evidence Policy Pack",
+  "description": "Governance controls for evidence, ownership, traceability, and policy exception review.",
+  "owner": "Governance Lead",
+  "defaults": {
+    "allowedTypes": ["Epic", "Feature", "User Story", "Bug", "Task", "Issue", "Risk"],
+    "requiredTags": ["Audit"],
+    "requiredFields": ["System.Title", "System.Description", "System.AssignedTo"],
+    "staleDays": 10,
+    "slaDays": 30,
+    "evidenceTag": "audit-evidence",
+    "escalationTag": "audit-escalation",
+    "driftThresholds": {
+      "openRatio": 0.1,
+      "staleRatio": 0.08,
+      "unassignedRatio": 0.05,
+      "governanceFindingsProxy": 0.05
+    }
+  },
+  "policies": [
+    {
+      "id": "audit.evidence-required",
+      "name": "Evidence Is Attached Or Referenced",
+      "severity": "critical",
+      "rules": {
+        "requiredTags": ["Audit", "Evidence"],
+        "evidenceRequirements": ["Approval record", "Test or review evidence", "Decision rationale"]
+      },
+      "remediation": {
+        "owner": "Control Owner",
+        "action": "Attach evidence or link the authoritative record before review."
+      }
+    },
+    {
+      "id": "audit.owner-required",
+      "name": "Open Audit Items Have Owners",
+      "severity": "high",
+      "rules": {
+        "requiredFields": ["System.AssignedTo", "System.State", "System.Title"],
+        "staleDays": 7
+      }
+    },
+    {
+      "id": "audit.exceptions-reviewed",
+      "name": "Policy Exceptions Are Reviewed",
+      "severity": "high",
+      "rules": {
+        "requiredTags": ["Exception Review"],
+        "decisionKeywords": ["exception", "waiver", "approval", "risk acceptance"]
+      },
+      "remediation": {
+        "owner": "Governance Lead",
+        "action": "Record exception decision, approver, and expiration date."
+      }
+    }
+  ]
+}

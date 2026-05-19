@@ -1,0 +1,59 @@
+{
+  "$schema": "./policy-pack.schema.json",
+  "kind": "azureBoards.policyPack",
+  "version": 1,
+  "id": "kanban",
+  "name": "Kanban Flow Policy Pack",
+  "description": "Continuous-flow controls for aging work, WIP pressure, blockers, and service classes.",
+  "owner": "Flow Manager",
+  "defaults": {
+    "allowedTypes": ["Feature", "User Story", "Bug", "Task"],
+    "staleDays": 7,
+    "slaDays": 21,
+    "blockedDays": 3,
+    "highPriorityThreshold": 2,
+    "blockedKeywords": ["blocked", "waiting", "dependency", "on hold"],
+    "decisionKeywords": ["decision", "approval", "clarify"],
+    "staleTag": "flow-stale",
+    "blockedTag": "flow-blocked",
+    "escalationTag": "flow-escalation"
+  },
+  "policies": [
+    {
+      "id": "kanban.service-class",
+      "name": "Service Class Is Visible",
+      "severity": "medium",
+      "rules": {
+        "requiredTags": ["Class of Service"],
+        "requiredFields": ["System.Title", "System.AssignedTo"]
+      },
+      "remediation": {
+        "owner": "Flow Manager",
+        "action": "Classify demand before it enters active delivery."
+      }
+    },
+    {
+      "id": "kanban.aging-work",
+      "name": "Aging Work Is Reviewed",
+      "severity": "high",
+      "rules": {
+        "staleDays": 4,
+        "slaDays": 15,
+        "evidenceRequirements": ["Current blocker status", "Next owner action"]
+      }
+    },
+    {
+      "id": "kanban.blocked-work",
+      "name": "Blocked Work Is Explicit",
+      "severity": "critical",
+      "rules": {
+        "blockedDays": 2,
+        "blockedKeywords": ["blocked", "dependency", "waiting for", "external"]
+      },
+      "remediation": {
+        "owner": "Delivery Lead",
+        "action": "Add blocked tag, name dependency owner, and set escalation path."
+      }
+    }
+  ]
+}

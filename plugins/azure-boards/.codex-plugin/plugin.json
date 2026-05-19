@@ -1,0 +1,47 @@
+{
+  "name": "azure-boards",
+  "version": "0.1.0",
+  "description": "Azure Boards plugin with individual Microsoft Entra login or token access, Work Item operations, and explainable AI/KI delivery and process cockpit tools.",
+  "author": {
+    "name": "RW Local Productivity",
+    "email": "support@example.com",
+    "url": "https://dev.azure.com/"
+  },
+  "homepage": "https://learn.microsoft.com/azure/devops/",
+  "repository": "https://github.com/local/azure-boards-codex-plugin",
+  "license": "MIT",
+  "keywords": [
+    "azure-boards",
+    "azure-devops",
+    "work-items",
+    "process-mining",
+    "delivery-risk",
+    "governance"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "apps": "./.app.json",
+  "interface": {
+    "displayName": "Azure Boards",
+    "shortDescription": "AI/KI delivery and process cockpit for Azure Boards",
+    "longDescription": "Use Azure Boards with individual Microsoft Entra login or token access to query, create, update, and comment on Work Items, plus explainable AI/KI tools for delivery risk, process bottlenecks, SLA aging, governance gaps, scope creep, and executive status reporting.",
+    "developerName": "RW Local Productivity",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://learn.microsoft.com/azure/devops/",
+    "privacyPolicyURL": "https://privacy.microsoft.com/privacystatement",
+    "termsOfServiceURL": "https://www.microsoft.com/servicesagreement",
+    "defaultPrompt": [
+      "Show delivery risks and SLA issues in my Azure Boards project.",
+      "Improve this Work Item with clear acceptance criteria.",
+      "Find process gaps and bottlenecks across my board."
+    ],
+    "brandColor": "#0078D4",
+    "composerIcon": "./assets/azure-boards-small.svg",
+    "logo": "./assets/azure-boards.svg",
+    "screenshots": []
+  }
+}

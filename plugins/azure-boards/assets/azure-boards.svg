@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Azure Boards">
+  <rect width="512" height="512" rx="96" fill="#0078D4"/>
+  <rect x="104" y="120" width="304" height="272" rx="34" fill="#fff"/>
+  <rect x="144" y="168" width="224" height="40" rx="10" fill="#0078D4"/>
+  <rect x="144" y="236" width="104" height="104" rx="16" fill="#50E6FF"/>
+  <rect x="264" y="236" width="104" height="104" rx="16" fill="#243A5E"/>
+  <path d="M162 288l32 32 72-86" fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+

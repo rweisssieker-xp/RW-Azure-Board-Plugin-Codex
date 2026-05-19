@@ -1,0 +1,73 @@
+{
+  "$schema": "./policy-pack.schema.json",
+  "kind": "azureBoards.policyPack",
+  "version": 1,
+  "id": "scrum",
+  "name": "Scrum Delivery Policy Pack",
+  "description": "Sprint-oriented controls for backlog quality, flow, blockers, and review readiness.",
+  "owner": "Scrum Master",
+  "defaults": {
+    "allowedTypes": ["Epic", "Feature", "User Story", "Bug", "Task"],
+    "requiredTags": ["Sprint"],
+    "staleDays": 5,
+    "slaDays": 14,
+    "blockedDays": 2,
+    "highPriorityThreshold": 2,
+    "blockedKeywords": ["blocked", "impediment", "dependency", "waiting"],
+    "staleTag": "stale",
+    "blockedTag": "blocked",
+    "escalationTag": "needs-escalation",
+    "evidenceTag": "evidence-needed"
+  },
+  "policies": [
+    {
+      "id": "scrum.backlog-ready",
+      "name": "Backlog Items Are Sprint Ready",
+      "severity": "high",
+      "rules": {
+        "allowedTypes": ["User Story", "Bug", "Task"],
+        "requiredFields": ["System.Title", "System.Description", "Microsoft.VSTS.Common.AcceptanceCriteria"],
+        "requiredTags": ["Sprint", "Ready"]
+      },
+      "remediation": {
+        "owner": "Product Owner",
+        "action": "Add acceptance criteria and mark the item Ready before sprint commitment."
+      }
+    },
+    {
+      "id": "scrum.impediment-response",
+      "name": "Impediments Have Fast Response",
+      "severity": "critical",
+      "rules": {
+        "blockedDays": 1,
+        "blockedKeywords": ["blocked", "impediment", "cannot proceed", "dependency"]
+      },
+      "remediation": {
+        "owner": "Scrum Master",
+        "action": "Escalate the impediment and record a dated next action."
+      }
+    },
+    {
+      "id": "scrum.state-flow",
+      "name": "Scrum State Flow Is Followed",
+      "severity": "medium",
+      "rules": {
+        "closedStates": ["Done", "Removed"],
+        "allowedTransitions": [
+          {
+            "from": "New",
+            "to": "Active"
+          },
+          {
+            "from": "Active",
+            "to": "Resolved"
+          },
+          {
+            "from": "Resolved",
+            "to": "Closed"
+          }
+        ]
+      }
+    }
+  ]
+}

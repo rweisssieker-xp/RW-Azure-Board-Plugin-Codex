@@ -1,0 +1,64 @@
+{
+  "$schema": "./policy-pack.schema.json",
+  "kind": "azureBoards.policyPack",
+  "version": 1,
+  "id": "release-governance",
+  "name": "Release Governance Policy Pack",
+  "description": "Release-readiness controls for scope approval, risk visibility, quality evidence, and sign-off.",
+  "owner": "Release Manager",
+  "defaults": {
+    "allowedTypes": ["Epic", "Feature", "User Story", "Bug", "Task", "Risk"],
+    "requiredTags": ["Release"],
+    "requiredFields": ["System.Title", "System.AssignedTo"],
+    "staleDays": 5,
+    "slaDays": 20,
+    "blockedDays": 2,
+    "highPriorityThreshold": 2,
+    "customerKeywords": ["customer", "production", "outage", "impact"],
+    "decisionKeywords": ["approval", "sign-off", "go/no-go", "decision"],
+    "blockedTag": "release-blocker",
+    "escalationTag": "release-escalation",
+    "evidenceTag": "release-evidence"
+  },
+  "policies": [
+    {
+      "id": "release.scope-approved",
+      "name": "Release Scope Is Approved",
+      "severity": "critical",
+      "rules": {
+        "requiredTags": ["Release", "Scope Approved"],
+        "decisionKeywords": ["approval", "scope decision", "sign-off"]
+      },
+      "remediation": {
+        "owner": "Product Owner",
+        "action": "Record release scope approval and remove unapproved work from committed scope."
+      }
+    },
+    {
+      "id": "release.blockers-escalated",
+      "name": "Release Blockers Are Escalated",
+      "severity": "critical",
+      "rules": {
+        "blockedDays": 1,
+        "blockedKeywords": ["blocked", "release blocker", "go/no-go", "dependency"]
+      },
+      "remediation": {
+        "owner": "Release Manager",
+        "action": "Escalate blockers and capture go/no-go impact."
+      }
+    },
+    {
+      "id": "release.quality-evidence",
+      "name": "Quality Evidence Is Present",
+      "severity": "high",
+      "rules": {
+        "requiredTags": ["Release", "Quality Evidence"],
+        "evidenceRequirements": ["Test summary", "Known issues", "Rollback plan", "Approver"]
+      },
+      "remediation": {
+        "owner": "QA Lead",
+        "action": "Attach quality summary and rollback evidence before release approval."
+      }
+    }
+  ]
+}

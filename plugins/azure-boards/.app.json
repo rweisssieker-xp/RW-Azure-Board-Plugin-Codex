@@ -1,0 +1,7 @@
+{
+  "apps": {
+    "azure-boards": {
+      "id": "local.azure-boards"
+    }
+  }
+}

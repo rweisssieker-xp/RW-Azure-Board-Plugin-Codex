@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rw-local.dev/schemas/azure-boards/policy-pack.schema.json",
+  "title": "Azure Boards Policy Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "policies"],
+  "properties": {
+    "kind": {
+      "const": "azureBoards.policyPack"
+    },
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "appliesTo": {
+      "$ref": "#/$defs/scope"
+    },
+    "defaults": {
+      "$ref": "#/$defs/rules"
+    },
+    "policies": {
+      "oneOf": [
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/policy"
+          }
+        },
+        {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/policy"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "organization": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "areaPath": {
+          "type": "string"
+        },
+        "iterationPath": {
+          "type": "string"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": ["info", "low", "medium", "high", "critical"]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "rules": {
+          "$ref": "#/$defs/rules"
+        },
+        "remediation": {
+          "$ref": "#/$defs/remediation"
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowedTypes": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "requiredTags": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "requiredFields": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "blockedKeywords": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "decisionKeywords": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "customerKeywords": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "blockedStates": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "closedStates": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "allowedTransitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to"],
+            "properties": {
+              "from": {
+                "type": "string",
+                "minLength": 1
+              },
+              "to": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "evidenceRequirements": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "slaDays": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "staleDays": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "blockedDays": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "highPriorityThreshold": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "maxItems": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "maxActions": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "defaultOwner": {
+          "type": "string"
+        },
+        "staleTag": {
+          "type": "string"
+        },
+        "blockedTag": {
+          "type": "string"
+        },
+        "escalationTag": {
+          "type": "string"
+        },
+        "evidenceTag": {
+          "type": "string"
+        },
+        "driftThresholds": {
+          "$ref": "#/$defs/numberMap"
+        },
+        "riskWeights": {
+          "$ref": "#/$defs/numberMap"
+        }
+      }
+    },
+    "remediation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "patchPreview": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "positiveNumber": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "numberMap": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/positiveNumber"
+      }
+    }
+  }
+}
