@@ -3,11 +3,15 @@ import { AzureDevOpsClient, toSummary } from "./azureDevOps.js";
 import { planApprovedActions, summarizeApplyResults } from "./applyWorkflow.js";
 import { attachmentEvidenceSummary, bulkClosePreview, businessValueEstimate, closeCandidates, parentChildCleanup, wsjfConsistencyCheck } from "./bulkGovernance.js";
 import { deliverySystemCorrelation } from "./correlationAnalytics.js";
+import { cioRequirementRiskView, evidenceFirstRequirementReview, requirementDecisionCockpit } from "./decisionEngine.js";
+import { auditDecisionLog, boardHygieneAutomationPreview, closureGovernanceLedger, evidencePackCompleteness } from "./evidenceLedger.js";
 import { synthesizeReport } from "./llmSynthesis.js";
 import { createWatchdogSnapshot, deleteNamedArtifact, listNamedArtifacts, loadNamedArtifact, saveNamedArtifact } from "./localStore.js";
 import { authEnvironmentCheck, packageHealthCheck } from "./packageHealth.js";
 import { validatePolicyPack } from "./policyPack.js";
+import { benefitRealizationTracking, costAvoidanceByClosure, erpDomainImpactScoring, portfolioRationalization } from "./portfolioEngine.js";
 import { safeErrorMessage } from "./security.js";
+import { aiBusinessCaseGenerator, aiSteeringCommitteePack, automatedBoardDueDiligenceReport, changePortfolioSimulator, decisionTraceabilityGraph, erpProcessCriticalityModel, outcomeRealizationCockpit, policyAsCodeEvaluation, requirementInvestDivestMatrix, valueLeakageDetector } from "./steeringEngine.js";
 import { auditEvidencePack, bottleneckMining, actionPlan, briefExport, capacityForecast, changeImpact, commentIntelligence, costOfDelayRadar, createProcessBaseline, crossTeamBenchmark, decisionDebt, deliveryRiskRadar, findDuplicates, flowMiningFromUpdates, governanceScore, improveWorkItem, milestoneForecast, naturalLanguageToWiql, policyGapDetector, policyPackSummary, processDriftDetection, processRecommendations, processSimulator, projectCockpit, roleBasedReport, rootCausePatterns, scopeCreepDetector, slaAgingMonitor, statusBrief, watchlistReport, workflowConformance } from "./analytics.js";
 const auth = new AzureBoardsAuth();
 const azure = new AzureDevOpsClient(auth);
@@ -469,6 +473,216 @@ const tools = [
             required: ["workItems"]
         },
         handler: (args) => deliverySystemCorrelation(readItems(args), objectArg(args.evidence), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_requirement_decision_cockpit",
+        description: "Score Requirements for accelerate, review, park, or close decisions using evidence, value, risk, priority, and stale signals. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => requirementDecisionCockpit(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_evidence_first_requirement_review",
+        description: "Review Requirements against Description, acceptance criteria, attachments, and supplied evidence before decisions. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, evidence: { type: "array" } },
+            required: ["workItems"]
+        },
+        handler: (args) => evidenceFirstRequirementReview(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"))
+    },
+    {
+        name: "azure_boards_ai_cio_requirement_risk_view",
+        description: "Create a CIO-facing risk view for stale, unowned, regulated, high-priority, or weak-evidence Requirements. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => cioRequirementRiskView(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_portfolio_rationalization",
+        description: "Classify portfolio work as keep, kill, merge, or rework using value, effort, stale age, duplicate, and ERP-domain signals. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => portfolioRationalization(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_benefit_realization_tracking",
+        description: "Track expected versus realized benefits and expose unrealized benefit gaps. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => benefitRealizationTracking(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_cost_avoidance_by_closure",
+        description: "Estimate deterministic cost avoidance from closed, removed, or de-scoped work. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => costAvoidanceByClosure(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_erp_domain_impact_scoring",
+        description: "Score Work Items by ERP business domains such as Finance, Production, Compliance, Integration, Customer, Master Data, and Automation. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => erpDomainImpactScoring(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_closure_governance_ledger",
+        description: "Build a no-write closure ledger for terminal Work Items with closure actor, date, evidence, and missing governance signals.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, updates: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => closureGovernanceLedger(readRawItems(args), recordArrayArg(args.updates || [], "updates"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_audit_decision_log",
+        description: "Derive an audit decision log from Work Item fields and supplied comments, updates, or evidence records. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => auditDecisionLog(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_board_hygiene_automation_preview",
+        description: "Preview board hygiene actions for missing owner, stale item, missing acceptance criteria, missing evidence, or terminal-parent children. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => boardHygieneAutomationPreview(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_evidence_pack_completeness",
+        description: "Score Work Items for audit evidence pack completeness against configurable evidence requirements. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => evidencePackCompleteness(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_outcome_realization_cockpit",
+        description: "Compare expected versus realized benefits and expose outcome gaps. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => outcomeRealizationCockpit(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_business_case_generator",
+        description: "Generate draft business cases from Description, benefit, cost, ERP process, risk, and evidence signals. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => aiBusinessCaseGenerator(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_value_leakage_detector",
+        description: "Detect value leakage from stale open work, missing owners, weak evidence, or closed items without realized benefit. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => valueLeakageDetector(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_decision_traceability_graph",
+        description: "Build a no-write graph of Work Items, parent/child links, attachments, evidence, and decision nodes.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, evidence: { type: "array" } },
+            required: ["workItems"]
+        },
+        handler: (args) => decisionTraceabilityGraph(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"))
+    },
+    {
+        name: "azure_boards_ai_erp_process_criticality_model",
+        description: "Score Work Items against ERP process criticality areas: Finance Closing, Order-to-Cash, Procure-to-Pay, Manufacturing, Warehouse, Master Data, Regulatory, and Integration Backbone.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => erpProcessCriticalityModel(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_board_due_diligence_report",
+        description: "Create a CIO due-diligence report combining outcome realization, value leakage, ERP criticality, and traceability gaps. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => automatedBoardDueDiligenceReport(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_requirement_invest_divest_matrix",
+        description: "Place Requirements into invest, steering-decision, bundle, or divest quadrants from benefit and cost signals. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => requirementInvestDivestMatrix(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_change_portfolio_simulator",
+        description: "Simulate portfolio effects of closing/removing selected Work Items, including freed cost, lost benefit, and domain coverage. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => changePortfolioSimulator(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_steering_committee_pack",
+        description: "Generate a no-write Markdown/optional HTML steering pack from Work Items and optional source reports.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, reports: { type: "array" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => aiSteeringCommitteePack(readRawItems(args), recordArrayArg(args.reports || [], "reports"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_policy_as_code_evaluation",
+        description: "Evaluate Work Items against versionable policy-as-code controls for required tags, fields, owner, stale age, and evidence. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: { workItems: { type: "array" }, policy: { type: "object" }, options: { type: "object" } },
+            required: ["workItems"]
+        },
+        handler: (args) => policyAsCodeEvaluation(readRawItems(args), objectArg(args.policy), objectArg(args.options))
     },
     {
         name: "azure_boards_store_save",

@@ -92,6 +92,17 @@ The Azure Boards plugin is intended to go beyond basic Work Item lookup. The doc
 - **Attachment evidence review**: `azure_boards_ai_attachment_evidence_summary` summarizes attachment metadata and optional extracted text snippets so business decisions can cite Description plus supporting documents.
 - **Parent/child cleanup**: `azure_boards_ai_parent_child_cleanup` finds open Tasks whose parent Requirement is already terminal.
 - **Bulk close preview/apply**: `azure_boards_ai_bulk_close_preview` creates an auditable no-write close plan with comments, patches, child impact, skipped items, and risk. `azure_boards_apply_bulk_close_plan` applies only a generated preview and requires `approved:true` plus `confirmPhrase: "APPLY_BULK_CLOSE"`.
+- **Requirement Decision Engine**: `azure_boards_ai_requirement_decision_cockpit`, `azure_boards_ai_evidence_first_requirement_review`, and `azure_boards_ai_cio_requirement_risk_view` turn board evidence into accelerate/review/park/close decision support for Product Owners, Projekt Leads, and CIO review.
+- **Portfolio rationalization and benefit realization**: `azure_boards_ai_portfolio_rationalization`, `azure_boards_ai_benefit_realization_tracking`, and `azure_boards_ai_cost_avoidance_by_closure` classify keep/kill/merge/rework decisions, track expected versus realized benefits, and estimate avoided spend from closed or de-scoped work.
+- **ERP domain impact scoring**: `azure_boards_ai_erp_domain_impact_scoring` scores Finance, Production, Compliance, Integration, Customer, Master Data, and Automation impact so ERP work can be prioritized by business-process value.
+- **Audit/Governance Evidence Ledger**: `azure_boards_ai_closure_governance_ledger`, `azure_boards_ai_audit_decision_log`, `azure_boards_ai_board_hygiene_automation_preview`, and `azure_boards_ai_evidence_pack_completeness` create no-write audit previews, decision logs, hygiene action previews, and evidence completeness scores.
+- **Outcome Realization Cockpit**: `azure_boards_ai_outcome_realization_cockpit` compares expected and realized benefits, exposes value gaps, and makes benefit ownership visible after delivery or closure.
+- **AI Business Case Generator**: `azure_boards_ai_business_case_generator` creates draft business cases from board evidence with problem, business outcome, cost assumption, risk of not doing, ROI, and recommendation.
+- **Value Leakage Detector**: `azure_boards_ai_value_leakage_detector` identifies stale open value, missing owners, weak evidence, and closed items without realized benefit.
+- **Decision Traceability Graph**: `azure_boards_ai_decision_traceability_graph` links Work Items, parent/child relations, attachments, supplied evidence, and decision nodes for explainable audit trails.
+- **ERP process criticality model**: `azure_boards_ai_erp_process_criticality_model` maps work to Finance Closing, Order-to-Cash, Procure-to-Pay, Manufacturing, Warehouse, Master Data, Regulatory, and Integration Backbone.
+- **Board due diligence and steering packs**: `azure_boards_ai_board_due_diligence_report`, `azure_boards_ai_requirement_invest_divest_matrix`, `azure_boards_ai_change_portfolio_simulator`, and `azure_boards_ai_steering_committee_pack` prepare CIO/steering committee decision material without writing.
+- **Policy-as-code evaluation**: `azure_boards_ai_policy_as_code_evaluation` evaluates versionable controls for required tags, fields, owner, stale age, and evidence.
 
 ## Policy Packs
 
@@ -154,6 +165,8 @@ Bulk closure has stricter rules:
 4. Close direct child Tasks only when the parent closure rationale explicitly covers them.
 5. Apply the plan only through `azure_boards_apply_bulk_close_plan` with `approved:true` and `confirmPhrase: "APPLY_BULK_CLOSE"`.
 6. Re-query after applying and report remaining counts.
+
+Decision, portfolio, outcome, steering-pack, policy-as-code, and evidence-ledger tools are advisory/export tools. They must distinguish actual Azure Boards evidence from inferred status, cite assumptions for Euro, ROI, cost-avoidance, and benefit-realization values, and must not create audit evidence, close Work Items, or change state without the explicit write-preview/apply workflow above.
 
 Operational Azure DevOps notes learned from live use:
 

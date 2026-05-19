@@ -32,7 +32,28 @@ test("MCP server lists Azure Boards tools", async () => {
       "azure_boards_ai_cost_of_delay_radar",
       "azure_boards_ai_process_simulator",
       "azure_boards_ai_capacity_forecast",
-      "azure_boards_ai_brief_export"
+      "azure_boards_ai_brief_export",
+      "azure_boards_ai_requirement_decision_cockpit",
+      "azure_boards_ai_evidence_first_requirement_review",
+      "azure_boards_ai_cio_requirement_risk_view",
+      "azure_boards_ai_portfolio_rationalization",
+      "azure_boards_ai_benefit_realization_tracking",
+      "azure_boards_ai_cost_avoidance_by_closure",
+      "azure_boards_ai_erp_domain_impact_scoring",
+      "azure_boards_ai_closure_governance_ledger",
+      "azure_boards_ai_audit_decision_log",
+      "azure_boards_ai_board_hygiene_automation_preview",
+      "azure_boards_ai_evidence_pack_completeness",
+      "azure_boards_ai_outcome_realization_cockpit",
+      "azure_boards_ai_business_case_generator",
+      "azure_boards_ai_value_leakage_detector",
+      "azure_boards_ai_decision_traceability_graph",
+      "azure_boards_ai_erp_process_criticality_model",
+      "azure_boards_ai_board_due_diligence_report",
+      "azure_boards_ai_requirement_invest_divest_matrix",
+      "azure_boards_ai_change_portfolio_simulator",
+      "azure_boards_ai_steering_committee_pack",
+      "azure_boards_ai_policy_as_code_evaluation"
     ];
     const missing = expectedTools.filter((name) => !names.includes(name));
     assert.deepEqual(missing, [], `Expected MCP tools to be listed: ${expectedTools.join(", ")}`);

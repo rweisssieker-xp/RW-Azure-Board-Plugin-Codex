@@ -9,11 +9,32 @@ export {
   wsjfConsistencyCheck
 } from "./bulkGovernance.js";
 export { deliverySystemCorrelation } from "./correlationAnalytics.js";
+export { cioRequirementRiskView, evidenceFirstRequirementReview, requirementDecisionCockpit } from "./decisionEngine.js";
+export { auditDecisionLog, boardHygieneAutomationPreview, closureGovernanceLedger, evidencePackCompleteness } from "./evidenceLedger.js";
 export { synthesizeReport } from "./llmSynthesis.js";
 export { createWatchdogSnapshot, deleteNamedArtifact, listNamedArtifacts, loadNamedArtifact, saveNamedArtifact } from "./localStore.js";
 export { authEnvironmentCheck, packageHealthCheck } from "./packageHealth.js";
 export { validatePolicyPack } from "./policyPack.js";
+export {
+  benefitRealizationTracking,
+  costAvoidanceAnalysis,
+  costAvoidanceByClosure,
+  erpDomainImpactScoring,
+  portfolioRationalization
+} from "./portfolioEngine.js";
 export { redactSecrets, safeErrorMessage } from "./security.js";
+export {
+  aiBusinessCaseGenerator,
+  aiSteeringCommitteePack,
+  automatedBoardDueDiligenceReport,
+  changePortfolioSimulator,
+  decisionTraceabilityGraph,
+  erpProcessCriticalityModel,
+  outcomeRealizationCockpit,
+  policyAsCodeEvaluation,
+  requirementInvestDivestMatrix,
+  valueLeakageDetector
+} from "./steeringEngine.js";
 import { briefExport as baseBriefExport } from "./briefExport.js";
 import {
   createProcessBaseline as baseCreateProcessBaseline,
