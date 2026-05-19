@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Azure Boards AI Cockpit</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="app-header">
+      <div class="brand">
+        <img src="../assets/azure-boards-small.svg" alt="" class="brand-mark" width="40" height="40">
+        <div>
+          <p class="eyebrow">Local review workspace</p>
+          <h1>Azure Boards AI Cockpit</h1>
+        </div>
+      </div>
+      <div class="header-status" aria-label="Workspace status">
+        <span class="status-pill status-pill--read-only">Read only</span>
+        <span class="status-pill">Static UI</span>
+        <span class="status-pill">No Azure writes</span>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Cockpit sections">
+      <button class="tab tab-button" type="button" data-tab="input">Cockpit</button>
+      <button class="tab tab-button" type="button" data-tab="reports">Requirements</button>
+      <button class="tab tab-button" type="button" data-tab="portfolio">Portfolio</button>
+      <button class="tab tab-button" type="button" data-tab="governance">Governance</button>
+      <button class="tab tab-button" type="button" data-tab="markdown">Steering Pack</button>
+      <button class="tab tab-button" type="button" data-tab="bulk">Bulk Close Preview</button>
+    </nav>
+
+    <main id="main-content" class="app-shell">
+      <aside class="input-panel" data-tab-panel="input" aria-labelledby="input-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Input</p>
+            <h2 id="input-title">Review payload</h2>
+          </div>
+          <span class="status-dot" aria-label="Local only"></span>
+        </div>
+
+        <div class="control-stack">
+          <div class="field">
+            <label for="reportSelector">Report selector</label>
+            <select id="reportSelector" name="report"></select>
+          </div>
+
+          <div class="button-row" aria-label="Payload actions">
+            <button class="button button--primary" type="button" id="runReportButton">Preview report</button>
+            <button class="button" type="button" id="loadSampleButton">Load sample</button>
+            <button class="button" type="button" id="parseJsonButton">Parse JSON</button>
+          </div>
+
+          <div class="field">
+            <label for="jsonFileInput">Upload JSON artifact</label>
+            <input id="jsonFileInput" name="json-upload" type="file" accept="application/json,.json">
+            <p class="field-note" id="dataStatus" aria-live="polite">Selected files stay in the browser session.</p>
+          </div>
+
+          <div class="field">
+            <label for="jsonInput">Paste JSON</label>
+            <textarea id="jsonInput" name="json-payload" rows="16" spellcheck="false" placeholder='{"items":[{"id":1234,"title":"Requirement review","state":"Active"}]}'></textarea>
+          </div>
+        </div>
+      </aside>
+
+      <section class="workspace" data-tab-panel="reports" aria-label="Report workspace">
+        <section class="summary-strip" aria-label="Cockpit metrics">
+          <article class="metric">
+            <span class="metric-label">Mode</span>
+            <strong>Local</strong>
+            <span class="metric-trend">browser-only processing</span>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Writes</span>
+            <strong>0</strong>
+            <span class="metric-trend">preview and export only</span>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Inputs</span>
+            <strong>JSON</strong>
+            <span class="metric-trend">paste, sample, or file</span>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Exports</span>
+            <strong>MD/JSON</strong>
+            <span class="metric-trend">download from local result</span>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <div class="report-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Results</p>
+                <h2>Report table</h2>
+              </div>
+              <div class="table-tools" aria-label="Report export actions">
+                <button class="button" type="button" id="downloadJsonButton">Download JSON</button>
+                <button class="button" type="button" id="downloadMarkdownButton">Download Markdown</button>
+              </div>
+            </div>
+            <div id="reportOutput" aria-live="polite"></div>
+          </div>
+
+          <aside class="details-panel" aria-labelledby="details-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Details</p>
+                <h2 id="details-title">Review rules</h2>
+              </div>
+            </div>
+            <dl class="detail-list">
+              <div>
+                <dt>Execution</dt>
+                <dd>No network calls, no Azure DevOps writes, no token handling.</dd>
+              </div>
+              <div>
+                <dt>Purpose</dt>
+                <dd>Inspect report payloads and review decisions before using MCP tools.</dd>
+              </div>
+              <div>
+                <dt>Bulk close</dt>
+                <dd>Preview only. Real closure still requires the approved MCP apply flow.</dd>
+              </div>
+            </dl>
+          </aside>
+        </section>
+      </section>
+
+      <section class="workspace" data-tab-panel="portfolio" hidden aria-label="Portfolio workspace">
+        <div class="report-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Portfolio</p>
+              <h2>Value and rationalization review</h2>
+            </div>
+          </div>
+          <div class="empty-state">
+            <h3>Use the report selector</h3>
+            <p>Select Portfolio Rationalization or Steering Pack, then preview the report from the input panel.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" data-tab-panel="governance" hidden aria-label="Governance workspace">
+        <div class="report-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Governance</p>
+              <h2>Evidence and policy review</h2>
+            </div>
+          </div>
+          <div class="empty-state">
+            <h3>Evidence ledger view</h3>
+            <p>Select Evidence Ledger to inspect closure evidence, missing signals, and governance status.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" data-tab-panel="markdown" hidden aria-label="Steering pack workspace">
+        <div class="report-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Steering Pack</p>
+              <h2>Markdown preview</h2>
+            </div>
+          </div>
+          <div id="markdownPreview" class="markdown-preview"></div>
+        </div>
+      </section>
+
+      <section class="workspace" data-tab-panel="bulk" hidden aria-label="Bulk close workspace">
+        <div class="report-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Bulk Close Preview</p>
+              <h2>Closure candidates</h2>
+            </div>
+          </div>
+          <div class="empty-state">
+            <h3>Preview only</h3>
+            <p>Select Bulk Close Preview to inspect targets, child impact, skipped items, comments, and patch previews.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

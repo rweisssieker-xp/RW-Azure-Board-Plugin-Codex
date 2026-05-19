@@ -50,6 +50,12 @@ npm install
 npm run build
 ```
 
+## Local Review UI
+
+The plugin includes a static no-write cockpit at `plugins/azure-boards/ui/index.html`.
+
+Use it to paste or upload Work Item JSON, preview key AI/KI reports, inspect tables, review Bulk Close Preview output, and export local Markdown/JSON artifacts. The UI is browser-only: it does not call Azure DevOps, does not handle tokens, and does not perform writes. Real Azure Boards changes still require the MCP preview/apply workflow.
+
 ## Verify Auth Mode
 
 Call `azure_boards_auth_status` to see whether the server is using PAT, bearer token, OAuth cache, or device-code OAuth setup.
