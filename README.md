@@ -84,3 +84,12 @@ See:
 ## Safety
 
 Do not commit real `.env` files, token caches, PATs, bearer tokens, Microsoft Entra secrets, or private `production-publisher-inputs.json` files. The root `.gitignore` keeps those local files out of version control while allowing safe example files such as `.env.production.example`.
+
+## Public Project Documents
+
+- `LICENSE`
+- `SECURITY.md`
+- `CONTRIBUTING.md`
+- `CODE_OF_CONDUCT.md`
+- `SUPPORT.md`
+- `CHANGELOG.md`
