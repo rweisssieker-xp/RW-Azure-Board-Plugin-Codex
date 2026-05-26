@@ -79,19 +79,29 @@ test("static review UI files are present with expected no-write hooks", () => {
     "Customer Value Case Builder",
     "Proprietary Signal Catalog",
     "Autonomous Followup Scheduler",
-    "Adoption Experiment Designer"
+    "Adoption Experiment Designer",
+    "Persistent Snapshot",
+    "Approval Queue",
+    "Decision Audit Trail",
+    "Role Cockpit Configuration",
+    "Production Admin Console",
+    "Automated Reminder Plan",
+    "Decision Pack Export"
   ]) {
     assert.match(app, new RegExp(report), `${report} should be available in app.js`);
   }
 
   assert.match(app, /Subscription billing validation workflow/, "sample data should use a US-English business example");
   assert.match(app, /Expected annual value USD/, "rewrite previews should use US currency wording");
+  assert.match(app, /approvalPlanButton/, "Approval Queue should expose a local apply-plan control");
+  assert.match(app, /approvalVerifyButton/, "Approval Queue should expose a result verification control");
+  assert.match(app, /Import\/Export Manifest/, "Decision Pack should show import/export manifest details");
 
   assert.doesNotMatch(app, /\bfetch\s*\(/, "static UI must not call fetch");
   assert.doesNotMatch(app, /\bXMLHttpRequest\b/, "static UI must not use XMLHttpRequest");
   assert.doesNotMatch(app, /\bsendBeacon\b/, "static UI must not send beacons");
   assert.match(index, /No Azure writes|Read only/, "index should clearly state no-write mode");
-  for (const tab of ["Elicitation", "Convert", "Tests", "Traceability", "Visuals", "Documents", "Prompts/Admin"]) {
+  for (const tab of ["Elicitation", "Convert", "Tests", "Traceability", "Visuals", "Documents", "Prompts/Admin", "Product Ops", "Approval"]) {
     assert.match(index, new RegExp(tab), `${tab} tab should be present in index.html`);
   }
 });

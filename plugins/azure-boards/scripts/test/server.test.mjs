@@ -119,7 +119,18 @@ test("MCP server lists Azure Boards tools", async () => {
       "azure_boards_ai_customer_value_case_builder",
       "azure_boards_ai_proprietary_signal_catalog",
       "azure_boards_ai_autonomous_followup_scheduler",
-      "azure_boards_ai_adoption_experiment_designer"
+      "azure_boards_ai_adoption_experiment_designer",
+      "azure_boards_product_snapshot_save",
+      "azure_boards_product_baseline_save",
+      "azure_boards_product_approval_queue",
+      "azure_boards_product_approval_apply_plan",
+      "azure_boards_product_approval_result_review",
+      "azure_boards_product_audit_trail",
+      "azure_boards_product_role_cockpits",
+      "azure_boards_product_admin_console",
+      "azure_boards_product_reminder_plan",
+      "azure_boards_product_decision_pack_export",
+      "azure_boards_product_decision_pack_import"
     ];
     const missing = expectedTools.filter((name) => !names.includes(name));
     assert.deepEqual(missing, [], `Expected MCP tools to be listed: ${expectedTools.join(", ")}`);

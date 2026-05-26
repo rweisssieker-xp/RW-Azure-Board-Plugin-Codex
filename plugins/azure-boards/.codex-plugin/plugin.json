@@ -1,7 +1,7 @@
 {
   "name": "azure-boards",
   "version": "0.1.0",
-  "description": "Azure Boards plugin with individual Microsoft Entra login or token access, Work Item operations, and explainable AI delivery and process cockpit tools.",
+  "description": "Azure Boards plugin with Microsoft Entra login or token access, Work Item operations, persistent snapshots, approval queues, audit trails, role cockpits, and decision-pack exports.",
   "author": {
     "name": "RW Local Productivity",
     "email": "support@example.invalid",
@@ -23,8 +23,8 @@
   "apps": "./.app.json",
   "interface": {
     "displayName": "Azure Boards",
-    "shortDescription": "AI delivery and process cockpit for Azure Boards",
-    "longDescription": "Use Azure Boards with individual Microsoft Entra login or token access to query, create, update, and comment on Work Items, plus explainable AI tools for delivery risk, process bottlenecks, SLA aging, governance gaps, scope creep, and executive status reporting.",
+    "shortDescription": "Governance, approval, and delivery cockpit for Azure Boards",
+    "longDescription": "Use Azure Boards with individual Microsoft Entra login or token access to query, create, update, and comment on Work Items, plus explainable delivery and governance tools for persistent snapshots, approval queues, audit trails, role cockpits, admin policy controls, reminder plans, decision packs, delivery risk, process bottlenecks, SLA aging, governance gaps, scope creep, and executive status reporting.",
     "developerName": "RW Local Productivity",
     "category": "Productivity",
     "capabilities": [
@@ -36,12 +36,15 @@
     "termsOfServiceURL": "https://example.invalid/azure-boards/terms",
     "defaultPrompt": [
       "Show delivery risks and SLA issues in my Azure Boards project.",
-      "Improve this Work Item with clear acceptance criteria.",
-      "Find process gaps and bottlenecks across my board."
+      "Build an approval queue and audit trail for these recommendations.",
+      "Export a CIO decision pack with steering, handover, and operating rhythm sections."
     ],
     "brandColor": "#0078D4",
     "composerIcon": "./assets/azure-boards-small.svg",
     "logo": "./assets/azure-boards.svg",
-    "screenshots": []
+    "screenshots": [
+      "./assets/screenshots/decision-pack.png",
+      "./assets/screenshots/approval-workflow.png"
+    ]
   }
 }

@@ -45,6 +45,19 @@ export {
   securityPrivacyReview
 } from "./productizationMoat.js";
 export {
+  adminConsoleConfig,
+  approvalApplyPlan,
+  approvalQueue,
+  approvalResultReview,
+  auditTrail,
+  automatedReminderPlan,
+  createPersistentBaseline,
+  createPersistentSnapshot,
+  decisionPackExport,
+  decisionPackImport,
+  roleCockpitConfig
+} from "./productOperatingSystem.js";
+export {
   aiExceptionRegister,
   autonomousBoardAuditor,
   benefitRealizationFollowup,

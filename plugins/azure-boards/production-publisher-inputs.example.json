@@ -1,0 +1,13 @@
+{
+  "publisherName": "RW Local Productivity",
+  "supportEmail": "support@your-owned-domain.example",
+  "authorUrl": "https://your-owned-domain.example",
+  "homepageUrl": "https://your-owned-domain.example/azure-boards",
+  "repositoryUrl": "https://your-owned-domain.example/azure-boards/support",
+  "websiteUrl": "https://your-owned-domain.example/azure-boards",
+  "privacyPolicyUrl": "https://your-owned-domain.example/azure-boards/privacy",
+  "termsOfServiceUrl": "https://your-owned-domain.example/azure-boards/terms",
+  "hostedMcpUrl": "https://your-owned-domain.example/azure-boards/mcp",
+  "entraClientId": "00000000-0000-0000-0000-000000000000",
+  "entraTenantId": "organizations"
+}

@@ -17,7 +17,7 @@ Review notes for OpenAI App Directory readiness:
 - The MCP server must be deployed at a reachable production endpoint before submission; local stdio-only usage is not sufficient for a hosted app review.
 - Microsoft Entra OAuth requires a production app registration with approved Azure DevOps delegated permissions, redirect/device-flow configuration as applicable, and publisher-owned support documentation.
 - PAT and bearer-token modes are useful for local development and controlled automation, but the App Directory review path should prefer individual Microsoft Entra login and should not ask users to paste secrets into ChatGPT.
-- Tool descriptors currently need explicit Apps SDK annotations (`readOnlyHint`, `openWorldHint`, and `destructiveHint`) and output schemas before final submission. Representative review metadata is captured in `chatgpt-app-submission.json`, but server descriptors should be updated by the implementation owner.
+- Tool descriptors expose explicit Apps SDK annotations (`readOnlyHint`, `openWorldHint`, and `destructiveHint`) and generic object output schemas; `chatgpt-app-submission.json` is generated to cover every runtime tool.
 - Screenshots and final app listing copy should show the real app experience, safe write-preview workflow, and authentication state without exposing organization names, Work Item data, tokens, or private board content.
 
 ## Setup
@@ -73,6 +73,28 @@ npm run build
 The plugin includes a static no-write cockpit at `plugins/azure-boards/ui/index.html`.
 
 Use it to paste or upload Work Item JSON, preview key AI reports, inspect tables, review Bulk Close Preview output, and export local Markdown/JSON artifacts. The UI is browser-only: it does not call Azure DevOps, does not handle tokens, and does not perform writes. Real Azure Boards changes still require the MCP preview/apply workflow.
+
+Use `demo/erp-board-demo.json` for sanitized ERP and Azure Boards review scenarios when preparing screenshots, local demos, or App Directory evidence.
+
+## Product Operating System
+
+The plugin now includes productized operating flows in addition to one-off reports:
+
+- `azure_boards_product_snapshot_save`: saves a named board snapshot with baseline, watchlist, role summaries, metrics, and fingerprint.
+- `azure_boards_product_baseline_save`: saves a named process baseline for later drift comparison.
+- `azure_boards_product_approval_queue`: converts recommendations into a no-write approval queue with risk, selection state, patch preview, and verification steps.
+- `azure_boards_product_approval_apply_plan`: turns selected, rejected, or overridden approval rows into an auditable apply plan with secondary-approval handling.
+- `azure_boards_product_approval_result_review`: compares apply results and current Work Items so the user can verify outcomes before closing the approval.
+- `azure_boards_product_audit_trail`: normalizes accepted, rejected, overridden, or recorded decision events for audit review.
+- `azure_boards_product_role_cockpits`: prepares Product Owner, Scrum Master, CIO, and Compliance cockpit configurations.
+- `azure_boards_product_admin_console`: validates production admin controls for policies, thresholds, risk weights, data classes, LLM mode, hosted MCP, and OAuth readiness.
+- `azure_boards_product_reminder_plan`: prepares recurring watchlist and benefit-realization follow-up recommendations with schedule metadata and automation prompts, without sending or scheduling.
+- `azure_boards_product_decision_pack_export`: exports steering, audit, handover, and operating rhythm content as Markdown and JSON-ready Decision Packs with an import/export manifest.
+- `azure_boards_product_decision_pack_import`: validates imported Decision Pack artifacts before review or storage.
+
+See `docs/production-readiness.md` for the hosted MCP, Microsoft Entra OAuth, publisher asset, and verification gates required before claiming production readiness.
+See `docs/hosted-mcp-deployment.md` for the hosted HTTP MCP endpoint, Dockerfile, `/healthz`, `/mcp`, and smoke-test commands.
+Run `npm run check:production` from `plugins/azure-boards/scripts` as the final release gate; it is expected to fail until real publisher-owned URLs and contacts replace development placeholders.
 
 ## Verify Auth Mode
 

@@ -48,6 +48,19 @@ import {
   securityPrivacyReview
 } from "./productizationMoat.js";
 import {
+  adminConsoleConfig,
+  approvalApplyPlan,
+  approvalQueue,
+  approvalResultReview,
+  auditTrail,
+  automatedReminderPlan,
+  createPersistentBaseline,
+  createPersistentSnapshot,
+  decisionPackExport,
+  decisionPackImport,
+  roleCockpitConfig
+} from "./productOperatingSystem.js";
+import {
   aiExceptionRegister,
   autonomousBoardAuditor,
   benefitRealizationFollowup,
@@ -1294,6 +1307,114 @@ const tools: ToolDef[] = [
     handler: (args) => adoptionExperimentDesigner(recordArrayArg(args.usage || [], "usage"), recordArrayArg(args.teams || [], "teams"), objectArg(args.options))
   },
   {
+    name: "azure_boards_product_snapshot_save",
+    description: "Persist a product-grade process snapshot with baseline, watchlist, role summaries, and fingerprint in the user-local store.",
+    inputSchema: {
+      type: "object",
+      properties: { name: { type: "string" }, workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } },
+      required: ["name", "workItems"]
+    },
+    annotations: localWriteAnnotations,
+    handler: (args) => createPersistentSnapshot(requiredString(args.name, "name"), readItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_baseline_save",
+    description: "Persist a named process baseline for later drift comparison in the user-local store.",
+    inputSchema: {
+      type: "object",
+      properties: { name: { type: "string" }, workItems: { type: "array" }, updates: { type: "array" }, policy: { type: "object" } },
+      required: ["name", "workItems"]
+    },
+    annotations: localWriteAnnotations,
+    handler: (args) => createPersistentBaseline(requiredString(args.name, "name"), readItems(args), recordArrayArg(args.updates || [], "updates"), objectArg(args.policy))
+  },
+  {
+    name: "azure_boards_product_approval_queue",
+    description: "Build a no-write approval queue from recommendations or generated action-plan items, including selection defaults and verification steps.",
+    inputSchema: {
+      type: "object",
+      properties: { workItems: { type: "array" }, recommendations: { type: "array" }, options: { type: "object" } },
+      required: ["workItems"]
+    },
+    handler: (args) => approvalQueue(readItems(args), recordArrayArg(args.recommendations || [], "recommendations"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_approval_apply_plan",
+    description: "Turn selected, rejected, or overridden approval queue rows into an auditable no-write apply plan with verification steps.",
+    inputSchema: {
+      type: "object",
+      properties: { queue: { type: "array" }, selection: { type: "object" }, options: { type: "object" } },
+      required: ["queue"]
+    },
+    handler: (args) => approvalApplyPlan(recordArrayArg(args.queue || [], "queue"), objectArg(args.selection), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_approval_result_review",
+    description: "Review apply results against an approval apply plan and current Work Items, producing verification and audit events. Does not write.",
+    inputSchema: {
+      type: "object",
+      properties: { plan: { type: "array" }, results: { type: "array" }, workItems: { type: "array" } },
+      required: ["plan", "results", "workItems"]
+    },
+    handler: (args) => approvalResultReview(recordArrayArg(args.plan || [], "plan"), recordArrayArg(args.results || [], "results"), readItems(args))
+  },
+  {
+    name: "azure_boards_product_audit_trail",
+    description: "Normalize accepted, rejected, or overridden recommendation events into an audit trail. Does not write.",
+    inputSchema: {
+      type: "object",
+      properties: { events: { type: "array" }, options: { type: "object" } }
+    },
+    handler: (args) => auditTrail(recordArrayArg(args.events || [], "events"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_role_cockpits",
+    description: "Generate role-specific cockpit configurations for Product Owner, Scrum Master, CIO, and Compliance views. Does not write.",
+    inputSchema: {
+      type: "object",
+      properties: { workItems: { type: "array" }, roleConfig: { type: "object" }, policy: { type: "object" } },
+      required: ["workItems"]
+    },
+    handler: (args) => roleCockpitConfig(readItems(args), objectArg(args.roleConfig), objectArg(args.policy))
+  },
+  {
+    name: "azure_boards_product_admin_console",
+    description: "Normalize production admin settings for policies, thresholds, risk weights, data classes, LLM mode, hosted MCP, and OAuth readiness. Does not write.",
+    inputSchema: { type: "object", properties: { config: { type: "object" } } },
+    handler: (args) => adminConsoleConfig(objectArg(args.config))
+  },
+  {
+    name: "azure_boards_product_reminder_plan",
+    description: "Prepare no-write recurring reminder recommendations for watchlists and benefit realization follow-ups.",
+    inputSchema: {
+      type: "object",
+      properties: { workItems: { type: "array" }, options: { type: "object" } },
+      required: ["workItems"]
+    },
+    handler: (args) => automatedReminderPlan(readItems(args), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_decision_pack_export",
+    description: "Export steering, handover, and operating rhythm content as a Decision Pack with Markdown and JSON artifacts. Optionally persists locally.",
+    inputSchema: {
+      type: "object",
+      properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } },
+      required: ["workItems"]
+    },
+    annotations: localWriteAnnotations,
+    handler: (args) => decisionPackExport(readItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_decision_pack_import",
+    description: "Validate and normalize an imported Decision Pack artifact before review or storage. Does not write.",
+    inputSchema: {
+      type: "object",
+      properties: { artifact: { type: "object" } },
+      required: ["artifact"]
+    },
+    handler: (args) => decisionPackImport(objectArg(args.artifact))
+  },
+  {
     name: "azure_boards_store_save",
     description: "Save a JSON artifact to the user-local Azure Boards store.",
     inputSchema: {
@@ -1586,7 +1707,7 @@ function requiredNumber(value: unknown, name: string): number {
   return number;
 }
 
-async function handle(request: Record<string, unknown>): Promise<Record<string, unknown> | null> {
+export async function handle(request: Record<string, unknown>): Promise<Record<string, unknown> | null> {
   const id = request.id;
   try {
     if (request.method === "initialize") {
@@ -1640,18 +1761,20 @@ async function handle(request: Record<string, unknown>): Promise<Record<string, 
   }
 }
 
-let buffer = "";
-process.stdin.setEncoding("utf8");
-process.stdin.on("data", (chunk) => {
-  buffer += chunk;
-  let newline: number;
-  while ((newline = buffer.indexOf("\n")) >= 0) {
-    const line = buffer.slice(0, newline).trim();
-    buffer = buffer.slice(newline + 1);
-    if (!line) continue;
-    void dispatch(line);
-  }
-});
+if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/"))) {
+  let buffer = "";
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("data", (chunk) => {
+    buffer += chunk;
+    let newline: number;
+    while ((newline = buffer.indexOf("\n")) >= 0) {
+      const line = buffer.slice(0, newline).trim();
+      buffer = buffer.slice(newline + 1);
+      if (!line) continue;
+      void dispatch(line);
+    }
+  });
+}
 
 async function dispatch(line: string): Promise<void> {
   const request = JSON.parse(line) as Record<string, unknown>;

@@ -6,7 +6,11 @@
   "description": "Local MCP server for the Azure Boards Codex plugin.",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "apply:production-inputs": "node apply-production-publisher-inputs.mjs",
+    "check:production": "node production-readiness-check.mjs",
+    "smoke:hosted": "node hosted-mcp-smoke.mjs",
     "start": "node dist/server.js",
+    "start:hosted": "node dist/hostedServer.js",
     "test": "npm run build && node --test test/*.test.mjs",
     "test:live": "npm run build && node live/live-smoke.mjs"
   },

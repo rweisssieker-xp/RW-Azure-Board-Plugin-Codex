@@ -1,0 +1,81 @@
+{
+  "items": [
+    {
+      "id": 101,
+      "type": "Feature",
+      "title": "Subscription billing validation workflow for finance close",
+      "state": "Active",
+      "assignedTo": "Mira Finance",
+      "priority": 1,
+      "tags": ["Compliance", "Finance", "Evidence"],
+      "createdDate": "2026-01-12T09:00:00Z",
+      "changedDate": "2026-05-08T13:25:00Z",
+      "areaPath": "Finance\\Billing",
+      "description": "Automate validation and audit evidence for subscription billing before month-end close. Current manual checks create revenue leakage risk and delay customer invoice release.",
+      "acceptanceCriteria": "Given inbound invoice records with contract evidence, when validation runs, then invalid tax, customer account, and archive cases are reported with a traceable approval decision.",
+      "fields": {
+        "Custom.BusinessValue": 9,
+        "Custom.TargetBenefit": 95000,
+        "Custom.Cost": 28000,
+        "Microsoft.VSTS.Scheduling.StoryPoints": 13
+      },
+      "relations": [{ "rel": "AttachedFile", "attributes": { "name": "audit-sample.pdf" } }]
+    },
+    {
+      "id": 102,
+      "type": "Requirement",
+      "title": "Customer portal invoice download",
+      "state": "New",
+      "assignedTo": "",
+      "priority": 2,
+      "tags": ["Customer", "Portal"],
+      "createdDate": "2026-02-01T10:00:00Z",
+      "changedDate": "2026-02-11T10:00:00Z",
+      "areaPath": "Customer Success\\Portal",
+      "description": "Customers need self-service access to invoice PDFs and payment status to reduce service tickets and improve transparency.",
+      "acceptanceCriteria": "Customer sees invoice list, downloads PDF, and can filter by open or paid status.",
+      "fields": {
+        "Custom.BusinessValue": 7,
+        "Custom.TargetBenefit": 52000,
+        "Microsoft.VSTS.Scheduling.StoryPoints": 8
+      }
+    },
+    {
+      "id": 106,
+      "type": "Epic",
+      "title": "ERP cutover readiness for order-to-cash migration",
+      "state": "Active",
+      "assignedTo": "Iris PMO",
+      "priority": 1,
+      "tags": ["ERP", "Migration", "OrderToCash", "Cutover"],
+      "createdDate": "2026-03-05T09:00:00Z",
+      "changedDate": "2026-05-12T14:00:00Z",
+      "areaPath": "ERP\\OrderToCash",
+      "description": "Prepare order-to-cash migration readiness with owner sign-off, exception handling, finance evidence, and release rollback criteria.",
+      "acceptanceCriteria": "Cutover can proceed only when finance, operations, customer service, and integration owners approve readiness evidence.",
+      "fields": {
+        "Custom.BusinessValue": 10,
+        "Custom.TargetBenefit": 140000,
+        "Custom.Cost": 65000,
+        "Microsoft.VSTS.Scheduling.StoryPoints": 21
+      },
+      "relations": [{ "rel": "AttachedFile", "attributes": { "name": "cutover-readiness.xlsx" } }]
+    }
+  ],
+  "evidence": [
+    {
+      "workItemId": 101,
+      "type": "comment",
+      "actor": "Mira Finance",
+      "date": "2026-05-09T08:30:00Z",
+      "text": "Approved for audit review. Evidence: validation sample and finance sign-off attached."
+    },
+    {
+      "workItemId": 106,
+      "type": "risk",
+      "actor": "Iris PMO",
+      "date": "2026-05-12T14:30:00Z",
+      "text": "Cutover needs final integration rollback approval before release readiness can be accepted."
+    }
+  ]
+}

@@ -62,7 +62,14 @@
     { id: "customer-value-case", label: "Customer Value Case Builder", run: renderCustomerValueCase },
     { id: "signal-catalog", label: "Proprietary Signal Catalog", run: renderSignalCatalog },
     { id: "followup-scheduler", label: "Autonomous Followup Scheduler", run: renderFollowupScheduler },
-    { id: "adoption-experiments", label: "Adoption Experiment Designer", run: renderAdoptionExperiments }
+    { id: "adoption-experiments", label: "Adoption Experiment Designer", run: renderAdoptionExperiments },
+    { id: "persistent-snapshot", label: "Persistent Snapshot", run: renderPersistentSnapshot },
+    { id: "approval-queue", label: "Approval Queue", run: renderApprovalQueue },
+    { id: "audit-trail", label: "Decision Audit Trail", run: renderAuditTrail },
+    { id: "role-cockpits", label: "Role Cockpit Configuration", run: renderRoleCockpits },
+    { id: "admin-console", label: "Production Admin Console", run: renderAdminConsole },
+    { id: "reminder-plan", label: "Automated Reminder Plan", run: renderReminderPlan },
+    { id: "decision-pack", label: "Decision Pack Export", run: renderDecisionPack }
   ];
 
   const sampleItems = [
@@ -146,12 +153,34 @@
       acceptanceCriteria: "Closure rationale approved by operations.",
       fields: { "Custom.BusinessValue": 2, "Custom.RealizedBenefit": 0 },
       relations: [{ rel: "AttachedFile", attributes: { name: "closure-approval.msg" } }]
+    },
+    {
+      id: 106,
+      type: "Epic",
+      title: "ERP cutover readiness for order-to-cash migration",
+      state: "Active",
+      assignedTo: "Iris PMO",
+      priority: 1,
+      tags: ["ERP", "Migration", "OrderToCash", "Cutover"],
+      createdDate: "2026-03-05T09:00:00Z",
+      changedDate: "2026-05-12T14:00:00Z",
+      areaPath: "ERP\\OrderToCash",
+      description: "Prepare order-to-cash migration readiness with owner sign-off, exception handling, finance evidence, and release rollback criteria.",
+      acceptanceCriteria: "Cutover can proceed only when finance, operations, customer service, and integration owners approve readiness evidence.",
+      fields: {
+        "Custom.BusinessValue": 10,
+        "Custom.TargetBenefit": 140000,
+        "Custom.Cost": 65000,
+        "Microsoft.VSTS.Scheduling.StoryPoints": 21
+      },
+      relations: [{ rel: "AttachedFile", attributes: { name: "cutover-readiness.xlsx" } }]
     }
   ];
 
   const sampleEvidence = [
     { workItemId: 101, type: "comment", actor: "Mira Finance", date: "2026-05-09T08:30:00Z", text: "Approved for audit review. Evidence: validation sample and finance sign-off attached." },
-    { workItemId: 105, type: "update", actor: "Nina Ops", date: "2026-04-26T15:00:00Z", text: "Decision accepted: duplicate scope closed after warehouse review." }
+    { workItemId: 105, type: "update", actor: "Nina Ops", date: "2026-04-26T15:00:00Z", text: "Decision accepted: duplicate scope closed after warehouse review." },
+    { workItemId: 106, type: "risk", actor: "Iris PMO", date: "2026-05-12T14:30:00Z", text: "Cutover needs final integration rollback approval before release readiness can be accepted." }
   ];
 
   const state = {
@@ -160,7 +189,9 @@
     activeTab: "input",
     currentReportId: REPORTS[0].id,
     lastReport: null,
-    lastMarkdown: ""
+    lastMarkdown: "",
+    approvalPlan: null,
+    approvalResult: null
   };
 
   document.addEventListener("DOMContentLoaded", init);
@@ -287,9 +318,10 @@
   function switchTab(tab) {
     state.activeTab = tab || "input";
     const tabReportMap = {
-      reports: "requirement-decision",
       portfolio: "portfolio-rationalization",
       governance: "evidence-ledger",
+      productops: "persistent-snapshot",
+      approval: "approval-queue",
       bulk: "bulk-close-preview"
     };
     if (tabReportMap[state.activeTab] && state.currentReportId !== tabReportMap[state.activeTab]) {
@@ -304,7 +336,7 @@
       button.setAttribute("aria-selected", String(isActive));
     });
     $$("[data-tab-panel]").forEach((panel) => {
-      const reportTabs = new Set(["reports", "portfolio", "governance", "bulk"]);
+      const reportTabs = new Set(["reports", "portfolio", "governance", "productops", "approval", "bulk"]);
       const shouldShow = panel.dataset.tabPanel === state.activeTab || (panel.dataset.tabPanel === "reports" && reportTabs.has(state.activeTab));
       panel.hidden = !shouldShow;
     });
@@ -1041,6 +1073,122 @@
     return report;
   }
 
+  function renderPersistentSnapshot(items, evidence) {
+    const normalized = items.map(normalizeItem);
+    const open = normalized.filter((item) => !TERMINAL_STATES.has(item.state.toLowerCase())).length;
+    const stale = normalized.filter((item) => daysSince(item.changedDate) > 21 && !TERMINAL_STATES.has(item.state.toLowerCase())).length;
+    const snapshot = {
+      name: "weekly-erp-control",
+      itemCount: normalized.length,
+      evidenceCount: evidence.length,
+      fingerprint: String(normalized.length) + "-" + String(evidence.length) + "-" + String(stale),
+      metrics: { open, closed: normalized.length - open, stale },
+      retention: "local-user-store"
+    };
+    const report = baseReport("Persistent Snapshot", stale ? [{ title: "Stale open work in baseline", score: 75, severity: "high", signals: [`${stale} stale item(s)`], recommendation: "Save a named baseline and compare the next review against this snapshot." }] : [], `${snapshot.name} captures board metrics, evidence count, and a deterministic fingerprint for later drift review.`, { items: normalized.length, evidence: evidence.length, stale });
+    report.snapshot = snapshot;
+    return report;
+  }
+
+  function renderApprovalQueue(items) {
+    const queue = items.map(normalizeItem).filter((item) => !TERMINAL_STATES.has(item.state.toLowerCase())).slice(0, 8).map((item, index) => {
+      const highRisk = (item.priority || 99) <= 1 || item.tags.some((tag) => /compliance|finance|migration|erp/i.test(tag));
+      return {
+        id: `approval-${index + 1}`,
+        workItemId: item.id,
+        title: item.title,
+        status: "pending",
+        selected: !highRisk,
+        risk: highRisk ? "high" : item.assignedTo ? "medium" : "medium",
+        recommendation: highRisk ? "Require accountable owner approval before apply." : "Eligible for selected apply preview after review.",
+        verification: "Re-read, apply selected item, re-query."
+      };
+    });
+    const report = baseReport("Approval Queue", queue.map((row) => ({ id: row.workItemId, title: row.title, score: row.risk === "high" ? 85 : 55, severity: row.risk, signals: [`status ${row.status}`, `selected ${row.selected}`], recommendation: row.recommendation })), `${queue.length} recommendation(s) staged for approval review.`, { pending: queue.length, selected: queue.filter((row) => row.selected).length });
+    report.queue = queue;
+    return report;
+  }
+
+  function renderAuditTrail(items, evidence) {
+    const trail = evidence.map((entry, index) => ({
+      id: `audit-${index + 1}`,
+      workItemId: entry.workItemId || "",
+      actor: entry.actor || "unknown",
+      action: /accepted|approved/i.test(entry.text || "") ? "accepted" : /rejected|declined/i.test(entry.text || "") ? "rejected" : "recorded",
+      rationale: entry.text || "Evidence record supplied.",
+      outcome: "pending-verification"
+    }));
+    const report = baseReport("Decision Audit Trail", trail.map((row) => ({ id: row.workItemId, title: `${row.action} by ${row.actor}`, score: row.action === "recorded" ? 45 : 30, severity: "medium", signals: [row.outcome], recommendation: "Keep the decision event linked to the Work Item and verify outcome later." })), `${trail.length} decision event(s) normalized for audit review.`, { events: trail.length });
+    report.trail = trail;
+    return report;
+  }
+
+  function renderRoleCockpits(items) {
+    const roles = [
+      { role: "product-owner", title: "Product Owner Decision Cockpit", reports: ["Requirement Decision", "Approval Queue", "Gap Analysis"] },
+      { role: "scrum-master", title: "Scrum Master Flow Cockpit", reports: ["Watchlist", "Flow Mining", "Reminder Plan"] },
+      { role: "cio", title: "CIO Portfolio Cockpit", reports: ["Steering Pack", "Portfolio Fitness", "Benefit Follow-up"] },
+      { role: "compliance", title: "Compliance Evidence Cockpit", reports: ["Evidence Ledger", "Audit Trail", "Policy Review"] }
+    ];
+    const report = baseReport("Role Cockpit Configuration", roles.map((row) => ({ title: row.title, score: 35, severity: "low", signals: row.reports, recommendation: "Use this as the default cockpit for the role." })), `${roles.length} role cockpit(s) prepared for the same board data.`, { roles: roles.length, items: items.length });
+    report.cockpits = roles;
+    return report;
+  }
+
+  function renderAdminConsole() {
+    const controls = [
+      { name: "policies", status: "ready", value: "versioned policy packs" },
+      { name: "thresholds", status: "ready", value: "SLA 14 days, stale 21 days" },
+      { name: "risk weights", status: "ready", value: "stale, blocked, unassigned, value" },
+      { name: "data classes", status: "ready", value: "work-items, comments, evidence metadata" },
+      { name: "LLM mode", status: "ready", value: "deterministic-local" },
+      { name: "hosted MCP", status: "missing", value: "production endpoint required" },
+      { name: "OAuth", status: "missing", value: "production Entra app required" }
+    ];
+    const report = baseReport("Production Admin Console", controls.filter((row) => row.status !== "ready").map((row) => ({ title: row.name, score: 85, severity: "high", signals: [row.value], recommendation: "Complete before production listing." })), `${controls.filter((row) => row.status === "ready").length}/${controls.length} admin controls ready.`, { controls: controls.length, ready: controls.filter((row) => row.status === "ready").length });
+    report.adminControls = controls;
+    return report;
+  }
+
+  function renderReminderPlan(items) {
+    const reminders = items.map(normalizeItem).filter((item) => !TERMINAL_STATES.has(item.state.toLowerCase()) && (daysSince(item.changedDate) > 14 || !item.assignedTo)).slice(0, 8).map((item, index) => ({
+      id: `reminder-${index + 1}`,
+      type: targetBenefit(item) > 50000 ? "benefit-followup" : "watchlist",
+      workItemId: item.id,
+      title: item.title,
+      owner: item.assignedTo || "process-owner",
+      nextRun: "next review cycle",
+      schedule: targetBenefit(item) > 50000 ? "FREQ=MONTHLY;INTERVAL=1" : "FREQ=DAILY;INTERVAL=7",
+      message: "Review status, evidence, owner, and realized benefit."
+    }));
+    const report = baseReport("Automated Reminder Plan", reminders.map((row) => ({ id: row.workItemId, title: row.title, score: 60, severity: "medium", signals: [row.type, row.nextRun], recommendation: row.message })), `${reminders.length} reminder recommendation(s) prepared.`, { reminders: reminders.length });
+    report.reminders = reminders;
+    return report;
+  }
+
+  function renderDecisionPack(items, evidence) {
+    const top = items.map(normalizeItem).slice(0, 5);
+    const pack = {
+      name: "cio-decision-pack",
+      audience: "CIO",
+      exports: ["Markdown", "JSON"],
+      sections: ["Steering Pack", "Audit Pack", "Handover Pack", "Operating Rhythm"]
+    };
+    const report = baseReport("Decision Pack Export", top.map((item) => finding(item, targetBenefit(item) > 50000 ? 65 : 35, [`value ${targetBenefit(item)}`, `${evidenceForId(evidence, item.id).length} evidence record(s)`], "Include in the decision pack with owner, evidence, and next action.")), `${pack.name} combines steering, audit, handover, and rhythm sections.`, { items: top.length, evidence: evidence.length });
+    report.pack = pack;
+    report.markdown = `# ${pack.name}\n\n## Steering Pack\n${top.map((item) => `- #${item.id} ${item.title}`).join("\n")}\n\n## Audit Pack\nAccepted decisions, overrides, evidence gaps, and result-review status are included for compliance review.\n\n## Handover Pack\nOwners and evidence are listed for review.\n\n## Operating Rhythm\nReview pending approvals and benefit follow-ups in the next cycle.`;
+    report.manifest = {
+      schema: "rw.azureBoards.decisionPack.v1",
+      exports: [
+        { format: "json", filename: "cio-decision-pack.json" },
+        { format: "markdown", filename: "cio-decision-pack.md" }
+      ],
+      imports: [{ format: "json", requiredSections: ["Steering Pack", "Audit Pack", "Handover Pack", "Operating Rhythm"] }]
+    };
+    report.importReview = { status: "ready", controls: ["name", "steering", "audit", "handover", "operating rhythm", "markdown"] };
+    return report;
+  }
+
   function renderReport(report) {
     const output = $("#reportOutput");
     if (!output) return;
@@ -1050,9 +1198,11 @@
       renderMetrics(report.metrics),
       renderFindings(report.findings || []),
       renderSpecialTables(report),
+      renderWorkflowControls(report),
       `<details><summary>Raw JSON</summary><pre>${escapeHtml(JSON.stringify(report, null, 2))}</pre></details>`,
       `</article>`
     ].join("");
+    bindWorkflowControls(report);
   }
 
   function renderMetrics(metrics) {
@@ -1071,6 +1221,100 @@
       arrayFrom(entry.signals).join("; "),
       entry.recommendation || ""
     ]))}</section>`;
+  }
+
+  function renderWorkflowControls(report) {
+    if (report.queue) {
+      return [
+        `<section class="workflow-panel" aria-label="Approval workflow">`,
+        `<h3>Review and apply workflow</h3>`,
+        `<div class="approval-list">${report.queue.map((row) => `
+          <label class="approval-row">
+            <input type="checkbox" data-approval-id="${escapeAttr(row.id)}" ${row.selected ? "checked" : ""}>
+            <span><strong>${escapeHtml(row.title)}</strong><small>${escapeHtml(row.risk)} risk · #${escapeHtml(String(row.workItemId || ""))}</small></span>
+          </label>`).join("")}</div>`,
+        `<div class="button-row">
+          <button class="button button--primary" type="button" id="approvalPlanButton">Prepare apply plan</button>
+          <button class="button" type="button" id="approvalVerifyButton">Verify sample result</button>
+        </div>`,
+        `<div id="approvalWorkflowResult">${renderApprovalWorkflowResult()}</div>`,
+        `</section>`
+      ].join("");
+    }
+    return "";
+  }
+
+  function renderApprovalWorkflowResult() {
+    const parts = [];
+    if (state.approvalPlan) {
+      parts.push(`<section><h4>Apply plan</h4>${table(["ID", "Work Item", "Status", "Verification"], state.approvalPlan.plan.map((row) => [row.id, row.workItemId, row.status, arrayFrom(row.verification).join("; ")]))}</section>`);
+    }
+    if (state.approvalResult) {
+      parts.push(`<section><h4>Result review</h4>${table(["ID", "Work Item", "Result", "Current State", "Verified"], state.approvalResult.verification.map((row) => [row.recommendationId, row.workItemId, row.applyResult, row.currentState, row.verified]))}</section>`);
+    }
+    return parts.join("");
+  }
+
+  function bindWorkflowControls(report) {
+    const planButton = $("#approvalPlanButton");
+    if (planButton && report.queue) {
+      planButton.addEventListener("click", () => {
+        state.approvalPlan = buildApprovalApplyPlan(report.queue);
+        state.approvalResult = null;
+        const target = $("#approvalWorkflowResult");
+        if (target) target.innerHTML = renderApprovalWorkflowResult();
+      });
+    }
+    const verifyButton = $("#approvalVerifyButton");
+    if (verifyButton && report.queue) {
+      verifyButton.addEventListener("click", () => {
+        if (!state.approvalPlan) state.approvalPlan = buildApprovalApplyPlan(report.queue);
+        state.approvalResult = buildApprovalResultReview(state.approvalPlan.plan);
+        const target = $("#approvalWorkflowResult");
+        if (target) target.innerHTML = renderApprovalWorkflowResult();
+      });
+    }
+  }
+
+  function buildApprovalApplyPlan(queue) {
+    const selected = new Set($$("[data-approval-id]").filter((input) => input.checked).map((input) => input.dataset.approvalId));
+    const plan = queue.map((row) => {
+      const isSelected = selected.has(row.id);
+      const status = !isSelected ? "not-selected" : row.risk === "high" ? "needs-secondary-approval" : "ready-for-apply";
+      return {
+        id: row.id,
+        workItemId: row.workItemId,
+        title: row.title,
+        status,
+        verification: ["Re-read current Work Item", "Apply approved preview only", "Re-query Work Item", "Record audit outcome"]
+      };
+    });
+    return {
+      title: "Approval Apply Plan",
+      writePerformed: false,
+      plan,
+      auditEvents: plan.filter((row) => row.status !== "not-selected").map((row) => ({ recommendationId: row.id, workItemId: row.workItemId, action: row.status === "needs-secondary-approval" ? "recorded" : "accepted", outcome: "pending-apply" }))
+    };
+  }
+
+  function buildApprovalResultReview(plan) {
+    const verification = plan.filter((row) => row.status !== "not-selected").map((row) => {
+      const current = state.items.map(normalizeItem).find((item) => item.id === row.workItemId);
+      const verified = row.status === "ready-for-apply" && Boolean(current);
+      return {
+        recommendationId: row.id,
+        workItemId: row.workItemId,
+        applyResult: row.status === "needs-secondary-approval" ? "blocked-secondary-approval" : "succeeded",
+        currentState: current ? current.state : "not-requeried",
+        verified
+      };
+    });
+    return {
+      title: "Approval Result Review",
+      writePerformed: false,
+      verification,
+      auditEvents: verification.map((row) => ({ recommendationId: row.recommendationId, workItemId: row.workItemId, outcome: row.verified ? "verified" : "needs-review" }))
+    };
   }
 
   function renderSpecialTables(report) {
@@ -1118,6 +1362,13 @@
     if (report.signals) return `<section><h3>Signal Catalog</h3>${table(["Name", "Count", "Strength"], report.signals.map((row) => [row.name, row.count, row.strength]))}</section>`;
     if (report.followups) return `<section><h3>Followups</h3>${table(["ID", "Title", "Owner", "Reason", "Channel"], report.followups.map((row) => [row.id, row.title, row.owner, row.reason, row.channel]))}</section>`;
     if (report.experiments) return `<section><h3>Adoption Experiments</h3>${table(["Team", "Target", "Baseline", "Days", "Metric"], report.experiments.map((row) => [row.team, row.targetOutcome, row.baselineRuns, row.durationDays, row.successMetric]))}</section>`;
+    if (report.snapshot) return `<section><h3>Snapshot</h3>${table(["Name", "Items", "Evidence", "Fingerprint", "Retention"], [[report.snapshot.name, report.snapshot.itemCount, report.snapshot.evidenceCount, report.snapshot.fingerprint, report.snapshot.retention]])}</section>`;
+    if (report.queue) return `<section><h3>Approval Queue</h3>${table(["ID", "Work Item", "Title", "Risk", "Selected", "Status", "Verification"], report.queue.map((row) => [row.id, row.workItemId, row.title, row.risk, row.selected, row.status, row.verification]))}</section>`;
+    if (report.trail) return `<section><h3>Audit Trail</h3>${table(["ID", "Work Item", "Actor", "Action", "Outcome", "Rationale"], report.trail.map((row) => [row.id, row.workItemId, row.actor, row.action, row.outcome, row.rationale]))}</section>`;
+    if (report.cockpits) return `<section><h3>Role Cockpits</h3>${table(["Role", "Title", "Reports"], report.cockpits.map((row) => [row.role, row.title, arrayFrom(row.reports).join("; ")]))}</section>`;
+    if (report.adminControls) return `<section><h3>Admin Controls</h3>${table(["Name", "Status", "Value"], report.adminControls.map((row) => [row.name, row.status, row.value]))}</section>`;
+    if (report.reminders) return `<section><h3>Reminder Plan</h3>${table(["ID", "Type", "Work Item", "Title", "Owner", "Next Run", "Schedule"], report.reminders.map((row) => [row.id, row.type, row.workItemId, row.title, row.owner, row.nextRun, row.schedule]))}</section>`;
+    if (report.pack) return `<section><h3>Decision Pack</h3>${table(["Name", "Audience", "Exports", "Sections"], [[report.pack.name, report.pack.audience, arrayFrom(report.pack.exports).join("; "), arrayFrom(report.pack.sections).join("; ")]])}<h3>Import/Export Manifest</h3><pre>${escapeHtml(JSON.stringify(report.manifest || {}, null, 2))}</pre><h3>Markdown Export</h3><pre>${escapeHtml(report.markdown || "")}</pre></section>`;
     return "";
   }
 
