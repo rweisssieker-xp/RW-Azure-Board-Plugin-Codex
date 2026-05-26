@@ -1,0 +1,88 @@
+import type { Report } from "./types.js";
+import { finding, normalizeItems, objectFrom, report, stringFrom } from "./requirementsWorkbench.js";
+
+type InputItem = Record<string, unknown>;
+
+export function generateTestCases(workItems: InputItem[], options: Record<string, unknown> = {}): Report & { writePerformed: false; testCases: Array<Record<string, unknown>>; approvalRequired: true } {
+  const cases = normalizeItems(workItems).map((item) => {
+    const steps = [
+      { action: "Prepare representative input data and preconditions.", expectedResult: "Input data is valid and traceable to the requirement." },
+      { action: `Execute the process for ${item.title}.`, expectedResult: "The expected business behavior is completed without unhandled errors." },
+      { action: "Validate evidence, exception behavior, and owner approval.", expectedResult: "Evidence is attached or linked and acceptance criteria are met." }
+    ];
+    return {
+      sourceRequirementId: item.id,
+      title: `Test Case - ${item.title}`,
+      steps,
+      assumptions: ["Generated from Requirement title, Description, Acceptance Criteria, and supplied options.", "Human QA review required before creation."],
+      confidence: confidenceFor(item),
+      patchPreview: [
+        { op: "add", path: "/fields/System.Title", value: `Test Case - ${item.title}` },
+        { op: "add", path: "/fields/System.WorkItemType", value: "Test Case" },
+        { op: "add", path: "/fields/System.Description", value: steps.map((step, index) => `${index + 1}. ${step.action} Expected: ${step.expectedResult}`).join("\n") }
+      ],
+      relationPreview: [{ rel: "Microsoft.VSTS.Common.TestedBy-Forward", sourceId: item.id }],
+      writePerformed: false
+    };
+  });
+  const findings = cases.map((entry) => finding(Number(entry.sourceRequirementId), String(entry.title), Number(entry.confidence), ["test case preview", `${(entry.steps as unknown[]).length} steps`], "Review generated test steps before applying a test case plan."));
+  return { ...report("Test Case Generation Factory", findings, `${cases.length} Test Case preview(s) generated.`, { testCases: cases.length }), writePerformed: false, approvalRequired: true, testCases: cases };
+}
+
+export function generateUatSuite(workItems: InputItem[], options: Record<string, unknown> = {}): Report & { writePerformed: false; suite: Array<Record<string, unknown>> } {
+  const audience = stringFrom(options.audience) || "business users";
+  const suite = normalizeItems(workItems).map((item) => ({
+    requirementId: item.id,
+    title: `UAT - ${item.title}`,
+    audience,
+    script: [`Confirm business preconditions for ${item.title}.`, "Execute happy path with business data.", "Record evidence, exceptions, and sign-off decision."],
+    expectedOutcome: item.acceptanceCriteria || "Business owner confirms expected outcome.",
+    assumptions: ["UAT script is generated from current Work Item text."],
+    writePerformed: false
+  }));
+  return { ...report("UAT Suite Generator", suite.map((entry) => finding(Number(entry.requirementId), String(entry.title), 70, [`audience ${audience}`], "Review with business users before scheduling UAT.")), `${suite.length} UAT script(s) generated.`, { scripts: suite.length }), writePerformed: false, suite };
+}
+
+export function generateRegressionSuite(workItems: InputItem[], options: Record<string, unknown> = {}): Report & { writePerformed: false; suite: Array<Record<string, unknown>> } {
+  const suite = normalizeItems(workItems).map((item) => ({
+    requirementId: item.id,
+    title: `Regression - ${item.title}`,
+    priority: /finance|regulatory|integration|production|security/i.test(`${item.title} ${item.description}`) ? "high" : "normal",
+    checks: ["Existing behavior still works.", "Boundary and exception path are tested.", "Evidence is updated for changed process behavior."],
+    assumptions: ["Regression scope is inferred from requirement risk and process terms."],
+    writePerformed: false
+  }));
+  const findings = suite.map((entry) => finding(Number(entry.requirementId), String(entry.title), entry.priority === "high" ? 85 : 55, [`priority ${entry.priority}`], "Add to regression suite preview if coverage is missing or stale."));
+  return { ...report("Regression Suite Generator", findings, `${suite.length} regression candidate(s) generated.`, { regressionItems: suite.length }), writePerformed: false, suite };
+}
+
+export async function applyTestCasePlan(args: Record<string, unknown>, azure: { createWorkItem(input: Record<string, unknown>): Promise<unknown> }): Promise<Record<string, unknown>> {
+  if (args.approved !== true || args.confirmPhrase !== "APPLY_TEST_CASE_PLAN") {
+    throw new Error("Test Case writes require approved:true and confirmPhrase APPLY_TEST_CASE_PLAN.");
+  }
+  const organization = requiredString(args.organization, "organization");
+  const project = requiredString(args.project, "project");
+  const plan = objectFrom(args.plan);
+  if (plan.writePerformed !== false || plan.approvalRequired !== true || !Array.isArray(plan.testCases)) {
+    throw new Error("plan must be generated by azure_boards_ai_generate_test_cases.");
+  }
+  const results: Array<Record<string, unknown>> = [];
+  for (const testCase of plan.testCases as Record<string, unknown>[]) {
+    try {
+      const created = objectFrom(await azure.createWorkItem({ organization, project, type: "Test Case", patch: Array.isArray(testCase.patchPreview) ? testCase.patchPreview : [] }));
+      results.push({ title: testCase.title, sourceRequirementId: testCase.sourceRequirementId, success: true, createdId: created.id });
+    } catch (error) {
+      results.push({ title: testCase.title, sourceRequirementId: testCase.sourceRequirementId, success: false, error: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  return { title: "Test Case Apply Results", generatedAt: new Date().toISOString(), writePerformed: true, summary: `${results.filter((entry) => entry.success).length} Test Case(s) created.`, metrics: { requested: results.length, succeeded: results.filter((entry) => entry.success).length }, results };
+}
+
+function confidenceFor(item: { description: string; acceptanceCriteria: string; assignedTo: string }): number {
+  return Math.min(95, 35 + (item.description.length >= 80 ? 25 : 0) + (item.acceptanceCriteria.length >= 40 ? 25 : 0) + (item.assignedTo ? 10 : 0));
+}
+
+function requiredString(value: unknown, name: string): string {
+  if (typeof value !== "string" || !value.trim()) throw new Error(`${name} is required.`);
+  return value.trim();
+}

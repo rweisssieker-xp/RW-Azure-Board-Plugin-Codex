@@ -3,16 +3,24 @@ import { AzureDevOpsClient, toSummary } from "./azureDevOps.js";
 import { planApprovedActions, summarizeApplyResults } from "./applyWorkflow.js";
 import { attachmentEvidenceSummary, bulkClosePreview, businessValueEstimate, closeCandidates, parentChildCleanup, wsjfConsistencyCheck } from "./bulkGovernance.js";
 import { deliverySystemCorrelation } from "./correlationAnalytics.js";
+import { autonomousGovernanceAgent, decisionCourt, decisionMemory, recommendationQualityScore, requirementContractLifecycle, scenarioWarRoom, valueInflationDetector } from "./decisionAssurance.js";
 import { cioRequirementRiskView, evidenceFirstRequirementReview, requirementDecisionCockpit } from "./decisionEngine.js";
 import { auditDecisionLog, boardHygieneAutomationPreview, closureGovernanceLedger, evidencePackCompleteness } from "./evidenceLedger.js";
-import { aiExceptionRegister, autonomousBoardAuditor, benefitRealizationFollowup, cleanupCampaignManager, decisionMeetingCopilot, dependencyBlockerGraph, financialBacklogLedger, migrationCutoverReadiness, processOwnerControlTower, requirementConfidenceScore, requirementRewriteStudio } from "./governanceOperatingSystem.js";
+import { adoptionCockpit, businessDigitalTwin, enterpriseRiskHeatmap, eventLogProcessMining, externalEvidenceImport, modelRiskGovernance, policyStudio, promptEvalSuite, roiConfidenceWorkflow, stakeholderInfluenceMap } from "./enterpriseValueTrust.js";
+import { adoptionExperimentDesigner, autonomousFollowupScheduler, connectorReadinessAudit, customerValueCaseBuilder, evidenceIngestionPipeline, licensePackagingAdvisor, marketplaceSubmissionReadiness, orgRolloutReadiness, proprietarySignalCatalog, securityPrivacyReview } from "./productizationMoat.js";
+import { aiExceptionRegister, autonomousBoardAuditor, benefitRealizationFollowup, cleanupCampaignManager, complianceReadinessReview, decisionMeetingCopilot, dependencyBlockerGraph, financialBacklogLedger, handoverPackGenerator, migrationCutoverReadiness, okrAlignmentScorer, operatingRhythmPlanner, portfolioFitnessIndex, processOwnerControlTower, requirementConfidenceScore, requirementRewriteStudio } from "./governanceOperatingSystem.js";
 import { synthesizeReport } from "./llmSynthesis.js";
 import { createWatchdogSnapshot, deleteNamedArtifact, listNamedArtifacts, loadNamedArtifact, saveNamedArtifact } from "./localStore.js";
 import { authEnvironmentCheck, packageHealthCheck } from "./packageHealth.js";
+import { deletePrompt, getAdminConfig, listPrompts, runPrompt, savePrompt, validateAdminConfig } from "./promptAdmin.js";
 import { validatePolicyPack } from "./policyPack.js";
+import { convertRequirement, elicitRequirements, requirementGapAnalysis, transformWorkItemText } from "./requirementsWorkbench.js";
 import { benefitRealizationTracking, costAvoidanceByClosure, erpDomainImpactScoring, portfolioRationalization } from "./portfolioEngine.js";
 import { safeErrorMessage } from "./security.js";
 import { aiBusinessCaseGenerator, aiSteeringCommitteePack, automatedBoardDueDiligenceReport, changePortfolioSimulator, decisionTraceabilityGraph, erpProcessCriticalityModel, outcomeRealizationCockpit, policyAsCodeEvaluation, requirementInvestDivestMatrix, valueLeakageDetector } from "./steeringEngine.js";
+import { applyTestCasePlan, generateRegressionSuite, generateTestCases, generateUatSuite } from "./testFactory.js";
+import { applyTraceabilityPlan, defectTraceability, requirementTestTraceability, testCoverageAnalysis } from "./traceabilityEngine.js";
+import { generateDiagram, generateMockup, generateSopDocument } from "./visualDocumentFactory.js";
 import { auditEvidencePack, bottleneckMining, actionPlan, briefExport, capacityForecast, changeImpact, commentIntelligence, costOfDelayRadar, createProcessBaseline, crossTeamBenchmark, decisionDebt, deliveryRiskRadar, findDuplicates, flowMiningFromUpdates, governanceScore, improveWorkItem, milestoneForecast, naturalLanguageToWiql, policyGapDetector, policyPackSummary, processDriftDetection, processRecommendations, processSimulator, projectCockpit, roleBasedReport, rootCausePatterns, scopeCreepDetector, slaAgingMonitor, statusBrief, watchlistReport, workflowConformance } from "./analytics.js";
 const auth = new AzureBoardsAuth();
 const azure = new AzureDevOpsClient(auth);
@@ -27,11 +35,49 @@ const baseQuerySchema = {
     },
     required: ["organization", "project", "wiql"]
 };
+const genericOutputSchema = {
+    type: "object",
+    additionalProperties: true
+};
+const readOnlyAnnotations = {
+    readOnlyHint: true,
+    openWorldHint: false,
+    destructiveHint: false
+};
+const localWriteAnnotations = {
+    readOnlyHint: false,
+    openWorldHint: false,
+    destructiveHint: false
+};
+const azureWriteAnnotations = {
+    readOnlyHint: false,
+    openWorldHint: true,
+    destructiveHint: false
+};
+const destructiveLocalWriteAnnotations = {
+    readOnlyHint: false,
+    openWorldHint: false,
+    destructiveHint: true
+};
+const destructiveAzureWriteAnnotations = {
+    readOnlyHint: false,
+    openWorldHint: true,
+    destructiveHint: true
+};
+function toolDescriptor(tool) {
+    const { handler: _handler, ...descriptor } = tool;
+    return {
+        ...descriptor,
+        annotations: descriptor.annotations ?? readOnlyAnnotations,
+        outputSchema: descriptor.outputSchema ?? genericOutputSchema
+    };
+}
 const tools = [
     {
         name: "azure_boards_login",
         description: "Start individual Microsoft Entra device-code login for Azure Boards.",
         inputSchema: { type: "object", properties: {} },
+        annotations: localWriteAnnotations,
         handler: async () => auth.login()
     },
     {
@@ -178,6 +224,7 @@ const tools = [
             },
             required: ["organization", "project", "type", "patch"]
         },
+        annotations: azureWriteAnnotations,
         handler: async (args) => azure.createWorkItem(args)
     },
     {
@@ -200,6 +247,7 @@ const tools = [
             },
             required: ["organization", "project", "id"]
         },
+        annotations: azureWriteAnnotations,
         handler: async (args) => azure.updateWorkItem(args)
     },
     {
@@ -210,6 +258,7 @@ const tools = [
             properties: { organization: { type: "string" }, project: { type: "string" }, id: { type: "number" }, text: { type: "string" } },
             required: ["organization", "project", "id", "text"]
         },
+        annotations: azureWriteAnnotations,
         handler: async (args) => azure.addComment(args)
     },
     aiTool("azure_boards_ai_delivery_risk_radar", "Score delivery risks from Work Items.", deliveryRiskRadar),
@@ -415,7 +464,7 @@ const tools = [
     },
     {
         name: "azure_boards_ai_business_value_estimate",
-        description: "Estimate annual Euro benefit ranges from Description, WSJF, state, priority, and business signals. Does not write.",
+        description: "Estimate annual EUR-denominated benefit ranges from Description, WSJF, state, priority, and business signals. Does not write.",
         inputSchema: { type: "object", properties: { workItems: { type: "array" } }, required: ["workItems"] },
         handler: (args) => businessValueEstimate(readRawItems(args))
     },
@@ -459,6 +508,7 @@ const tools = [
             },
             required: ["organization", "project", "preview", "approved", "confirmPhrase"]
         },
+        annotations: destructiveAzureWriteAnnotations,
         handler: (args) => applyBulkClosePlan(args)
     },
     {
@@ -752,6 +802,328 @@ const tools = [
         handler: (args) => benefitRealizationFollowup(readRawItems(args), objectArg(args.options))
     },
     {
+        name: "azure_boards_ai_operating_rhythm_planner",
+        description: "Plan daily, weekly, monthly, and quarterly governance cadences from board evidence. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => operatingRhythmPlanner(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_okr_alignment_scorer",
+        description: "Score Work Items against strategic objectives or OKRs and flag unaligned work. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => okrAlignmentScorer(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_compliance_readiness_review",
+        description: "Review regulatory, audit, security, or compliance work for owner, acceptance, evidence, and exception controls. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, policy: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => complianceReadinessReview(readRawItems(args), objectArg(args.policy))
+    },
+    {
+        name: "azure_boards_ai_handover_pack_generator",
+        description: "Generate a board-evidence handover pack for Process Owners, Project Leads, or incoming owners. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => handoverPackGenerator(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_portfolio_fitness_index",
+        description: "Compute a portfolio fitness score from stale work, owner gaps, weak requirements, benefit, and estimated cost. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => portfolioFitnessIndex(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_elicit_requirements",
+        description: "Elicit Requirement drafts from keywords, notes, meetings, and file context. Does not write.",
+        inputSchema: { type: "object", properties: { keywords: { type: "array" }, notes: { type: "array" }, files: { type: "array" }, meetings: { type: "array" } } },
+        handler: (args) => elicitRequirements(args)
+    },
+    {
+        name: "azure_boards_ai_requirement_gap_analysis",
+        description: "Analyze Requirements for missing owner, evidence, acceptance criteria, and business value. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => requirementGapAnalysis(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"))
+    },
+    {
+        name: "azure_boards_ai_transform_work_item_text",
+        description: "Preview summarize, elaborate, paraphrase, or translate transformations for Work Item text. Does not write.",
+        inputSchema: { type: "object", properties: { title: { type: "string" }, text: { type: "string" }, description: { type: "string" }, operation: { type: "string" }, language: { type: "string" } } },
+        handler: (args) => transformWorkItemText(args)
+    },
+    {
+        name: "azure_boards_ai_convert_requirement",
+        description: "Convert a Requirement into Gherkin, Use Case, User Story, or Test Case draft. Does not write.",
+        inputSchema: { type: "object", properties: { workItem: { type: "object" }, target: { type: "string" } } },
+        handler: (args) => convertRequirement(args)
+    },
+    {
+        name: "azure_boards_ai_generate_test_cases",
+        description: "Generate Azure Test Case previews with steps, expected results, assumptions, confidence, and patch previews. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => generateTestCases(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_generate_uat_suite",
+        description: "Generate UAT scripts from Requirements and business evidence. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => generateUatSuite(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_generate_regression_suite",
+        description: "Generate regression suite candidates from Requirement risk and process signals. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => generateRegressionSuite(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_requirement_test_traceability",
+        description: "Preview Requirement to Test Case traceability links. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, testCases: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => requirementTestTraceability(readRawItems(args), recordArrayArg(args.testCases || [], "testCases"))
+    },
+    {
+        name: "azure_boards_ai_test_coverage_analysis",
+        description: "Analyze missing, stale, or duplicate test coverage for Requirements. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, testCases: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => testCoverageAnalysis(readRawItems(args), recordArrayArg(args.testCases || [], "testCases"))
+    },
+    {
+        name: "azure_boards_ai_defect_traceability",
+        description: "Analyze Defect to Requirement to Test Result traceability chains. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, defects: { type: "array" }, testResults: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => defectTraceability(readRawItems(args), recordArrayArg(args.defects || [], "defects"), recordArrayArg(args.testResults || [], "testResults"))
+    },
+    {
+        name: "azure_boards_ai_generate_mockup",
+        description: "Generate a local mockup preview from Work Item text or file context. Does not write.",
+        inputSchema: { type: "object", properties: { workItem: { type: "object" }, title: { type: "string" }, description: { type: "string" }, prompt: { type: "string" } } },
+        handler: (args) => generateMockup(args)
+    },
+    {
+        name: "azure_boards_ai_generate_diagram",
+        description: "Generate Mermaid or PlantUML diagram text from Work Item context. Does not write.",
+        inputSchema: { type: "object", properties: { workItem: { type: "object" }, title: { type: "string" }, description: { type: "string" }, prompt: { type: "string" }, format: { type: "string" } } },
+        handler: (args) => generateDiagram(args)
+    },
+    {
+        name: "azure_boards_ai_generate_sop_document",
+        description: "Generate a SOP document draft from Work Items and optional file context. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, workItem: { type: "object" }, files: { type: "array" } } },
+        handler: (args) => generateSopDocument(args)
+    },
+    {
+        name: "azure_boards_prompt_save",
+        description: "Save a local dynamic prompt artifact. Does not call Azure DevOps.",
+        inputSchema: { type: "object", properties: { name: { type: "string" }, description: { type: "string" }, inputSchema: { type: "object" }, prompt: { type: "string" }, allowedToolCategories: { type: "array" } }, required: ["name", "prompt"] },
+        annotations: localWriteAnnotations,
+        handler: (args) => savePrompt(args)
+    },
+    {
+        name: "azure_boards_prompt_list",
+        description: "List local dynamic prompt artifacts.",
+        inputSchema: { type: "object", properties: {} },
+        handler: () => listPrompts()
+    },
+    {
+        name: "azure_boards_prompt_run",
+        description: "Render a saved dynamic prompt locally without executing tools.",
+        inputSchema: { type: "object", properties: { name: { type: "string" }, variables: { type: "object" } }, required: ["name"] },
+        handler: (args) => runPrompt(args)
+    },
+    {
+        name: "azure_boards_prompt_delete",
+        description: "Delete a local dynamic prompt artifact.",
+        inputSchema: { type: "object", properties: { name: { type: "string" } }, required: ["name"] },
+        annotations: destructiveLocalWriteAnnotations,
+        handler: (args) => deletePrompt(args)
+    },
+    {
+        name: "azure_boards_admin_get_config",
+        description: "Return the local default admin configuration without secrets.",
+        inputSchema: { type: "object", properties: {} },
+        handler: () => getAdminConfig()
+    },
+    {
+        name: "azure_boards_admin_validate_config",
+        description: "Validate admin model routing, BYOD, private LLM, and prompt configuration without storing secrets.",
+        inputSchema: { type: "object", properties: { config: { type: "object" } } },
+        handler: (args) => validateAdminConfig(args)
+    },
+    {
+        name: "azure_boards_apply_test_case_plan",
+        description: "Apply an explicitly approved Test Case plan by creating Azure Boards Test Case Work Items.",
+        inputSchema: { type: "object", properties: { organization: { type: "string" }, project: { type: "string" }, plan: { type: "object" }, approved: { type: "boolean" }, confirmPhrase: { type: "string" } }, required: ["organization", "project", "plan", "approved", "confirmPhrase"] },
+        annotations: azureWriteAnnotations,
+        handler: (args) => applyTestCasePlan(args, azure)
+    },
+    {
+        name: "azure_boards_apply_traceability_plan",
+        description: "Apply an explicitly approved Requirement to Test Case traceability link plan.",
+        inputSchema: { type: "object", properties: { organization: { type: "string" }, project: { type: "string" }, plan: { type: "object" }, approved: { type: "boolean" }, confirmPhrase: { type: "string" } }, required: ["organization", "project", "plan", "approved", "confirmPhrase"] },
+        annotations: azureWriteAnnotations,
+        handler: (args) => applyTraceabilityPlan(args, azure)
+    },
+    {
+        name: "azure_boards_ai_decision_memory",
+        description: "Assemble an audit-ready memory of decisions, rationale, owners, and later outcomes. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, decisions: { type: "array" }, outcomes: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => decisionMemory(readRawItems(args), recordArrayArg(args.decisions || [], "decisions"), recordArrayArg(args.outcomes || [], "outcomes"))
+    },
+    {
+        name: "azure_boards_ai_recommendation_quality_score",
+        description: "Score previous recommendations against supplied outcomes and learning signals. Does not write.",
+        inputSchema: { type: "object", properties: { recommendations: { type: "array" }, outcomes: { type: "array" } } },
+        handler: (args) => recommendationQualityScore(recordArrayArg(args.recommendations || [], "recommendations"), recordArrayArg(args.outcomes || [], "outcomes"))
+    },
+    {
+        name: "azure_boards_ai_value_inflation_detector",
+        description: "Detect inflated Business Value, WSJF, or Cost-of-Delay claims with weak evidence. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => valueInflationDetector(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_decision_court",
+        description: "Prepare pro, contra, missing facts, confidence, and verdict for Close/Keep/Build recommendations. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, recommendations: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => decisionCourt(readRawItems(args), recordArrayArg(args.recommendations || [], "recommendations"))
+    },
+    {
+        name: "azure_boards_ai_requirement_contract_lifecycle",
+        description: "Generate measurable requirement outcome contracts with metric, baseline, target, owner, review cadence, and patch preview. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => requirementContractLifecycle(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_scenario_war_room",
+        description: "Simulate management scenarios such as budget cuts, fixed go-live, compliance priority, and scope pressure. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, scenarios: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => scenarioWarRoom(readRawItems(args), recordArrayArg(args.scenarios || [], "scenarios"))
+    },
+    {
+        name: "azure_boards_ai_autonomous_governance_agent",
+        description: "Prepare recurring governance watchlists, meeting agendas, and action previews without applying writes.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => autonomousGovernanceAgent(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_business_digital_twin",
+        description: "Map Work Items to external business KPI evidence and impact confidence. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => businessDigitalTwin(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_external_evidence_import",
+        description: "Normalize CSV, ERP, support, finance, incident, or KPI evidence records for board decisions. Does not write.",
+        inputSchema: { type: "object", properties: { records: { type: "array" }, options: { type: "object" } } },
+        handler: (args) => externalEvidenceImport(recordArrayArg(args.records || [], "records"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_event_log_process_mining",
+        description: "Mine imported event logs for process transitions and bottlenecks outside Azure Boards. Does not write.",
+        inputSchema: { type: "object", properties: { events: { type: "array" }, options: { type: "object" } } },
+        handler: (args) => eventLogProcessMining(recordArrayArg(args.events || [], "events"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_stakeholder_influence_map",
+        description: "Map stakeholders, owners, blockers, beneficiaries, and influence edges for Work Items. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, stakeholders: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => stakeholderInfluenceMap(readRawItems(args), recordArrayArg(args.stakeholders || [], "stakeholders"))
+    },
+    {
+        name: "azure_boards_ai_roi_confidence_workflow",
+        description: "Classify ROI maturity from rough estimate through evidence-backed, finance-reviewed, and realized. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, financeEvidence: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => roiConfidenceWorkflow(readRawItems(args), recordArrayArg(args.financeEvidence || [], "financeEvidence"))
+    },
+    {
+        name: "azure_boards_ai_enterprise_risk_heatmap",
+        description: "Aggregate delivery, compliance, finance, test, and ownership risks into an enterprise heatmap. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, signals: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => enterpriseRiskHeatmap(readRawItems(args), recordArrayArg(args.signals || [], "signals"))
+    },
+    {
+        name: "azure_boards_ai_policy_studio",
+        description: "Draft and simulate governance policies before adding them to policy packs. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, policy: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => policyStudio(readRawItems(args), objectArg(args.policy))
+    },
+    {
+        name: "azure_boards_ai_prompt_eval_suite",
+        description: "Evaluate saved or supplied prompts against no-write, stability, and assumption expectations. Does not write.",
+        inputSchema: { type: "object", properties: { prompts: { type: "array" }, cases: { type: "array" } } },
+        handler: (args) => promptEvalSuite(recordArrayArg(args.prompts || [], "prompts"), recordArrayArg(args.cases || [], "cases"))
+    },
+    {
+        name: "azure_boards_ai_model_risk_governance",
+        description: "Evaluate model routing, data classes, and private/public LLM risk. Does not write.",
+        inputSchema: { type: "object", properties: { config: { type: "object" }, dataClasses: { type: "array" } } },
+        handler: (args) => modelRiskGovernance(objectArg(args.config), recordArrayArg(args.dataClasses || [], "dataClasses"))
+    },
+    {
+        name: "azure_boards_ai_adoption_cockpit",
+        description: "Assess team adoption, active users, prompt usage, and approved preview usage. Does not write.",
+        inputSchema: { type: "object", properties: { usage: { type: "array" }, workItems: { type: "array" } } },
+        handler: (args) => adoptionCockpit(recordArrayArg(args.usage || [], "usage"), Array.isArray(args.workItems) ? readRawItems(args) : [])
+    },
+    {
+        name: "azure_boards_ai_connector_readiness_audit",
+        description: "Assess enterprise connector readiness for Azure Test Plans, Power BI/Fabric, ERP, Teams, SharePoint, monitoring, and related integrations. Does not write.",
+        inputSchema: { type: "object", properties: { connectors: { type: "array" }, options: { type: "object" } } },
+        handler: (args) => connectorReadinessAudit(recordArrayArg(args.connectors || [], "connectors"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_evidence_ingestion_pipeline",
+        description: "Normalize uploaded or external evidence metadata into linkable, non-persisted decision context. Does not write.",
+        inputSchema: { type: "object", properties: { records: { type: "array" }, options: { type: "object" } } },
+        handler: (args) => evidenceIngestionPipeline(recordArrayArg(args.records || [], "records"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_security_privacy_review",
+        description: "Review enterprise security, privacy, tenant isolation, RBAC, audit-log, retention, and redaction readiness. Does not write.",
+        inputSchema: { type: "object", properties: { config: { type: "object" }, dataFlows: { type: "array" } } },
+        handler: (args) => securityPrivacyReview(objectArg(args.config), recordArrayArg(args.dataFlows || [], "dataFlows"))
+    },
+    {
+        name: "azure_boards_ai_marketplace_submission_readiness",
+        description: "Check Marketplace/App Directory readiness including privacy, terms, support, screenshots, hosted MCP, annotations, and extension package evidence. Does not write.",
+        inputSchema: { type: "object", properties: { submission: { type: "object" }, assets: { type: "array" } } },
+        handler: (args) => marketplaceSubmissionReadiness(objectArg(args.submission), recordArrayArg(args.assets || [], "assets"))
+    },
+    {
+        name: "azure_boards_ai_org_rollout_readiness",
+        description: "Score organization rollout readiness across sponsor, admin consent, pilot scope, support owner, training, and team readiness. Does not write.",
+        inputSchema: { type: "object", properties: { orgConfig: { type: "object" }, teams: { type: "array" } } },
+        handler: (args) => orgRolloutReadiness(objectArg(args.orgConfig), recordArrayArg(args.teams || [], "teams"))
+    },
+    {
+        name: "azure_boards_ai_license_packaging_advisor",
+        description: "Recommend commercial edition packaging and feature gates from usage, approval, and governance signals. Does not write.",
+        inputSchema: { type: "object", properties: { usage: { type: "array" }, options: { type: "object" } } },
+        handler: (args) => licensePackagingAdvisor(recordArrayArg(args.usage || [], "usage"), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_customer_value_case_builder",
+        description: "Draft customer value cases and annual value assumptions from Work Items and linked evidence. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => customerValueCaseBuilder(readRawItems(args), recordArrayArg(args.evidence || [], "evidence"))
+    },
+    {
+        name: "azure_boards_ai_proprietary_signal_catalog",
+        description: "Catalog data-moat signals such as labeled requirement quality, value mismatch, closure evidence, feedback labels, and connector-specific patterns. Does not write.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, feedback: { type: "array" }, evidence: { type: "array" } }, required: ["workItems"] },
+        handler: (args) => proprietarySignalCatalog(readRawItems(args), recordArrayArg(args.feedback || [], "feedback"), recordArrayArg(args.evidence || [], "evidence"))
+    },
+    {
+        name: "azure_boards_ai_autonomous_followup_scheduler",
+        description: "Prepare no-write follow-up recommendations for stale, risky, unowned, or decision-heavy Work Items. Does not schedule or send.",
+        inputSchema: { type: "object", properties: { workItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+        handler: (args) => autonomousFollowupScheduler(readRawItems(args), objectArg(args.options))
+    },
+    {
+        name: "azure_boards_ai_adoption_experiment_designer",
+        description: "Design measured adoption experiments with hypotheses, baselines, metrics, duration, and guardrails. Does not write.",
+        inputSchema: { type: "object", properties: { usage: { type: "array" }, teams: { type: "array" }, options: { type: "object" } } },
+        handler: (args) => adoptionExperimentDesigner(recordArrayArg(args.usage || [], "usage"), recordArrayArg(args.teams || [], "teams"), objectArg(args.options))
+    },
+    {
         name: "azure_boards_store_save",
         description: "Save a JSON artifact to the user-local Azure Boards store.",
         inputSchema: {
@@ -759,6 +1131,7 @@ const tools = [
             properties: { kind: { type: "string" }, name: { type: "string" }, data: { type: "object" } },
             required: ["kind", "name", "data"]
         },
+        annotations: localWriteAnnotations,
         handler: (args) => saveNamedArtifact(requiredString(args.kind, "kind"), requiredString(args.name, "name"), args.data)
     },
     {
@@ -789,6 +1162,7 @@ const tools = [
             properties: { kind: { type: "string" }, name: { type: "string" } },
             required: ["kind", "name"]
         },
+        annotations: destructiveLocalWriteAnnotations,
         handler: (args) => deleteNamedArtifact(requiredString(args.kind, "kind"), requiredString(args.name, "name"))
     },
     {
@@ -799,6 +1173,7 @@ const tools = [
             properties: { name: { type: "string" }, report: { type: "object" } },
             required: ["name", "report"]
         },
+        annotations: localWriteAnnotations,
         handler: (args) => createWatchdogSnapshot(requiredString(args.name, "name"), objectArg(args.report))
     },
     {
@@ -1047,7 +1422,7 @@ async function handle(request) {
                 jsonrpc: "2.0",
                 id,
                 result: {
-                    tools: tools.map(({ name, description, inputSchema }) => ({ name, description, inputSchema }))
+                    tools: tools.map(toolDescriptor)
                 }
             };
         }
@@ -1062,6 +1437,7 @@ async function handle(request) {
                 jsonrpc: "2.0",
                 id,
                 result: {
+                    structuredContent: result,
                     content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
                 }
             };

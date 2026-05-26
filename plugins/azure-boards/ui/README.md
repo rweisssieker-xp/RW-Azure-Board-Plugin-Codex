@@ -1,4 +1,4 @@
-# Azure Boards AI Cockpit UI
+# Azure Boards Review Cockpit UI
 
 Static, local review UI for the Azure Boards plugin.
 
@@ -10,6 +10,8 @@ Open `index.html` directly in a browser. The page runs entirely in the browser:
 - no network calls from `app.js`
 
 The UI supports sample data, pasted JSON, local JSON upload, report previews, Markdown preview, and local JSON/Markdown downloads. It is intended for reviewing plugin report payloads before invoking MCP tools such as bulk-close preview/apply workflows.
+
+Included report previews cover delivery risk, requirement decision support, portfolio rationalization, evidence ledgers, steering packs, bulk-close previews, migration cutover readiness, financial backlog ledgers, requirement confidence scoring, requirement rewrite previews, exception registers, operating rhythm planning, OKR alignment, compliance readiness, handover packs, and portfolio fitness.
 
 Expected JSON shape:
 

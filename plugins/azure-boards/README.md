@@ -2,6 +2,24 @@
 
 Repo-local Codex plugin for Azure Boards with individual Microsoft Entra login or token access, Work Item operations, and explainable AI tools for delivery and process management.
 
+## OpenAI App Directory Submission Readiness
+
+Current submission metadata is intentionally marked with `TODO_SUBMISSION_*` placeholders where owned production values are not yet known. Before App Directory submission, replace these with real, owned values:
+
+- `TODO_SUBMISSION_SUPPORT_EMAIL`: monitored support contact for the app publisher.
+- `TODO_SUBMISSION_DEVELOPER_URL` and `TODO_SUBMISSION_WEBSITE_URL`: owned publisher or product pages, not Microsoft Learn or local development URLs.
+- `TODO_SUBMISSION_REPOSITORY_URL`: owned source or support repository if the submission requires one.
+- `TODO_SUBMISSION_PRIVACY_POLICY_URL`: owned privacy policy that explains Azure DevOps data access, authentication data handling, local token-cache behavior, optional OpenAI report synthesis, local artifact storage, and support contact handling.
+- `TODO_SUBMISSION_TERMS_OF_SERVICE_URL`: owned terms that cover user responsibilities for Azure DevOps access, write approvals, and generated decision-support output.
+
+Review notes for OpenAI App Directory readiness:
+
+- The MCP server must be deployed at a reachable production endpoint before submission; local stdio-only usage is not sufficient for a hosted app review.
+- Microsoft Entra OAuth requires a production app registration with approved Azure DevOps delegated permissions, redirect/device-flow configuration as applicable, and publisher-owned support documentation.
+- PAT and bearer-token modes are useful for local development and controlled automation, but the App Directory review path should prefer individual Microsoft Entra login and should not ask users to paste secrets into ChatGPT.
+- Tool descriptors currently need explicit Apps SDK annotations (`readOnlyHint`, `openWorldHint`, and `destructiveHint`) and output schemas before final submission. Representative review metadata is captured in `chatgpt-app-submission.json`, but server descriptors should be updated by the implementation owner.
+- Screenshots and final app listing copy should show the real app experience, safe write-preview workflow, and authentication state without exposing organization names, Work Item data, tokens, or private board content.
+
 ## Setup
 
 ### Option A: Microsoft Entra OAuth
@@ -109,6 +127,15 @@ The Azure Boards plugin is intended to go beyond basic Work Item lookup. The doc
 - **ERP process criticality model**: `azure_boards_ai_erp_process_criticality_model` maps work to Finance Closing, Order-to-Cash, Procure-to-Pay, Manufacturing, Warehouse, Master Data, Regulatory, and Integration Backbone.
 - **Board due diligence and steering packs**: `azure_boards_ai_board_due_diligence_report`, `azure_boards_ai_requirement_invest_divest_matrix`, `azure_boards_ai_change_portfolio_simulator`, and `azure_boards_ai_steering_committee_pack` prepare CIO/steering committee decision material without writing.
 - **Policy-as-code evaluation**: `azure_boards_ai_policy_as_code_evaluation` evaluates versionable controls for required tags, fields, owner, stale age, and evidence.
+- **Governance Operating System**: `azure_boards_ai_autonomous_board_auditor`, `azure_boards_ai_requirement_rewrite_studio`, `azure_boards_ai_decision_meeting_copilot`, `azure_boards_ai_cleanup_campaign_manager`, `azure_boards_ai_financial_backlog_ledger`, `azure_boards_ai_requirement_confidence_score`, `azure_boards_ai_dependency_blocker_graph`, `azure_boards_ai_process_owner_control_tower`, `azure_boards_ai_migration_cutover_readiness`, `azure_boards_ai_exception_register`, `azure_boards_ai_benefit_realization_followup`, `azure_boards_ai_operating_rhythm_planner`, `azure_boards_ai_okr_alignment_scorer`, `azure_boards_ai_compliance_readiness_review`, `azure_boards_ai_handover_pack_generator`, and `azure_boards_ai_portfolio_fitness_index` extend the plugin into audit automation, decision meetings, cleanup campaigns, ERP cutover readiness, exception handling, handovers, operating cadence, strategic alignment, compliance readiness, and financial backlog governance.
+- **Copilot4DevOps gap closure**: `azure_boards_ai_elicit_requirements`, `azure_boards_ai_requirement_gap_analysis`, `azure_boards_ai_transform_work_item_text`, `azure_boards_ai_convert_requirement`, `azure_boards_ai_generate_test_cases`, `azure_boards_ai_generate_uat_suite`, `azure_boards_ai_generate_regression_suite`, `azure_boards_ai_requirement_test_traceability`, `azure_boards_ai_test_coverage_analysis`, `azure_boards_ai_defect_traceability`, `azure_boards_ai_generate_mockup`, `azure_boards_ai_generate_diagram`, `azure_boards_ai_generate_sop_document`, prompt tools, admin validation, and approved test/traceability apply tools add elicitation, conversion, testing, traceability, visuals, documents, dynamic prompts, admin controls, and native Azure DevOps extension readiness.
+- **Decision assurance and autonomous governance**: `azure_boards_ai_decision_memory`, `azure_boards_ai_recommendation_quality_score`, `azure_boards_ai_value_inflation_detector`, `azure_boards_ai_decision_court`, `azure_boards_ai_requirement_contract_lifecycle`, `azure_boards_ai_scenario_war_room`, and `azure_boards_ai_autonomous_governance_agent` add auditable decision memory, recommendation learning, value-inflation checks, pro/contra decision courts, measurable outcome contracts, management scenario simulation, and recurring governance watchlists.
+- **Enterprise Value & Trust Layer**: `azure_boards_ai_business_digital_twin`, `azure_boards_ai_external_evidence_import`, `azure_boards_ai_event_log_process_mining`, `azure_boards_ai_stakeholder_influence_map`, `azure_boards_ai_roi_confidence_workflow`, `azure_boards_ai_enterprise_risk_heatmap`, `azure_boards_ai_policy_studio`, `azure_boards_ai_prompt_eval_suite`, `azure_boards_ai_model_risk_governance`, and `azure_boards_ai_adoption_cockpit` add Board-to-business KPI correlation, external evidence normalization, event-log process mining, stakeholder influence, ROI maturity, enterprise risk, policy simulation, prompt evaluation, model-risk governance, and team adoption analytics.
+- **Enterprise Productization & Data Moat Layer**: `azure_boards_ai_connector_readiness_audit`, `azure_boards_ai_evidence_ingestion_pipeline`, `azure_boards_ai_security_privacy_review`, `azure_boards_ai_marketplace_submission_readiness`, `azure_boards_ai_org_rollout_readiness`, `azure_boards_ai_license_packaging_advisor`, `azure_boards_ai_customer_value_case_builder`, `azure_boards_ai_proprietary_signal_catalog`, `azure_boards_ai_autonomous_followup_scheduler`, and `azure_boards_ai_adoption_experiment_designer` prepare hosted enterprise rollout, connector onboarding, safe evidence ingestion, marketplace packaging, pricing tiers, customer value cases, proprietary signal catalogs, follow-up cadences, and adoption experiments without writing to Azure Boards.
+
+## Native Azure DevOps Extension Preview
+
+The `azure-devops-extension/` folder contains a local-first Azure DevOps extension skeleton with Work Item and admin panels. It is intended for productization and marketplace packaging work. The panels accept a configurable MCP backend URL, do not store secrets or attachment content in browser storage, and keep all write paths behind MCP preview/apply tools.
 
 ## Policy Packs
 

@@ -1,0 +1,15 @@
+{
+  "data": {
+    "allowedToolCategories": [
+      "read-only-analysis"
+    ],
+    "createdAt": "2026-05-26T04:19:26.720Z",
+    "description": "",
+    "inputSchema": {},
+    "name": "status",
+    "prompt": "Summarize {{topic}}"
+  },
+  "kind": "prompt",
+  "name": "status",
+  "savedAt": "2026-05-26T04:19:26.721Z"
+}

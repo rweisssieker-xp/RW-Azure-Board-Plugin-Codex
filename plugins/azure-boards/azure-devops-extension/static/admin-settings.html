@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Boards Assistant Settings</title>
+    <link rel="stylesheet" href="extension.css">
+  </head>
+  <body>
+    <main class="panel">
+      <header>
+        <h1>Assistant Settings</h1>
+        <p>Configure backend routing, prompt governance, model ranking labels, and private endpoint references without storing secrets.</p>
+      </header>
+      <form>
+        <label for="backendUrl">MCP backend URL</label>
+        <input id="backendUrl" name="backendUrl" type="url" placeholder="https://localhost.example/mcp">
+        <label for="modelRanking">Model ranking labels</label>
+        <textarea id="modelRanking" name="modelRanking" rows="4" placeholder="deterministic-local"></textarea>
+        <label><input type="checkbox" name="centralPrompts"> Enable central prompts</label>
+      </form>
+    </main>
+  </body>
+</html>

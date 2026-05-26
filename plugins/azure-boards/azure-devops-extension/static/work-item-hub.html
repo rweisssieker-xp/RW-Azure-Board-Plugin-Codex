@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Boards Assistant Hub</title>
+    <link rel="stylesheet" href="extension.css">
+  </head>
+  <body>
+    <main class="panel">
+      <header>
+        <h1>Boards Assistant</h1>
+        <p>Preview elicitation, conversion, tests, traceability, visuals, and governance actions before approved apply flows.</p>
+      </header>
+      <section class="grid" aria-label="Assistant actions">
+        <button type="button">Elicit requirements</button>
+        <button type="button">Analyze gaps</button>
+        <button type="button">Convert work item</button>
+        <button type="button">Generate tests</button>
+        <button type="button">Trace coverage</button>
+        <button type="button">Generate mockup</button>
+      </section>
+      <section>
+        <label for="backendUrl">MCP backend URL</label>
+        <input id="backendUrl" name="backendUrl" type="url" placeholder="https://localhost.example/mcp">
+        <p>No secrets, credentials, or attachment contents are stored in browser storage by this panel.</p>
+      </section>
+    </main>
+  </body>
+</html>

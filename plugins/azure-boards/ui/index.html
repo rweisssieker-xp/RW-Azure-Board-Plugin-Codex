@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Azure Boards AI Cockpit</title>
+    <title>Azure Boards Review Cockpit</title>
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
@@ -14,7 +14,7 @@
         <img src="../assets/azure-boards-small.svg" alt="" class="brand-mark" width="40" height="40">
         <div>
           <p class="eyebrow">Local review workspace</p>
-          <h1>Azure Boards AI Cockpit</h1>
+          <h1>Azure Boards Review Cockpit</h1>
         </div>
       </div>
       <div class="header-status" aria-label="Workspace status">
@@ -29,6 +29,13 @@
       <button class="tab tab-button" type="button" data-tab="reports">Requirements</button>
       <button class="tab tab-button" type="button" data-tab="portfolio">Portfolio</button>
       <button class="tab tab-button" type="button" data-tab="governance">Governance</button>
+      <button class="tab tab-button" type="button" data-tab="elicitation">Elicitation</button>
+      <button class="tab tab-button" type="button" data-tab="convert">Convert</button>
+      <button class="tab tab-button" type="button" data-tab="tests">Tests</button>
+      <button class="tab tab-button" type="button" data-tab="traceability">Traceability</button>
+      <button class="tab tab-button" type="button" data-tab="visuals">Visuals</button>
+      <button class="tab tab-button" type="button" data-tab="documents">Documents</button>
+      <button class="tab tab-button" type="button" data-tab="prompts">Prompts/Admin</button>
       <button class="tab tab-button" type="button" data-tab="markdown">Steering Pack</button>
       <button class="tab tab-button" type="button" data-tab="bulk">Bulk Close Preview</button>
     </nav>
@@ -160,6 +167,34 @@
             <p>Select Evidence Ledger to inspect closure evidence, missing signals, and governance status.</p>
           </div>
         </div>
+      </section>
+
+      <section class="workspace" data-tab-panel="elicitation" hidden aria-label="Elicitation workspace">
+        <div class="report-panel"><div class="panel-heading"><div><p class="eyebrow">Elicitation</p><h2>Requirements workbench</h2></div></div><div class="empty-state"><h3>Local preview</h3><p>Preview elicited requirements and gap analysis from pasted JSON, notes, meetings, and file context.</p></div></div>
+      </section>
+
+      <section class="workspace" data-tab-panel="convert" hidden aria-label="Convert workspace">
+        <div class="report-panel"><div class="panel-heading"><div><p class="eyebrow">Convert</p><h2>Requirement conversion</h2></div></div><div class="empty-state"><h3>Draft formats</h3><p>Preview Gherkin, use cases, user stories, test drafts, and transformed Work Item text.</p></div></div>
+      </section>
+
+      <section class="workspace" data-tab-panel="tests" hidden aria-label="Tests workspace">
+        <div class="report-panel"><div class="panel-heading"><div><p class="eyebrow">Tests</p><h2>Test factory</h2></div></div><div class="empty-state"><h3>Preview only</h3><p>Generate Test Case, UAT, and regression suite previews before any approved apply flow.</p></div></div>
+      </section>
+
+      <section class="workspace" data-tab-panel="traceability" hidden aria-label="Traceability workspace">
+        <div class="report-panel"><div class="panel-heading"><div><p class="eyebrow">Traceability</p><h2>Coverage review</h2></div></div><div class="empty-state"><h3>Link previews</h3><p>Review Requirement, Test Case, Defect, and coverage relationships as local link previews.</p></div></div>
+      </section>
+
+      <section class="workspace" data-tab-panel="visuals" hidden aria-label="Visual workspace">
+        <div class="report-panel"><div class="panel-heading"><div><p class="eyebrow">Visuals</p><h2>Mockups and diagrams</h2></div></div><div class="empty-state"><h3>Versionable previews</h3><p>Generate mockup and diagram artifacts from Work Item context without server-side rendering.</p></div></div>
+      </section>
+
+      <section class="workspace" data-tab-panel="documents" hidden aria-label="Document workspace">
+        <div class="report-panel"><div class="panel-heading"><div><p class="eyebrow">Documents</p><h2>SOP drafts</h2></div></div><div class="empty-state"><h3>Document generator</h3><p>Preview SOP and document drafts from Work Items and uploaded local context.</p></div></div>
+      </section>
+
+      <section class="workspace" data-tab-panel="prompts" hidden aria-label="Prompt and admin workspace">
+        <div class="report-panel"><div class="panel-heading"><div><p class="eyebrow">Prompts/Admin</p><h2>Prompt and model controls</h2></div></div><div class="empty-state"><h3>Local controls</h3><p>Review prompt and admin configuration payloads without storing tokens in the browser.</p></div></div>
       </section>
 
       <section class="workspace" data-tab-panel="markdown" hidden aria-label="Steering pack workspace">

@@ -197,6 +197,105 @@ export function benefitRealizationFollowup(items, options = {}) {
     const findings = followups.map((entry) => finding(Number(entry.id), String(entry.title), Number(entry.expectedBenefit) / 1000, [`expected ${entry.expectedBenefit}`, `realized ${entry.realizedBenefit}`, `closed ${entry.ageSinceClosure} days ago`], "Ask the benefit owner to update realized benefit or re-baseline the case."));
     return { ...report("Benefit Realization Follow-up Bot", findings, `${followups.length} benefit follow-up(s) due after closure.`, { followups: followups.length }), writePerformed: false, followups };
 }
+export function operatingRhythmPlanner(items, options = {}) {
+    const normalized = normalizeItems(items);
+    const staleDays = positive(options.staleDays, 30);
+    const highRisk = normalized.filter((item) => !isClosed(item) && (RISK_WORDS.test(textFor(item)) || priority(item) <= 2));
+    const weakRequirements = normalized.filter((item) => REQUIREMENT_TYPES.has(item.type.toLowerCase()) && confidenceScore(item) < 45);
+    const benefitFollowups = normalized.filter((item) => isClosed(item) && expectedBenefit(item) >= 25_000 && realizedBenefit(item) === 0);
+    const cadence = [
+        { cadence: "daily", meeting: "Delivery risk standup", targetItems: highRisk.slice(0, 10).map((item) => item.id), decision: "Unblock, escalate, or accept risk." },
+        { cadence: "weekly", meeting: "Requirement evidence clinic", targetItems: weakRequirements.slice(0, 15).map((item) => item.id), decision: "Rewrite, park, or close weak Requirements." },
+        { cadence: "biweekly", meeting: "Process owner governance review", targetItems: normalized.filter((item) => !isClosed(item) && daysSince(item.changedDate) > staleDays).slice(0, 20).map((item) => item.id), decision: "Resolve stale work and policy gaps." },
+        { cadence: "monthly", meeting: "Benefit realization review", targetItems: benefitFollowups.slice(0, 20).map((item) => item.id), decision: "Confirm realized value or re-baseline business case." },
+        { cadence: "quarterly", meeting: "Portfolio fitness review", targetItems: normalized.filter((item) => expectedBenefit(item) < implementationCost(item, options) && !isClosed(item)).slice(0, 20).map((item) => item.id), decision: "Divest, bundle, or reprioritize low-fitness work." }
+    ];
+    const findings = cadence
+        .filter((entry) => entry.targetItems.length)
+        .map((entry) => finding(0, String(entry.meeting), Math.min(100, entry.targetItems.length * 12), [`cadence ${entry.cadence}`, `${entry.targetItems.length} target item(s)`], String(entry.decision)));
+    return { ...report("Operating Rhythm Planner", findings, `${cadence.length} governance cadence block(s) prepared.`, { cadenceBlocks: cadence.length, activeBlocks: findings.length }), writePerformed: false, cadence };
+}
+export function okrAlignmentScorer(items, options = {}) {
+    const objectives = arrayOfStrings(options.objectives).length ? arrayOfStrings(options.objectives) : ["finance automation", "customer experience", "regulatory compliance", "integration stability", "operational efficiency"];
+    const alignments = normalizeItems(items).map((item) => {
+        const text = textFor(item);
+        const matched = objectives.filter((objective) => objective.toLowerCase().split(/\s+/).some((word) => word.length > 3 && text.includes(word)));
+        const score = Math.min(100, matched.length * 35 + (expectedBenefit(item) >= 50_000 ? 20 : 0) + (priority(item) <= 2 ? 10 : 0));
+        const status = score >= 70 ? "aligned" : score >= 35 ? "partial" : "unaligned";
+        return { id: item.id, title: item.title, status, alignmentScore: score, objectives: matched, expectedBenefit: Math.round(expectedBenefit(item)) };
+    }).sort((a, b) => Number(a.alignmentScore) - Number(b.alignmentScore));
+    const findings = alignments.filter((entry) => entry.status !== "aligned").map((entry) => finding(Number(entry.id), String(entry.title), 100 - Number(entry.alignmentScore), [`status ${entry.status}`, `objectives ${entry.objectives.join(", ") || "none"}`], "Clarify strategic objective or remove from active portfolio."));
+    return { ...report("OKR Alignment Scorer", findings, `${alignments.length} Work Item(s) scored against ${objectives.length} objective(s).`, { assessedItems: alignments.length, objectives: objectives.length, unaligned: alignments.filter((entry) => entry.status === "unaligned").length }), writePerformed: false, alignments };
+}
+export function complianceReadinessReview(items, policy = {}) {
+    const regulatoryOnly = policy.regulatoryOnly !== false;
+    const candidates = normalizeItems(items).filter((item) => !regulatoryOnly || /regulatory|compliance|audit|gudid|udi|eudamed|security|privacy/i.test(textFor(item)));
+    const controls = candidates.flatMap((item) => [
+        control(item, "owner", Boolean(item.assignedTo), "Missing accountable owner."),
+        control(item, "acceptance", item.acceptanceCriteria.length >= 40, "Missing testable acceptance criteria."),
+        control(item, "evidence", evidenceSignals(item).length > 0, "Missing audit or validation evidence."),
+        control(item, "exception", isClosed(item) || !RISK_WORDS.test(textFor(item)) || DECISION_WORDS.test(item.description), "Open risk has no decision or exception rationale.")
+    ]);
+    const failed = controls.filter((entry) => entry.status === "fail");
+    const findings = failed.map((entry) => finding(Number(entry.id), String(entry.title), 80, [`control ${entry.control}`, String(entry.reason)], "Close the compliance evidence gap or document an explicit exception."));
+    return { ...report("Compliance Readiness Review", findings, `${failed.length} failed control(s) across ${controls.length} compliance checks.`, { controls: controls.length, failedControls: failed.length, assessedItems: candidates.length }), writePerformed: false, controls };
+}
+export function handoverPackGenerator(items, evidence = [], options = {}) {
+    const role = stringFrom(options.role) || "Process Owner";
+    const normalized = normalizeItems(items);
+    const critical = normalized.filter((item) => !isClosed(item) && (priority(item) <= 2 || RISK_WORDS.test(textFor(item)))).slice(0, 10);
+    const decisions = normalized.filter((item) => DECISION_WORDS.test(textFor(item)) || evidenceFor(item, evidence).some((entry) => DECISION_WORDS.test(evidenceText(entry)))).slice(0, 10);
+    const weak = normalized.filter((item) => REQUIREMENT_TYPES.has(item.type.toLowerCase()) && confidenceScore(item) < 45).slice(0, 10);
+    const sections = [
+        { title: "Open critical work", itemIds: critical.map((item) => item.id) },
+        { title: "Recent decisions and exceptions", itemIds: decisions.map((item) => item.id) },
+        { title: "Weak requirements needing clarification", itemIds: weak.map((item) => item.id) }
+    ];
+    const markdown = [
+        `# ${role} Handover Pack`,
+        "",
+        "## Open Critical Work",
+        ...critical.map((item) => `- #${item.id} ${item.title}: ${decisionAsk(item)}`),
+        "",
+        "## Decisions And Exceptions",
+        ...decisions.map((item) => `- #${item.id} ${item.title}: owner ${item.assignedTo || "unassigned"}`),
+        "",
+        "## Weak Requirements",
+        ...weak.map((item) => `- #${item.id} ${item.title}: confidence ${confidenceScore(item)}/100`),
+        "",
+        "_Generated from board evidence only. No Azure Boards write was performed._"
+    ].join("\n");
+    const findings = [...critical, ...weak].filter((item, index, array) => array.findIndex((candidate) => candidate.id === item.id) === index).map((item) => finding(item.id, item.title, RISK_WORDS.test(textFor(item)) ? 85 : 60, [`owner ${item.assignedTo || "missing"}`, `confidence ${confidenceScore(item)}`], "Include this item in the handover discussion."));
+    return { ...report("Handover Pack Generator", findings, `${sections.length} handover section(s) generated for ${role}.`, { sections: sections.length }), writePerformed: false, markdown, sections };
+}
+export function portfolioFitnessIndex(items, options = {}) {
+    const normalized = normalizeItems(items);
+    const open = normalized.filter((item) => !isClosed(item));
+    const stale = open.filter((item) => daysSince(item.changedDate) > positive(options.staleDays, 60));
+    const ownerGaps = open.filter((item) => !item.assignedTo);
+    const weakRequirements = normalized.filter((item) => REQUIREMENT_TYPES.has(item.type.toLowerCase()) && confidenceScore(item) < 45);
+    const totalBenefit = normalized.reduce((sum, item) => sum + expectedBenefit(item), 0);
+    const totalCost = normalized.reduce((sum, item) => sum + implementationCost(item, options), 0);
+    const valueCostRatio = totalCost ? totalBenefit / totalCost : 0;
+    const score = Math.max(0, Math.min(100, Math.round(55 + Math.min(30, valueCostRatio * 10) - stale.length * 3 - ownerGaps.length * 2 - weakRequirements.length * 2)));
+    const fitness = {
+        score,
+        status: score >= 75 ? "healthy" : score >= 50 ? "strained" : "critical",
+        openItems: open.length,
+        staleItems: stale.length,
+        ownerGaps: ownerGaps.length,
+        weakRequirements: weakRequirements.length,
+        totalExpectedBenefit: Math.round(totalBenefit),
+        totalEstimatedCost: Math.round(totalCost),
+        valueCostRatio: Number(valueCostRatio.toFixed(2))
+    };
+    const findings = [
+        ...stale.map((item) => finding(item.id, item.title, 70, [`stale ${daysSince(item.changedDate)} days`], "Resolve, re-baseline, or close stale portfolio work.")),
+        ...ownerGaps.map((item) => finding(item.id, item.title, 65, ["missing owner"], "Assign accountable owner or remove from active portfolio.")),
+        ...weakRequirements.map((item) => finding(item.id, item.title, 60, [`confidence ${confidenceScore(item)}`], "Improve requirement quality before further spend."))
+    ];
+    return { ...report("Portfolio Fitness Index", findings, `Portfolio fitness is ${fitness.status} with score ${score}/100.`, { portfolioFitness: score, openItems: open.length, staleItems: stale.length, ownerGaps: ownerGaps.length, weakRequirements: weakRequirements.length }), writePerformed: false, fitness };
+}
 function normalizeItems(items) {
     return items.map((raw, index) => {
         const record = objectFrom(raw);
@@ -225,6 +324,9 @@ function normalizeItems(items) {
 }
 function addAudit(rows, item, check, passed, reason) {
     rows.push({ id: item.id, title: item.title, check, status: passed ? "pass" : "fail", reason: passed ? "ok" : reason });
+}
+function control(item, name, passed, reason) {
+    return { id: item.id, title: item.title, control: name, status: passed ? "pass" : "fail", reason: passed ? "ok" : reason };
 }
 function confidenceScore(item) {
     return Math.min(100, (item.description.length >= 120 ? 25 : item.description.length >= 60 ? 12 : 0) + (item.acceptanceCriteria.length >= 40 ? 25 : 0) + (item.assignedTo ? 15 : 0) + (evidenceSignals(item).length ? 20 : 0) + (expectedBenefit(item) >= 25_000 ? 15 : 0));
@@ -419,6 +521,9 @@ function numberFrom(value) {
 }
 function stringFrom(value) {
     return typeof value === "string" ? value.trim() : "";
+}
+function arrayOfStrings(value) {
+    return Array.isArray(value) ? value.map((entry) => String(entry).trim()).filter(Boolean) : [];
 }
 function identity(value) {
     if (typeof value === "string" && value.trim())

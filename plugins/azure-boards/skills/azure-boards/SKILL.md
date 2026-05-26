@@ -7,6 +7,16 @@ description: Use Azure Boards through Microsoft Entra OAuth, PAT, or bearer-toke
 
 Use this skill when the user wants to work with Azure DevOps Boards, Work Items, project delivery status, process compliance, delivery risk, bottlenecks, comments, role-specific reporting, governance, or process policy analysis.
 
+## App Directory Review Notes
+
+When preparing this plugin for OpenAI App Directory review, keep submission metadata conservative and evidence-backed:
+
+1. Do not publish example support addresses, local repository URLs, development-only URLs, or Microsoft-owned documentation URLs as app-owned support, repository, privacy, terms, or website links.
+2. Use `TODO_SUBMISSION_*` placeholders only in pre-submission artifacts when the real owned URL or support contact is not known.
+3. Do not fabricate privacy policy or terms URLs. Require publisher-owned privacy and terms pages before final submission.
+4. Prefer individual Microsoft Entra login for app review. PAT and bearer-token modes are development or controlled automation options and must not require users to paste secrets into ChatGPT.
+5. Confirm deployed MCP transport, OAuth registration, support contact, privacy policy, terms, screenshots, tool annotations, and output schemas before claiming App Directory readiness.
+
 ## Authentication Guidance
 
 1. Prefer the active configured mode reported by `azure_boards_auth_status`.
@@ -63,6 +73,68 @@ Use this skill when the user wants to work with Azure DevOps Boards, Work Items,
    - `azure_boards_ai_change_portfolio_simulator`
    - `azure_boards_ai_steering_committee_pack`
    - `azure_boards_ai_policy_as_code_evaluation`
+   - `azure_boards_ai_autonomous_board_auditor`
+   - `azure_boards_ai_requirement_rewrite_studio`
+   - `azure_boards_ai_decision_meeting_copilot`
+   - `azure_boards_ai_cleanup_campaign_manager`
+   - `azure_boards_ai_financial_backlog_ledger`
+   - `azure_boards_ai_requirement_confidence_score`
+   - `azure_boards_ai_dependency_blocker_graph`
+   - `azure_boards_ai_process_owner_control_tower`
+   - `azure_boards_ai_migration_cutover_readiness`
+   - `azure_boards_ai_exception_register`
+   - `azure_boards_ai_benefit_realization_followup`
+   - `azure_boards_ai_operating_rhythm_planner`
+   - `azure_boards_ai_okr_alignment_scorer`
+   - `azure_boards_ai_compliance_readiness_review`
+   - `azure_boards_ai_handover_pack_generator`
+   - `azure_boards_ai_portfolio_fitness_index`
+   - `azure_boards_ai_elicit_requirements`
+   - `azure_boards_ai_requirement_gap_analysis`
+   - `azure_boards_ai_transform_work_item_text`
+   - `azure_boards_ai_convert_requirement`
+   - `azure_boards_ai_generate_test_cases`
+   - `azure_boards_ai_generate_uat_suite`
+   - `azure_boards_ai_generate_regression_suite`
+   - `azure_boards_ai_requirement_test_traceability`
+   - `azure_boards_ai_test_coverage_analysis`
+   - `azure_boards_ai_defect_traceability`
+   - `azure_boards_ai_generate_mockup`
+   - `azure_boards_ai_generate_diagram`
+   - `azure_boards_ai_generate_sop_document`
+   - `azure_boards_prompt_save`
+   - `azure_boards_prompt_list`
+   - `azure_boards_prompt_run`
+   - `azure_boards_prompt_delete`
+   - `azure_boards_admin_get_config`
+   - `azure_boards_admin_validate_config`
+   - `azure_boards_ai_decision_memory`
+   - `azure_boards_ai_recommendation_quality_score`
+   - `azure_boards_ai_value_inflation_detector`
+   - `azure_boards_ai_decision_court`
+   - `azure_boards_ai_requirement_contract_lifecycle`
+   - `azure_boards_ai_scenario_war_room`
+   - `azure_boards_ai_autonomous_governance_agent`
+   - `azure_boards_ai_business_digital_twin`
+   - `azure_boards_ai_external_evidence_import`
+   - `azure_boards_ai_event_log_process_mining`
+   - `azure_boards_ai_stakeholder_influence_map`
+   - `azure_boards_ai_roi_confidence_workflow`
+   - `azure_boards_ai_enterprise_risk_heatmap`
+   - `azure_boards_ai_policy_studio`
+   - `azure_boards_ai_prompt_eval_suite`
+   - `azure_boards_ai_model_risk_governance`
+   - `azure_boards_ai_adoption_cockpit`
+   - `azure_boards_ai_connector_readiness_audit`
+   - `azure_boards_ai_evidence_ingestion_pipeline`
+   - `azure_boards_ai_security_privacy_review`
+   - `azure_boards_ai_marketplace_submission_readiness`
+   - `azure_boards_ai_org_rollout_readiness`
+   - `azure_boards_ai_license_packaging_advisor`
+   - `azure_boards_ai_customer_value_case_builder`
+   - `azure_boards_ai_proprietary_signal_catalog`
+   - `azure_boards_ai_autonomous_followup_scheduler`
+   - `azure_boards_ai_adoption_experiment_designer`
    - `azure_boards_validate_policy_pack`
    - `azure_boards_ai_synthesize_report`
 4. For AI Project Cockpit requests, combine delivery risk, SLA aging, bottleneck, governance, policy, blocker, and next-action signals into one evidence-backed report.
@@ -89,7 +161,12 @@ Use this skill when the user wants to work with Azure DevOps Boards, Work Items,
 20. For audit and governance work, use `azure_boards_ai_closure_governance_ledger`, `azure_boards_ai_audit_decision_log`, `azure_boards_ai_board_hygiene_automation_preview`, and `azure_boards_ai_evidence_pack_completeness`. Distinguish actual Azure Boards evidence from inferred governance status and never fabricate evidence ledger entries.
 21. For outcome and CIO steering work, use `azure_boards_ai_outcome_realization_cockpit`, `azure_boards_ai_business_case_generator`, `azure_boards_ai_value_leakage_detector`, `azure_boards_ai_board_due_diligence_report`, and `azure_boards_ai_steering_committee_pack`. Treat generated business cases and packs as drafts requiring human review.
 22. For traceability and process criticality, use `azure_boards_ai_decision_traceability_graph`, `azure_boards_ai_erp_process_criticality_model`, `azure_boards_ai_requirement_invest_divest_matrix`, `azure_boards_ai_change_portfolio_simulator`, and `azure_boards_ai_policy_as_code_evaluation`. Separate simulated closure effects from actual board state.
-23. For write operations, show the proposed field changes or JSON Patch first unless the user explicitly requested the exact write.
+23. For Governance Operating System work, use `azure_boards_ai_autonomous_board_auditor`, `azure_boards_ai_requirement_rewrite_studio`, `azure_boards_ai_decision_meeting_copilot`, `azure_boards_ai_cleanup_campaign_manager`, `azure_boards_ai_financial_backlog_ledger`, `azure_boards_ai_requirement_confidence_score`, `azure_boards_ai_dependency_blocker_graph`, `azure_boards_ai_process_owner_control_tower`, `azure_boards_ai_migration_cutover_readiness`, `azure_boards_ai_exception_register`, `azure_boards_ai_benefit_realization_followup`, `azure_boards_ai_operating_rhythm_planner`, `azure_boards_ai_okr_alignment_scorer`, `azure_boards_ai_compliance_readiness_review`, `azure_boards_ai_handover_pack_generator`, and `azure_boards_ai_portfolio_fitness_index`. Treat rewrite suggestions, cleanup campaigns, cutover readiness, exception registers, benefit follow-ups, handover packs, strategic alignment scores, compliance readiness checks, and portfolio fitness scores as advisory previews until the user explicitly approves concrete writes.
+24. For elicitation, conversion, test generation, traceability, mockup, diagram, SOP, prompt, and admin work, use the Copilot4DevOps gap-closure tools. Treat generated Requirements, test cases, UAT/regression suites, links, mockups, diagrams, SOPs, prompt runs, and admin configs as drafts or previews until explicitly approved.
+25. For CIO decision assurance and autonomous Process Owner work, use `azure_boards_ai_decision_memory`, `azure_boards_ai_recommendation_quality_score`, `azure_boards_ai_value_inflation_detector`, `azure_boards_ai_decision_court`, `azure_boards_ai_requirement_contract_lifecycle`, `azure_boards_ai_scenario_war_room`, and `azure_boards_ai_autonomous_governance_agent`. Treat decision memory, recommendation learning, value inflation, decision court, contracts, scenarios, watchlists, agenda items, and action previews as advisory until explicitly approved.
+26. For Enterprise Value & Trust work, use `azure_boards_ai_business_digital_twin`, `azure_boards_ai_external_evidence_import`, `azure_boards_ai_event_log_process_mining`, `azure_boards_ai_stakeholder_influence_map`, `azure_boards_ai_roi_confidence_workflow`, `azure_boards_ai_enterprise_risk_heatmap`, `azure_boards_ai_policy_studio`, `azure_boards_ai_prompt_eval_suite`, `azure_boards_ai_model_risk_governance`, and `azure_boards_ai_adoption_cockpit`. Treat external evidence, process logs, KPI links, stakeholder maps, ROI maturity, heatmaps, policies, prompt evals, model risk, and adoption metrics as decision-support evidence, not as authoritative truth without review.
+27. For enterprise productization and data-moat work, use `azure_boards_ai_connector_readiness_audit`, `azure_boards_ai_evidence_ingestion_pipeline`, `azure_boards_ai_security_privacy_review`, `azure_boards_ai_marketplace_submission_readiness`, `azure_boards_ai_org_rollout_readiness`, `azure_boards_ai_license_packaging_advisor`, `azure_boards_ai_customer_value_case_builder`, `azure_boards_ai_proprietary_signal_catalog`, `azure_boards_ai_autonomous_followup_scheduler`, and `azure_boards_ai_adoption_experiment_designer`. Treat connector readiness, marketplace checklists, security/privacy controls, commercial packaging, signal catalogs, follow-ups, and adoption experiments as rollout planning evidence, not as deployment or scheduling actions.
+28. For write operations, show the proposed field changes or JSON Patch first unless the user explicitly requested the exact write.
 
 ## Safe Write-Preview Workflow
 
@@ -121,6 +198,8 @@ For bulk close work:
 - Use `azure_boards_package_health` and `azure_boards_auth_environment_check` for diagnostics, but do not ask the user to paste secret values.
 - Use `azure_boards_ai_plan_approved_actions` only after explicit approval; it prepares batches but still does not perform Azure DevOps writes.
 - Use `azure_boards_apply_bulk_close_plan` only for a preview generated by `azure_boards_ai_bulk_close_preview`; never construct hidden bulk writes.
-- Treat decision, portfolio, CIO, steering-pack, policy-as-code, and evidence-ledger tools as advisory no-write tools. They can recommend, rank, simulate, and export evidence previews, but only explicit write tools may change Azure Boards.
+- Use `azure_boards_apply_test_case_plan` only for a preview generated by `azure_boards_ai_generate_test_cases`; require `approved:true` and `confirmPhrase: "APPLY_TEST_CASE_PLAN"`.
+- Use `azure_boards_apply_traceability_plan` only for a preview generated by `azure_boards_ai_requirement_test_traceability`; require `approved:true` and `confirmPhrase: "APPLY_TRACEABILITY_PLAN"`.
+- Treat decision, portfolio, CIO, steering-pack, policy-as-code, evidence-ledger, and Governance Operating System tools as advisory no-write tools. They can recommend, rank, simulate, draft rewrite patches, and export evidence previews, but only explicit write tools may change Azure Boards.
 - Do not store PATs, bearer tokens, OAuth token caches, or live attachment extraction artifacts in plugin docs or local JSON reports.
 - Remember Azure DevOps process quirks: Work Item comments use `7.1-preview`, and Work Item batch fetches should not combine explicit fields with relation expansion.

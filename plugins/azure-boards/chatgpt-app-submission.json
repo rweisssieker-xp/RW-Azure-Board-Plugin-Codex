@@ -1,0 +1,1932 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "Azure Boards",
+    "subtitle": "Manage work items",
+    "description": "Azure Boards helps users query Work Items, inspect delivery risk, prepare governance and executive reports, generate safe change previews, and apply explicitly approved Azure DevOps updates through ChatGPT.",
+    "category": "PRODUCTIVITY"
+  },
+  "tools": {
+    "azure_boards_login": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Start individual Microsoft Entra device-code login for Azure Boards and can change Azure DevOps or authentication state.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_auth_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Show local Azure Boards OAuth configuration and token-cache status and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_package_health": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Check local plugin package health without exposing secrets and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_auth_environment_check": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Check configured auth modes without returning token or PAT values and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_whoami": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Return the authenticated Azure DevOps profile and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_list_projects": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "List Azure DevOps projects for an organization and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_list_teams": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "List teams for an Azure DevOps project and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_get_work_item_comments": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Fetch comments for a Work Item so comment intelligence can use real discussion evidence and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_get_work_item_updates": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Fetch Work Item update history for flow mining and process analysis and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_get_work_item_revisions": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Fetch Work Item revisions for audit evidence and process history analysis and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_list_saved_queries": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "List saved Azure Boards queries for project discovery and reusable cockpit inputs and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_list_pull_requests": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "List Azure DevOps pull requests for optional Work Item / PR risk correlation and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_list_builds": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "List Azure DevOps builds for optional Work Item / build health correlation and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_list_pipelines": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "List Azure DevOps pipelines for optional delivery-system correlation and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_list_releases": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "List Azure DevOps releases for optional release readiness correlation and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_query_work_items": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Run WIQL and return compact Work Item results and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_get_work_item": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Fetch one Work Item by id and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_create_work_item": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Create a Work Item using Azure DevOps JSON Patch and can change Azure DevOps or authentication state.",
+        "open_world_justification": "Can modify the user's Azure DevOps organization, an external third-party system outside ChatGPT.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_update_work_item": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Update a Work Item using either raw JSON Patch or supported convenience fields and can change Azure DevOps or authentication state.",
+        "open_world_justification": "Can modify the user's Azure DevOps organization, an external third-party system outside ChatGPT.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_add_comment": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Add a comment to a Work Item and can change Azure DevOps or authentication state.",
+        "open_world_justification": "Can modify the user's Azure DevOps organization, an external third-party system outside ChatGPT.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_delivery_risk_radar": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score delivery risks from Work Items and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_milestone_forecast": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Forecast milestone confidence from current board state and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_scope_creep_detector": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Compare current and previous Work Item snapshots to detect scope creep and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_status_brief": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate an executive status brief grounded in Work Item data and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_decision_debt": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Find unresolved decision and approval debt and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_bottleneck_mining": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Find process bottlenecks by state, area, and aging and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_workflow_conformance": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Check Work Items against process policy rules and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_sla_aging_monitor": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Find Work Items breaching SLA and aging thresholds and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_root_cause_patterns": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Detect recurring root-cause patterns in Work Item metadata and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_process_recommendations": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Suggest concrete process improvements from board evidence and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_project_cockpit": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Combine delivery, SLA, bottleneck, and governance evidence into one Project Lead / Process Owner cockpit and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_comment_intelligence": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Analyze supplied Work Item comments for blockers, decisions, approvals, risk, and customer impact and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_role_based_report": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate a role-specific report for Project Leads, Product Owners, Process Managers, Process Owners, QA, or executives and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_flow_mining_from_updates": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Mine Azure Boards update history for state transitions, rework, reopen churn, and workflow bottlenecks and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_policy_pack_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Evaluate a multi-policy process pack for governance, SLA, and audit-readiness evidence and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_watchlist_report": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate a proactive operational watchlist for stale, blocked, high-impact, unassigned, or policy-risk work and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_action_plan": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Convert board risks into prioritized next actions and JSON Patch previews. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_create_process_baseline": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Create a deterministic local process baseline from Work Items and optional update evidence and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_process_drift_detection": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Compare current Work Items with a previous process baseline and explain drift and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_cost_of_delay_radar": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Rank open work by estimated cost of delay, urgency, priority, blocker, and customer-impact signals and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_process_simulator": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Run a no-write what-if process simulation for WIP, scope, expedite, capacity, or cycle-time changes and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_capacity_forecast": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Forecast delivery capacity and demand pressure from current board evidence and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_brief_export": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Convert one or more AI reports into a Markdown/HTML executive, daily-risk, or audit brief and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_synthesize_report": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Optionally synthesize one or more reports with OpenAI, falling back to deterministic local synthesis when not configured and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_validate_policy_pack": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validate and normalize an Azure Boards policy pack. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_plan_approved_actions": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Turn an AI Action Plan into approved patch batches. Requires explicit approved:true and does not call Azure DevOps and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_summarize_apply_results": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Summarize apply or planned-apply results without exposing secrets and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_close_candidates": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Find close candidates from Work Item evidence using stale age, weak Description, low priority, and low WSJF. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_wsjf_consistency_check": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Check WSJF fields against Description, state, priority, and business-risk signals. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_business_value_estimate": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Estimate annual EUR-denominated benefit ranges from Description, WSJF, state, priority, and business signals. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_attachment_evidence_summary": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Summarize attachment evidence from Work Item relations and optional extracted attachment text snippets. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_parent_child_cleanup": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Find open Tasks whose parent Requirement is already terminal. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_bulk_close_preview": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Create an auditable bulk-close plan with target states, comments, patch previews, child impact, skipped items, and approval requirement. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_apply_bulk_close_plan": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Apply an explicitly approved bulk-close preview by adding comments then updating states. Requires approved:true and confirmPhrase APPLY_BULK_CLOSE and can change Azure DevOps or authentication state.",
+        "open_world_justification": "Can modify the user's Azure DevOps organization, an external third-party system outside ChatGPT.",
+        "destructive_justification": "Can close Work Items after explicit preview approval and confirmation, which is treated as a destructive state change."
+      }
+    },
+    "azure_boards_ai_delivery_system_correlation": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Correlate Work Items with PR, build, pipeline, and release evidence and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_requirement_decision_cockpit": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score Requirements for accelerate, review, park, or close decisions using evidence, value, risk, priority, and stale signals. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_evidence_first_requirement_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Review Requirements against Description, acceptance criteria, attachments, and supplied evidence before decisions. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_cio_requirement_risk_view": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Create a CIO-facing risk view for stale, unowned, regulated, high-priority, or weak-evidence Requirements. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_portfolio_rationalization": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Classify portfolio work as keep, kill, merge, or rework using value, effort, stale age, duplicate, and ERP-domain signals. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_benefit_realization_tracking": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Track expected versus realized benefits and expose unrealized benefit gaps. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_cost_avoidance_by_closure": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Estimate deterministic cost avoidance from closed, removed, or de-scoped work. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_erp_domain_impact_scoring": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score Work Items by ERP business domains such as Finance, Production, Compliance, Integration, Customer, Master Data, and Automation. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_closure_governance_ledger": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Build a no-write closure ledger for terminal Work Items with closure actor, date, evidence, and missing governance signals and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_audit_decision_log": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Derive an audit decision log from Work Item fields and supplied comments, updates, or evidence records. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_board_hygiene_automation_preview": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Preview board hygiene actions for missing owner, stale item, missing acceptance criteria, missing evidence, or terminal-parent children. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_evidence_pack_completeness": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score Work Items for audit evidence pack completeness against configurable evidence requirements. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_outcome_realization_cockpit": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Compare expected versus realized benefits and expose outcome gaps. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_business_case_generator": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate draft business cases from Description, benefit, cost, ERP process, risk, and evidence signals. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_value_leakage_detector": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Detect value leakage from stale open work, missing owners, weak evidence, or closed items without realized benefit. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_decision_traceability_graph": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Build a no-write graph of Work Items, parent/child links, attachments, evidence, and decision nodes and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_erp_process_criticality_model": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score Work Items against ERP process criticality areas: Finance Closing, Order-to-Cash, Procure-to-Pay, Manufacturing, Warehouse, Master Data, Regulatory, and Integration Backbone and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_board_due_diligence_report": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Create a CIO due-diligence report combining outcome realization, value leakage, ERP criticality, and traceability gaps. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_requirement_invest_divest_matrix": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Place Requirements into invest, steering-decision, bundle, or divest quadrants from benefit and cost signals. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_change_portfolio_simulator": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Simulate portfolio effects of closing/removing selected Work Items, including freed cost, lost benefit, and domain coverage. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_steering_committee_pack": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate a no-write Markdown/optional HTML steering pack from Work Items and optional source reports and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_policy_as_code_evaluation": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Evaluate Work Items against versionable policy-as-code controls for required tags, fields, owner, stale age, and evidence. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_autonomous_board_auditor": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Run a no-write autonomous audit for owner, Description, acceptance, stale, and benefit evidence gaps and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_requirement_rewrite_studio": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate better Requirement Description and Acceptance Criteria patch previews. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_decision_meeting_copilot": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Prepare a decision meeting agenda and minutes draft from Work Item evidence. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_cleanup_campaign_manager": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Plan board cleanup campaigns such as low-value, missing-description, orphan-task, or closed-evidence campaigns. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_financial_backlog_ledger": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Create a financial ledger with expected benefit, realized benefit, implementation cost, delay cost, and net value. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_requirement_confidence_score": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score whether Requirements are ready, need clarification, or are not investable. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_dependency_blocker_graph": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Build a no-write dependency and blocker graph from parent/child links, artifacts, comments, and risk terms and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_process_owner_control_tower": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Create a Process Owner control tower across Area Paths with governance score, open work, and policy gaps. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_migration_cutover_readiness": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score ERP migration cutover readiness with Go/Conditional-Go/No-Go signals from open critical work, missing evidence, and blockers and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_exception_register": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Detect exception, waiver, or deferred-decision candidates and produce an audit-ready exception register. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_benefit_realization_followup": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Find closed high-benefit items that need realized-benefit follow-up after a configurable lag. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_operating_rhythm_planner": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Plan daily, weekly, monthly, and quarterly governance cadences from board evidence. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_okr_alignment_scorer": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score Work Items against strategic objectives or OKRs and flag unaligned work. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_compliance_readiness_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Review regulatory, audit, security, or compliance work for owner, acceptance, evidence, and exception controls. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_handover_pack_generator": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate a board-evidence handover pack for Process Owners, Project Leads, or incoming owners. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_portfolio_fitness_index": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Compute a portfolio fitness score from stale work, owner gaps, weak requirements, benefit, and estimated cost. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_elicit_requirements": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Elicit Requirement drafts from keywords, notes, meetings, and file context. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_requirement_gap_analysis": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Analyze Requirements for missing owner, evidence, acceptance criteria, and business value. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_transform_work_item_text": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Preview summarize, elaborate, paraphrase, or translate transformations for Work Item text. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_convert_requirement": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Convert a Requirement into Gherkin, Use Case, User Story, or Test Case draft. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_generate_test_cases": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate Azure Test Case previews with steps, expected results, assumptions, confidence, and patch previews. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_generate_uat_suite": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate UAT scripts from Requirements and business evidence. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_generate_regression_suite": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate regression suite candidates from Requirement risk and process signals. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_requirement_test_traceability": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Preview Requirement to Test Case traceability links. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_test_coverage_analysis": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Analyze missing, stale, or duplicate test coverage for Requirements. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_defect_traceability": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Analyze Defect to Requirement to Test Result traceability chains. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_generate_mockup": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate a local mockup preview from Work Item text or file context. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_generate_diagram": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate Mermaid or PlantUML diagram text from Work Item context. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_generate_sop_document": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate a SOP document draft from Work Items and optional file context. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_prompt_save": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Save a local dynamic prompt artifact. Does not call Azure DevOps. May change local artifacts or Azure DevOps only through an explicit user action.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_prompt_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "List local dynamic prompt artifacts. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_prompt_run": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Render a saved dynamic prompt locally without executing tools. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_prompt_delete": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Delete a local dynamic prompt artifact. May change local artifacts or Azure DevOps only through an explicit user action.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Can perform destructive local or Azure DevOps changes only after explicit confirmation."
+      }
+    },
+    "azure_boards_admin_get_config": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Return the local default admin configuration without secrets. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_admin_validate_config": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validate admin model routing, BYOD, private LLM, and prompt configuration without storing secrets. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_apply_test_case_plan": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Apply an explicitly approved Test Case plan by creating Azure Boards Test Case Work Items. May change local artifacts or Azure DevOps only through an explicit user action.",
+        "open_world_justification": "May modify Azure DevOps when explicitly approved by the user.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_apply_traceability_plan": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Apply an explicitly approved Requirement to Test Case traceability link plan. May change local artifacts or Azure DevOps only through an explicit user action.",
+        "open_world_justification": "May modify Azure DevOps when explicitly approved by the user.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_decision_memory": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Assemble an audit-ready memory of decisions, rationale, owners, and later outcomes. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_recommendation_quality_score": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score previous recommendations against supplied outcomes and learning signals. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_value_inflation_detector": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Detect inflated Business Value, WSJF, or Cost-of-Delay claims with weak evidence. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_decision_court": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Prepare pro, contra, missing facts, confidence, and verdict for Close/Keep/Build recommendations. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_requirement_contract_lifecycle": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate measurable requirement outcome contracts with metric, baseline, target, owner, review cadence, and patch preview. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_scenario_war_room": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Simulate management scenarios such as budget cuts, fixed go-live, compliance priority, and scope pressure. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_autonomous_governance_agent": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Prepare recurring governance watchlists, meeting agendas, and action previews without applying writes. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_business_digital_twin": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Map Work Items to external business KPI evidence and impact confidence. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_external_evidence_import": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Normalize CSV, ERP, support, finance, incident, or KPI evidence records for board decisions. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_event_log_process_mining": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Mine imported event logs for process transitions and bottlenecks outside Azure Boards. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_stakeholder_influence_map": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Map stakeholders, owners, blockers, beneficiaries, and influence edges for Work Items. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_roi_confidence_workflow": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Classify ROI maturity from rough estimate through evidence-backed, finance-reviewed, and realized. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_enterprise_risk_heatmap": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Aggregate delivery, compliance, finance, test, and ownership risks into an enterprise heatmap. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_policy_studio": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Draft and simulate governance policies before adding them to policy packs. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_prompt_eval_suite": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Evaluate saved or supplied prompts against no-write, stability, and assumption expectations. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_model_risk_governance": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Evaluate model routing, data classes, and private/public LLM risk. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_adoption_cockpit": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Assess team adoption, active users, prompt usage, and approved preview usage. Does not write. Returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_store_save": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Save a JSON artifact to the user-local Azure Boards store and changes user-local plugin artifact storage.",
+        "open_world_justification": "Only changes local plugin storage and does not publish or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_store_load": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Load a JSON artifact from the user-local Azure Boards store and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only changes local plugin storage and does not publish or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_store_list": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "List JSON artifacts from the user-local Azure Boards store and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only changes local plugin storage and does not publish or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_store_delete": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Delete a JSON artifact from the user-local Azure Boards store and changes user-local plugin artifact storage.",
+        "open_world_justification": "Only changes local plugin storage and does not publish or modify public internet state.",
+        "destructive_justification": "Can delete or irreversibly remove a local stored artifact."
+      }
+    },
+    "azure_boards_store_watchdog_snapshot": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Save a proactive watchdog report snapshot to the user-local Azure Boards store and changes user-local plugin artifact storage.",
+        "open_world_justification": "Only changes local plugin storage and does not publish or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_governance_score": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score process governance quality for Process Owners and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_policy_gap_detector": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Find policy gaps such as missing tags, wrong types, and missing ownership and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_change_impact": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Estimate which Work Items would be affected by a proposed process change and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_cross_team_benchmark": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Benchmark Area Paths or teams by open volume and aging and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_audit_evidence_pack": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Generate an audit evidence pack from policy gaps and SLA findings and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_improve_work_item": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Return an explainable quality-improvement patch preview for a Work Item. Does not write and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_nl_to_wiql": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Convert natural language into conservative WIQL. Does not execute the query and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Does not publish content or modify public internet state.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_find_duplicates": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Find similar or duplicate Work Items from a supplied result set and returns results without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_connector_readiness_audit": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Assess enterprise connector readiness for hosted Azure Boards productization without modifying Azure DevOps.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_evidence_ingestion_pipeline": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Normalize uploaded or external evidence metadata without persisting raw content or modifying Azure DevOps.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_security_privacy_review": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Review security, privacy, tenant, RBAC, audit, retention, and redaction readiness without changing settings.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_marketplace_submission_readiness": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Check marketplace and app directory readiness without submitting, publishing, or modifying external systems.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_org_rollout_readiness": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Assess organization rollout readiness without changing organization settings or Azure Boards data.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_license_packaging_advisor": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Recommend commercial packaging from supplied usage signals without enforcing licenses or changing access.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_customer_value_case_builder": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Draft customer value cases from Work Item evidence without writing to Azure Boards.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_proprietary_signal_catalog": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Catalog data-moat signal families from supplied board and feedback evidence without storing or writing data.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_autonomous_followup_scheduler": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Prepare follow-up recommendations without scheduling, sending messages, or modifying Azure Boards.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_ai_adoption_experiment_designer": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Design adoption experiments with metrics and guardrails without creating tasks or changing systems.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    }
+  },
+  "test_cases": [
+    {
+      "description": "Check which authentication mode is active before accessing Azure Boards data.",
+      "user_prompt": "Check whether my Azure Boards plugin is authenticated and tell me which mode it is using without showing secrets.",
+      "file_attachment_urls": null,
+      "tools_triggered": "azure_boards_auth_status",
+      "expected_output": "Reports the active authentication mode and setup status without returning token, PAT, or cache contents.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Query open Work Items and summarize the returned board evidence.",
+      "user_prompt": "Find open bugs in my Fabrikam Azure Boards project and show the top 20 with owner, state, priority, and age.",
+      "file_attachment_urls": null,
+      "tools_triggered": "azure_boards_query_work_items",
+      "expected_output": "Returns matching Work Items from WIQL and summarizes the fields needed for review.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Inspect one Work Item in detail before making a recommendation.",
+      "user_prompt": "Get Azure Boards Work Item 12345 and explain its current status, owner, tags, and linked evidence.",
+      "file_attachment_urls": null,
+      "tools_triggered": "azure_boards_get_work_item",
+      "expected_output": "Fetches the Work Item and provides an evidence-grounded status summary without changing the item.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Create an evidence-backed delivery cockpit from supplied Work Item summaries.",
+      "user_prompt": "Use these Work Item results to build a project cockpit with delivery risks, SLA aging, bottlenecks, governance gaps, and next actions.",
+      "file_attachment_urls": null,
+      "tools_triggered": "azure_boards_ai_project_cockpit",
+      "expected_output": "Returns a consolidated cockpit grounded in the supplied Work Item evidence and clearly labels assumptions.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Generate safe change previews before any write operation.",
+      "user_prompt": "Create an action plan for these stale blocked items and show the JSON Patch previews, but do not apply anything.",
+      "file_attachment_urls": null,
+      "tools_triggered": "azure_boards_ai_action_plan",
+      "expected_output": "Returns prioritized recommended actions with field-level or JSON Patch previews and no Azure DevOps writes.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Prepare and then apply an explicitly approved bulk close workflow.",
+      "user_prompt": "Preview closing these completed requirements, then apply the plan only after I approve it with APPLY_BULK_CLOSE.",
+      "file_attachment_urls": null,
+      "tools_triggered": "azure_boards_ai_bulk_close_preview, azure_boards_apply_bulk_close_plan",
+      "expected_output": "First returns a close preview with comments, target states, child impact, skipped items, and risk; applies only after explicit approval and confirmation.",
+      "expected_output_url": null
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "Do not trigger for unrelated calendar requests.",
+      "user_prompt": "What meetings do I have tomorrow and which ones should I decline?",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because the request is outside Azure Boards workflows.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger for generic source-control questions without Azure Boards scope.",
+      "user_prompt": "Review the last five Git commits and tell me whether the code style is consistent.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because the request is about repository review rather than Azure Boards data.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger writes when the user asks for unsupported secret handling.",
+      "user_prompt": "Store my Azure DevOps PAT in a report so the team can reuse it later.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should refuse to store secrets and should not call Azure Boards tools that persist or echo token values.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not apply destructive-seeming board changes without explicit preview approval.",
+      "user_prompt": "Close every open item in the project immediately and skip the review details.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should require a concrete preview and explicit confirmation before any state-changing Azure Boards tool is used.",
+      "expected_output_url": null
+    }
+  ]
+}

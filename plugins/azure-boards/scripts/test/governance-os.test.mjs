@@ -70,7 +70,12 @@ test("governance operating system exports all USP functions", async () => {
     "processOwnerControlTower",
     "migrationCutoverReadiness",
     "aiExceptionRegister",
-    "benefitRealizationFollowup"
+    "benefitRealizationFollowup",
+    "operatingRhythmPlanner",
+    "okrAlignmentScorer",
+    "complianceReadinessReview",
+    "handoverPackGenerator",
+    "portfolioFitnessIndex"
   ]) {
     assert.equal(typeof module[name], "function", `${name} should be exported`);
   }
@@ -115,9 +120,32 @@ test("financial, confidence, dependency, control tower, cutover, exception, and 
   assert.ok(followup.followups.some((row) => row.id === 4103));
 });
 
+test("operating rhythm, alignment, compliance, handover, and fitness tools produce no-write governance outputs", async () => {
+  const {
+    operatingRhythmPlanner,
+    okrAlignmentScorer,
+    complianceReadinessReview,
+    handoverPackGenerator,
+    portfolioFitnessIndex
+  } = await import("../dist/governanceOperatingSystem.js");
+  const rhythm = operatingRhythmPlanner(workItems, { staleDays: 30 });
+  const alignment = okrAlignmentScorer(workItems, { objectives: ["regulatory compliance", "finance automation"] });
+  const compliance = complianceReadinessReview(workItems);
+  const handover = handoverPackGenerator(workItems, evidence, { role: "Project Lead" });
+  const fitness = portfolioFitnessIndex(workItems, { staleDays: 30 });
+  assert.equal(rhythm.writePerformed, false);
+  assert.ok(rhythm.cadence.some((row) => row.cadence === "daily"));
+  assert.ok(alignment.alignments.some((row) => row.id === 4102 && row.status === "unaligned"));
+  assert.ok(compliance.controls.some((row) => row.control === "exception"));
+  assert.match(handover.markdown, /Project Lead Handover Pack/);
+  assert.match(String(fitness.fitness.status), /healthy|strained|critical/);
+});
+
 test("analytics facade exports governance operating system functions", async () => {
   const analytics = await import("../dist/analytics.js");
   assert.equal(typeof analytics.migrationCutoverReadiness, "function");
   assert.equal(typeof analytics.financialBacklogLedger, "function");
   assert.equal(typeof analytics.requirementRewriteStudio, "function");
+  assert.equal(typeof analytics.operatingRhythmPlanner, "function");
+  assert.equal(typeof analytics.portfolioFitnessIndex, "function");
 });

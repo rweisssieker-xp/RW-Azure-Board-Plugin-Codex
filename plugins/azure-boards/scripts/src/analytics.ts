@@ -9,8 +9,41 @@ export {
   wsjfConsistencyCheck
 } from "./bulkGovernance.js";
 export { deliverySystemCorrelation } from "./correlationAnalytics.js";
+export {
+  autonomousGovernanceAgent,
+  decisionCourt,
+  decisionMemory,
+  recommendationQualityScore,
+  requirementContractLifecycle,
+  scenarioWarRoom,
+  valueInflationDetector
+} from "./decisionAssurance.js";
 export { cioRequirementRiskView, evidenceFirstRequirementReview, requirementDecisionCockpit } from "./decisionEngine.js";
 export { auditDecisionLog, boardHygieneAutomationPreview, closureGovernanceLedger, evidencePackCompleteness } from "./evidenceLedger.js";
+export {
+  adoptionCockpit,
+  businessDigitalTwin,
+  enterpriseRiskHeatmap,
+  eventLogProcessMining,
+  externalEvidenceImport,
+  modelRiskGovernance,
+  policyStudio,
+  promptEvalSuite,
+  roiConfidenceWorkflow,
+  stakeholderInfluenceMap
+} from "./enterpriseValueTrust.js";
+export {
+  adoptionExperimentDesigner,
+  autonomousFollowupScheduler,
+  connectorReadinessAudit,
+  customerValueCaseBuilder,
+  evidenceIngestionPipeline,
+  licensePackagingAdvisor,
+  marketplaceSubmissionReadiness,
+  orgRolloutReadiness,
+  proprietarySignalCatalog,
+  securityPrivacyReview
+} from "./productizationMoat.js";
 export {
   aiExceptionRegister,
   autonomousBoardAuditor,
@@ -19,6 +52,11 @@ export {
   decisionMeetingCopilot,
   dependencyBlockerGraph,
   financialBacklogLedger,
+  handoverPackGenerator,
+  okrAlignmentScorer,
+  operatingRhythmPlanner,
+  portfolioFitnessIndex,
+  complianceReadinessReview,
   migrationCutoverReadiness,
   processOwnerControlTower,
   requirementConfidenceScore,
@@ -27,6 +65,37 @@ export {
 export { synthesizeReport } from "./llmSynthesis.js";
 export { createWatchdogSnapshot, deleteNamedArtifact, listNamedArtifacts, loadNamedArtifact, saveNamedArtifact } from "./localStore.js";
 export { authEnvironmentCheck, packageHealthCheck } from "./packageHealth.js";
+export {
+  deletePrompt,
+  getAdminConfig,
+  listPrompts,
+  runPrompt,
+  savePrompt,
+  validateAdminConfig
+} from "./promptAdmin.js";
+export {
+  convertRequirement,
+  elicitRequirements,
+  requirementGapAnalysis,
+  transformWorkItemText
+} from "./requirementsWorkbench.js";
+export {
+  applyTestCasePlan,
+  generateRegressionSuite,
+  generateTestCases,
+  generateUatSuite
+} from "./testFactory.js";
+export {
+  applyTraceabilityPlan,
+  defectTraceability,
+  requirementTestTraceability,
+  testCoverageAnalysis
+} from "./traceabilityEngine.js";
+export {
+  generateDiagram,
+  generateMockup,
+  generateSopDocument
+} from "./visualDocumentFactory.js";
 export { validatePolicyPack } from "./policyPack.js";
 export {
   benefitRealizationTracking,
