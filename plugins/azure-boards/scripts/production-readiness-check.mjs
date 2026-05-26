@@ -34,6 +34,16 @@ if (manifest) {
   checkValue(Array.isArray(manifest.interface?.screenshots) && manifest.interface.screenshots.length >= 2, "Manifest references decision and approval screenshots");
 }
 
+const submission = readJson("chatgpt-app-submission.json");
+if (submission) {
+  checkValue(!containsPlaceholder(submission.production?.support_email), "Submission support email is publisher-owned");
+  checkValue(!containsPlaceholder(submission.production?.website_url), "Submission website URL is publisher-owned");
+  checkValue(!containsPlaceholder(submission.production?.privacy_policy_url), "Submission privacy policy URL is publisher-owned");
+  checkValue(!containsPlaceholder(submission.production?.terms_of_service_url), "Submission terms URL is publisher-owned");
+  checkValue(!containsPlaceholder(submission.production?.hosted_mcp_url), "Submission hosted MCP URL is production-owned");
+  checkValue(!containsPlaceholder(submission.production?.microsoft_entra?.client_id), "Submission Microsoft Entra client id is production-owned");
+}
+
 const envTemplate = readText(".env.production.example");
 if (envTemplate) {
   checkValue(envTemplate.includes("AZURE_BOARDS_CLIENT_ID="), "Production env includes Microsoft Entra client id");
@@ -139,5 +149,5 @@ function readText(relativePath) {
 }
 
 function containsPlaceholder(value) {
-  return typeof value !== "string" || /example\.invalid|TODO_SUBMISSION|your-owned-domain|<[^>]+>|support@example/i.test(value);
+  return typeof value !== "string" || /example\.invalid|TODO_|your-owned-domain|00000000-0000-0000-0000-000000000000|<[^>]+>|support@example/i.test(value);
 }

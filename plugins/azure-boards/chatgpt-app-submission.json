@@ -7,6 +7,19 @@
     "description": "Azure Boards helps users query Work Items, inspect delivery risk, prepare governance and executive reports, generate safe change previews, and apply explicitly approved Azure DevOps updates through ChatGPT.",
     "category": "PRODUCTIVITY"
   },
+  "production": {
+    "publisher_name": "Reiner Weisssieker",
+    "support_email": "rweisssieker@gmail.com",
+    "website_url": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex",
+    "privacy_policy_url": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/plugins/azure-boards/docs/privacy-policy.md",
+    "terms_of_service_url": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/plugins/azure-boards/docs/terms-of-service.md",
+    "hosted_mcp_url": "TODO_DEPLOY_HOSTED_MCP_URL",
+    "microsoft_entra": {
+      "client_id": "TODO_ENTRA_CLIENT_ID",
+      "tenant_id": "organizations",
+      "auth_mode": "Microsoft Entra OAuth delegated Azure DevOps access"
+    }
+  },
   "tools": {
     "azure_boards_login": {
       "annotations": {

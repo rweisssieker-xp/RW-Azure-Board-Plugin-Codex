@@ -4,13 +4,10 @@ Repo-local Codex plugin for Azure Boards with individual Microsoft Entra login o
 
 ## OpenAI App Directory Submission Readiness
 
-Current submission metadata is intentionally marked with `TODO_SUBMISSION_*` placeholders where owned production values are not yet known. Before App Directory submission, replace these with real, owned values:
+Current submission metadata uses the publisher name Reiner Weisssieker, the public GitHub repository, and repository-owned privacy and terms documents. Before App Directory submission, replace the remaining deployment placeholders with real, owned infrastructure values:
 
-- `TODO_SUBMISSION_SUPPORT_EMAIL`: monitored support contact for the app publisher.
-- `TODO_SUBMISSION_DEVELOPER_URL` and `TODO_SUBMISSION_WEBSITE_URL`: owned publisher or product pages, not Microsoft Learn or local development URLs.
-- `TODO_SUBMISSION_REPOSITORY_URL`: owned source or support repository if the submission requires one.
-- `TODO_SUBMISSION_PRIVACY_POLICY_URL`: owned privacy policy that explains Azure DevOps data access, authentication data handling, local token-cache behavior, optional OpenAI report synthesis, local artifact storage, and support contact handling.
-- `TODO_SUBMISSION_TERMS_OF_SERVICE_URL`: owned terms that cover user responsibilities for Azure DevOps access, write approvals, and generated decision-support output.
+- `TODO_DEPLOY_HOSTED_MCP_URL`: reachable HTTPS MCP endpoint for the hosted server.
+- `TODO_ENTRA_CLIENT_ID`: production Microsoft Entra app registration client id.
 
 Review notes for OpenAI App Directory readiness:
 
@@ -94,7 +91,7 @@ The plugin now includes productized operating flows in addition to one-off repor
 
 See `docs/production-readiness.md` for the hosted MCP, Microsoft Entra OAuth, publisher asset, and verification gates required before claiming production readiness.
 See `docs/hosted-mcp-deployment.md` for the hosted HTTP MCP endpoint, Dockerfile, `/healthz`, `/mcp`, and smoke-test commands.
-Run `npm run check:production` from `plugins/azure-boards/scripts` as the final release gate; it is expected to fail until real publisher-owned URLs and contacts replace development placeholders.
+Run `npm run check:production` from `plugins/azure-boards/scripts` as the final release gate; it is expected to fail until the hosted MCP URL and production Microsoft Entra client id replace deployment placeholders.
 
 ## Verify Auth Mode
 
@@ -134,7 +131,7 @@ The Azure Boards plugin is intended to go beyond basic Work Item lookup. The doc
 - **Optional LLM synthesis**: `azure_boards_ai_synthesize_report` uses deterministic fallback by default and only calls OpenAI when `OPENAI_API_KEY` and `AZURE_BOARDS_LLM_MODE=openai` are set.
 - **Package and auth health checks**: `azure_boards_package_health` and `azure_boards_auth_environment_check` help diagnose local setup without returning secret values.
 - **Safe write-preview workflow**: change-producing tools must show a proposed JSON Patch or field-level preview before any write is executed.
-- **WSJF and business-value governance**: `azure_boards_ai_wsjf_consistency_check` checks WSJF fields against Description signals, `azure_boards_ai_business_value_estimate` provides conservative annual EUR-denominated benefit ranges, and `azure_boards_ai_close_candidates` identifies likely closure candidates without writing.
+- **WSJF and business-value governance**: `azure_boards_ai_wsjf_consistency_check` checks WSJF fields against Description signals, `azure_boards_ai_business_value_estimate` provides conservative annual USD-denominated benefit ranges, and `azure_boards_ai_close_candidates` identifies likely closure candidates without writing.
 - **Attachment evidence review**: `azure_boards_ai_attachment_evidence_summary` summarizes attachment metadata and optional extracted text snippets so business decisions can cite Description plus supporting documents.
 - **Parent/child cleanup**: `azure_boards_ai_parent_child_cleanup` finds open Tasks whose parent Requirement is already terminal.
 - **Bulk close preview/apply**: `azure_boards_ai_bulk_close_preview` creates an auditable no-write close plan with comments, patches, child impact, skipped items, and risk. `azure_boards_apply_bulk_close_plan` applies only a generated preview and requires `approved:true` plus `confirmPhrase: "APPLY_BULK_CLOSE"`.
@@ -221,7 +218,7 @@ Bulk closure has stricter rules:
 5. Apply the plan only through `azure_boards_apply_bulk_close_plan` with `approved:true` and `confirmPhrase: "APPLY_BULK_CLOSE"`.
 6. Re-query after applying and report remaining counts.
 
-Decision, portfolio, outcome, steering-pack, policy-as-code, and evidence-ledger tools are advisory/export tools. They must distinguish actual Azure Boards evidence from inferred status, cite assumptions for EUR-denominated values, ROI, cost avoidance, and benefit realization, and must not create audit evidence, close Work Items, or change state without the explicit write-preview/apply workflow above.
+Decision, portfolio, outcome, steering-pack, policy-as-code, and evidence-ledger tools are advisory/export tools. They must distinguish actual Azure Boards evidence from inferred status, cite assumptions for USD-denominated values, ROI, cost avoidance, and benefit realization, and must not create audit evidence, close Work Items, or change state without the explicit write-preview/apply workflow above.
 
 Operational Azure DevOps notes learned from live use:
 

@@ -66,7 +66,7 @@ Do not use `.env.production.example` unchanged in production. Replace placeholde
 After deploying to the owned production domain, run:
 
 ```powershell
-npm run smoke:hosted -- https://your-owned-domain.example/mcp
+npm run smoke:hosted -- https://mcp.example.com/mcp
 ```
 
-The smoke command also supports path-based deployments such as `https://your-owned-domain.example/azure-boards/mcp`; in that case it checks `https://your-owned-domain.example/azure-boards/healthz` and `https://your-owned-domain.example/azure-boards/mcp`.
+The smoke command also supports path-based deployments such as `https://mcp.example.com/azure-boards/mcp`; in that case it checks `https://mcp.example.com/azure-boards/healthz` and `https://mcp.example.com/azure-boards/mcp`.

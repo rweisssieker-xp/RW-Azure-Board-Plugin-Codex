@@ -5,7 +5,7 @@ Use this checklist when moving the plugin from local review to a production publ
 ## 1. Publisher Values
 
 - Copy `production-publisher-inputs.example.json` to `production-publisher-inputs.json`.
-- Replace every placeholder with publisher-owned values:
+- Replace every placeholder with production-owned values:
   - support email
   - author URL
   - homepage URL
@@ -36,7 +36,7 @@ This updates:
 - Deploy the hosted MCP server behind HTTPS on the publisher-owned domain.
 - Verify `GET /healthz` returns `status: ok`.
 - Verify `POST /mcp` supports JSON-RPC `tools/list`.
-- Run `npm run smoke:hosted -- https://your-owned-domain.example/mcp`.
+- Run `npm run smoke:hosted -- https://mcp.example.com/mcp`.
 - Configure production environment variables from `.env.production.example`.
 - Store secrets outside the repository and outside generated Decision Packs.
 
@@ -68,4 +68,4 @@ Run from the repository root:
 python C:\Users\reinerw\.codex\skills\.system\plugin-creator\scripts\validate_plugin.py D:\temp\RW-Azure-Board-Plugin-Codex\plugins\azure-boards
 ```
 
-Do not submit until all gates pass with the real publisher-owned values.
+Do not submit until all gates pass with the real production deployment values.

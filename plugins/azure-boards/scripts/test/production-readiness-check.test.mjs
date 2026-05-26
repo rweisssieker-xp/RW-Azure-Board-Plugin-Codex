@@ -6,24 +6,19 @@ import path from "node:path";
 const scriptsRoot = process.cwd();
 const checkScript = path.join(scriptsRoot, "production-readiness-check.mjs");
 
-test("production readiness gate reports only publisher-owned placeholder failures", () => {
+test("production readiness gate reports only remaining hosted deployment placeholder failures", () => {
   const result = spawnSync(process.execPath, [checkScript, "--json"], {
     cwd: scriptsRoot,
     encoding: "utf8"
   });
 
-  assert.equal(result.status, 1, "gate should fail until real publisher metadata replaces placeholders");
+  assert.equal(result.status, 1, "gate should fail until real hosted MCP and Entra deployment metadata replaces placeholders");
 
   const report = JSON.parse(result.stdout);
   const failedNames = report.checks.filter((check) => !check.pass).map((check) => check.name);
   assert.deepEqual(failedNames, [
-    "Manifest support email is publisher-owned",
-    "Manifest author URL is publisher-owned",
-    "Manifest homepage is publisher-owned",
-    "Manifest repository URL is publisher-owned",
-    "Manifest website URL is publisher-owned",
-    "Manifest privacy policy URL is publisher-owned",
-    "Manifest terms URL is publisher-owned"
+    "Submission hosted MCP URL is production-owned",
+    "Submission Microsoft Entra client id is production-owned"
   ]);
 
   for (const requiredPass of [
@@ -45,6 +40,10 @@ test("production readiness gate reports only publisher-owned placeholder failure
     "Hosted HTTP MCP source exists",
     "Product operating system source exists",
     "Manifest references decision and approval screenshots",
+    "Submission support email is publisher-owned",
+    "Submission website URL is publisher-owned",
+    "Submission privacy policy URL is publisher-owned",
+    "Submission terms URL is publisher-owned",
     "Production env includes Microsoft Entra client id",
     "Production env includes hosted MCP URL",
     "Production env includes persistent store path",

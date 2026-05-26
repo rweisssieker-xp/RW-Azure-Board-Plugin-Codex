@@ -4,7 +4,7 @@ Date: 2026-05-26
 
 ## Status Summary
 
-The USP and feature layer is implemented and documented for local/plugin review. The remaining gap to a fully production-publishable plugin is not another in-repo feature; it is replacement of development placeholders with publisher-owned production assets and a real hosted deployment configuration.
+The USP and feature layer is implemented and documented for local/plugin review. Publisher-owned GitHub metadata, support contact, privacy policy, and terms are now configured. The remaining gap to a fully production-publishable plugin is the real hosted MCP endpoint and production Microsoft Entra app registration.
 
 ## Implemented USPs
 
@@ -43,29 +43,25 @@ The USP and feature layer is implemented and documented for local/plugin review.
 | Hosted MCP plus production OAuth story | `scripts/src/hostedServer.ts`, `scripts/hosted-mcp-smoke.mjs`, `Dockerfile`, `.env.production.example`, and `docs/hosted-mcp-deployment.md` define hosted transport, smoke validation, environment shape, OAuth, and deployment path. | `scripts/test/hosted-server.test.mjs` covers `/healthz`, `/mcp`, and hosted smoke; `scripts/production-readiness-check.mjs` checks hosted source, Dockerfile, OAuth docs, env template, and smoke docs. |
 | Screenshots and app listing show decision, preview, apply, and evidence value | `assets/screenshots/decision-pack.png`, `assets/screenshots/approval-workflow.png`, `.codex-plugin/plugin.json`, and `docs/app-listing.md` provide listing and screenshot evidence. | `scripts/production-readiness-check.mjs` checks screenshots and manifest references; plugin validation checks package shape. |
 | Import/export Decision Packs with Steering Pack, Audit Pack, and Handover Pack | `scripts/src/productOperatingSystem.ts` implements `decisionPackExport`, `decisionPackImport`, manifest metadata, Steering Pack, Audit Pack, Handover Pack, and Operating Rhythm; `ui/app.js` renders Decision Pack Export and import/export manifest. | `scripts/test/product-operating-system.test.mjs` covers Decision Pack import/export; `scripts/production-readiness-check.mjs` checks Decision Pack sections and manifest requirements. |
-| Production plugin ready documentation and release process | `docs/production-readiness.md`, `docs/production-gate.md`, `docs/release-handoff-checklist.md`, `production-publisher-inputs.example.json`, `scripts/apply-production-publisher-inputs.mjs`, and `scripts/production-readiness-check.mjs` define release gates, publisher handoff, hosted smoke, and metadata application. | `scripts/test/production-readiness-check.test.mjs` verifies that the only current gate failures are publisher-owned placeholders; `scripts/test/production-publisher-inputs.test.mjs` verifies production metadata application and placeholder rejection. |
+| Production plugin ready documentation and release process | `docs/production-readiness.md`, `docs/production-gate.md`, `docs/release-handoff-checklist.md`, `production-publisher-inputs.example.json`, `scripts/apply-production-publisher-inputs.mjs`, and `scripts/production-readiness-check.mjs` define release gates, publisher handoff, hosted smoke, and metadata application. | `scripts/test/production-readiness-check.test.mjs` verifies that the only current gate failures are hosted deployment placeholders; `scripts/test/production-publisher-inputs.test.mjs` verifies production metadata application and placeholder rejection. |
 
 ## Verified Evidence
 
 - `npm test` in `plugins/azure-boards/scripts` passed with the product, hosted server, MCP, and UI static tests.
 - The plugin validator passed for `plugins/azure-boards`.
 - Browser checks confirmed the approval workflow and Decision Pack UI render with the static demo data.
-- `npm run check:production` passes product/technical checks and intentionally fails only on publisher-owned placeholder metadata.
+- `npm run check:production` passes product, technical, documentation, publisher, privacy, and terms checks and intentionally fails only on hosted MCP and Microsoft Entra deployment placeholders.
 
 ## Remaining Production Inputs
 
-These items cannot be completed from the repository alone:
+These items cannot be completed from GitHub repository metadata alone:
 
-- Publisher-owned support email.
-- Publisher-owned product website, homepage, author URL, and repository/support URL.
-- Publisher-owned privacy policy URL.
-- Publisher-owned terms of service URL.
 - Production Microsoft Entra app registration and approved Azure DevOps delegated permissions.
 - Hosted HTTPS MCP endpoint on an owned domain.
 - Production secrets and environment configuration outside the repository.
 
-The repository now includes `production-publisher-inputs.example.json` and `scripts/apply-production-publisher-inputs.mjs` so the final publisher-owned values can be applied reproducibly once they exist.
+The repository now includes `production-publisher-inputs.example.json` and `scripts/apply-production-publisher-inputs.mjs` so final hosted MCP and Microsoft Entra values can be applied reproducibly once they exist.
 
 ## Release Gate
 
-The plugin should not be claimed as fully production-published until `npm run check:production` passes after the publisher-owned values above are supplied.
+The plugin should not be claimed as fully production-published until `npm run check:production` passes after the hosted MCP and Microsoft Entra values above are supplied.

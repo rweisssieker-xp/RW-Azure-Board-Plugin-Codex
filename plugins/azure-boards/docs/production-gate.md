@@ -6,9 +6,10 @@ Run the production gate from `plugins/azure-boards/scripts`:
 npm run check:production
 ```
 
-The gate intentionally fails while publisher-owned production values are still placeholders. Passing requires:
+The gate intentionally fails while production deployment values are still placeholders. Passing requires:
 
 - `.codex-plugin/plugin.json` uses real support, website, repository, privacy policy, and terms URLs.
+- `chatgpt-app-submission.json` uses real support, website, privacy policy, terms, hosted MCP, and Microsoft Entra values.
 - Screenshot assets exist and are referenced by the manifest.
 - Hosted MCP source, Dockerfile, deployment docs, and env template exist.
 - Product operating system functions are implemented.
@@ -16,7 +17,7 @@ The gate intentionally fails while publisher-owned production values are still p
 - Reminder plans include schedule metadata.
 - `docs/release-handoff-checklist.md` covers publisher metadata, hosted MCP, OAuth, product evidence, and final gates.
 
-Prepare the publisher-owned values by copying `production-publisher-inputs.example.json` to `production-publisher-inputs.json`, replacing every placeholder with the real production value, and applying it from `plugins/azure-boards/scripts`:
+Prepare deployment values by copying `production-publisher-inputs.example.json` to `production-publisher-inputs.json`, replacing every placeholder with the real production value, and applying it from `plugins/azure-boards/scripts`:
 
 ```powershell
 npm run apply:production-inputs -- ..\production-publisher-inputs.json
@@ -29,4 +30,4 @@ Use JSON output for release automation:
 node production-readiness-check.mjs --json
 ```
 
-Do not bypass failed publisher-owned URL checks for App Directory or Azure DevOps Marketplace review. Those values must come from the actual publisher and deployment environment.
+Do not bypass failed hosted MCP or Microsoft Entra checks for App Directory or Azure DevOps Marketplace review. Those values must come from the actual deployment environment.

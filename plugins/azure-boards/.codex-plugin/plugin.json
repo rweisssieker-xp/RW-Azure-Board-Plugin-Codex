@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "Azure Boards plugin with Microsoft Entra login or token access, Work Item operations, persistent snapshots, approval queues, audit trails, role cockpits, and decision-pack exports.",
   "author": {
-    "name": "RW Local Productivity",
-    "email": "support@example.invalid",
-    "url": "https://example.invalid/rw-local-productivity"
+    "name": "Reiner Weisssieker",
+    "email": "rweisssieker@gmail.com",
+    "url": "https://github.com/rweisssieker-xp"
   },
-  "homepage": "https://example.invalid/azure-boards",
-  "repository": "https://example.invalid/azure-boards/repository",
+  "homepage": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex",
+  "repository": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex",
   "license": "MIT",
   "keywords": [
     "azure-boards",
@@ -25,15 +25,15 @@
     "displayName": "Azure Boards",
     "shortDescription": "Governance, approval, and delivery cockpit for Azure Boards",
     "longDescription": "Use Azure Boards with individual Microsoft Entra login or token access to query, create, update, and comment on Work Items, plus explainable delivery and governance tools for persistent snapshots, approval queues, audit trails, role cockpits, admin policy controls, reminder plans, decision packs, delivery risk, process bottlenecks, SLA aging, governance gaps, scope creep, and executive status reporting.",
-    "developerName": "RW Local Productivity",
+    "developerName": "Reiner Weisssieker",
     "category": "Productivity",
     "capabilities": [
       "Interactive",
       "Write"
     ],
-    "websiteURL": "https://example.invalid/azure-boards",
-    "privacyPolicyURL": "https://example.invalid/azure-boards/privacy",
-    "termsOfServiceURL": "https://example.invalid/azure-boards/terms",
+    "websiteURL": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex",
+    "privacyPolicyURL": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/plugins/azure-boards/docs/privacy-policy.md",
+    "termsOfServiceURL": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/plugins/azure-boards/docs/terms-of-service.md",
     "defaultPrompt": [
       "Show delivery risks and SLA issues in my Azure Boards project.",
       "Build an approval queue and audit trail for these recommendations.",
