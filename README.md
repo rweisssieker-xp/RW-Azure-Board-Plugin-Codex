@@ -81,6 +81,16 @@ See:
 - `plugins/azure-boards/docs/hosted-mcp-deployment.md`
 - `plugins/azure-boards/docs/release-handoff-checklist.md`
 
+## Submission Artifact
+
+Do not submit the repository root as the plugin artifact. Build the submission package instead:
+
+```powershell
+.\tools\New-AzureBoardsPluginSubmission.ps1
+```
+
+The generated ZIP is written to `artifacts/azure-board-plugin-codex-submission.zip`. Its root contains `.codex-plugin/plugin.json`, excludes tests and source files that are not needed at runtime, and keeps the file count under the submission scanner limit.
+
 ## Safety
 
 Do not commit real `.env` files, token caches, PATs, bearer tokens, Microsoft Entra secrets, or private `production-publisher-inputs.json` files. The root `.gitignore` keeps those local files out of version control while allowing safe example files such as `.env.production.example`.

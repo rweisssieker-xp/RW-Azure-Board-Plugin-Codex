@@ -93,6 +93,16 @@ See `docs/production-readiness.md` for the hosted MCP, Microsoft Entra OAuth, pu
 See `docs/hosted-mcp-deployment.md` for the hosted HTTP MCP endpoint, Dockerfile, `/healthz`, `/mcp`, and smoke-test commands.
 Run `npm run check:production` from `plugins/azure-boards/scripts` as the final release gate; it is expected to fail until the hosted MCP URL and production Microsoft Entra client id replace deployment placeholders.
 
+## Submission Artifact
+
+Submit a packaged plugin artifact, not the repository root. From the repository root:
+
+```powershell
+.\tools\New-AzureBoardsPluginSubmission.ps1
+```
+
+Use `artifacts\azure-board-plugin-codex-submission.zip` for scanner or marketplace submission. The artifact root contains `.codex-plugin/plugin.json` and excludes tests, TypeScript sources, local temp stores, and development-only scripts.
+
 ## Verify Auth Mode
 
 Call `azure_boards_auth_status` to see whether the server is using PAT, bearer token, OAuth cache, or device-code OAuth setup.
