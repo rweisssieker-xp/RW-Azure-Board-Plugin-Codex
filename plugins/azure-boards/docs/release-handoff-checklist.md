@@ -1,4 +1,4 @@
-# Azure Boards Release Handoff Checklist
+# Azure Board Plugin Codex Release Handoff Checklist
 
 Use this checklist when moving the plugin from local review to a production publisher submission.
 

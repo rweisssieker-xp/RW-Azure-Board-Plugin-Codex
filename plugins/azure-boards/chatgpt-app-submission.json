@@ -2,9 +2,9 @@
   "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
   "schema_version": 1,
   "app_info": {
-    "display_name": "Azure Boards",
+    "display_name": "Azure Board Plugin Codex",
     "subtitle": "Manage work items",
-    "description": "Azure Boards helps users query Work Items, inspect delivery risk, prepare governance and executive reports, generate safe change previews, and apply explicitly approved Azure DevOps updates through ChatGPT.",
+    "description": "Azure Board Plugin Codex helps users query Azure Boards Work Items, inspect delivery risk, prepare governance and executive reports, generate safe change previews, and apply explicitly approved Azure DevOps updates through ChatGPT.",
     "category": "PRODUCTIVITY"
   },
   "production": {

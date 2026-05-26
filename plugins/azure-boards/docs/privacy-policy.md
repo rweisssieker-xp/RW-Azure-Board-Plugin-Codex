@@ -2,7 +2,7 @@
 
 Publisher: Reiner Weisssieker
 
-Product: Azure Boards plugin for Codex and ChatGPT-compatible MCP clients.
+Product: Azure Board Plugin Codex for Codex and ChatGPT-compatible MCP clients.
 
 ## Data Processed
 

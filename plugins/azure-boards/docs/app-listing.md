@@ -1,8 +1,8 @@
-# Azure Boards App Listing Draft
+# Azure Board Plugin Codex App Listing Draft
 
 ## Display Name
 
-Azure Boards
+Azure Board Plugin Codex
 
 ## Subtitle
 
@@ -14,7 +14,7 @@ Review Azure Boards work, detect delivery and governance risk, prepare approval 
 
 ## Long Description
 
-Azure Boards turns work item data into an operational decision cockpit for product, delivery, portfolio, and compliance teams. It supports read-only board analysis, role-specific views, persistent snapshots and baselines, approval queues, audit trails, policy checks, benefit follow-ups, and decision pack exports.
+Azure Board Plugin Codex turns Azure Boards work item data into an operational decision cockpit for product, delivery, portfolio, and compliance teams. It supports read-only board analysis, role-specific views, persistent snapshots and baselines, approval queues, audit trails, policy checks, benefit follow-ups, and decision pack exports.
 
 Write-capable workflows use explicit preview and apply steps. Users can inspect proposed field changes, comments, state transitions, approval selections, secondary-approval needs, and verification steps before any Azure DevOps write occurs. After apply, result review compares apply results with current Work Items and produces audit events.
 

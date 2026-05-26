@@ -1,4 +1,4 @@
-# Azure Boards Production Readiness
+# Azure Board Plugin Codex Production Readiness
 
 This plugin is production-oriented when the local development defaults are replaced with owned publisher assets, a hosted MCP transport, and a production Microsoft Entra app registration.
 

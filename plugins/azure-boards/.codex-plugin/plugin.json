@@ -1,7 +1,7 @@
 {
   "name": "azure-boards",
   "version": "0.1.0",
-  "description": "Azure Boards plugin with Microsoft Entra login or token access, Work Item operations, persistent snapshots, approval queues, audit trails, role cockpits, and decision-pack exports.",
+  "description": "Azure Board Plugin Codex with Microsoft Entra login or token access, Work Item operations, persistent snapshots, approval queues, audit trails, role cockpits, and decision-pack exports.",
   "author": {
     "name": "Reiner Weisssieker",
     "email": "rweisssieker@gmail.com",
@@ -22,9 +22,9 @@
   "mcpServers": "./.mcp.json",
   "apps": "./.app.json",
   "interface": {
-    "displayName": "Azure Boards",
+    "displayName": "Azure Board Plugin Codex",
     "shortDescription": "Governance, approval, and delivery cockpit for Azure Boards",
-    "longDescription": "Use Azure Boards with individual Microsoft Entra login or token access to query, create, update, and comment on Work Items, plus explainable delivery and governance tools for persistent snapshots, approval queues, audit trails, role cockpits, admin policy controls, reminder plans, decision packs, delivery risk, process bottlenecks, SLA aging, governance gaps, scope creep, and executive status reporting.",
+    "longDescription": "Use Azure Board Plugin Codex with individual Microsoft Entra login or token access to query, create, update, and comment on Azure Boards Work Items, plus explainable delivery and governance tools for persistent snapshots, approval queues, audit trails, role cockpits, admin policy controls, reminder plans, decision packs, delivery risk, process bottlenecks, SLA aging, governance gaps, scope creep, and executive status reporting.",
     "developerName": "Reiner Weisssieker",
     "category": "Productivity",
     "capabilities": [

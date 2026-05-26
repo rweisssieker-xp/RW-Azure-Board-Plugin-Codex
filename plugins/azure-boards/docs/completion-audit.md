@@ -1,4 +1,4 @@
-# Azure Boards USP And Feature Completion Audit
+# Azure Board Plugin Codex USP And Feature Completion Audit
 
 Date: 2026-05-26
 

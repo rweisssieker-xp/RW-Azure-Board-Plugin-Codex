@@ -1,10 +1,10 @@
-# RW Azure Board Plugin Codex
+# Azure Board Plugin Codex
 
-Codex plugin workspace for an Azure Boards MCP integration. The main plugin lives in `plugins/azure-boards` and provides Azure DevOps Work Item access, deterministic governance analytics, product operating workflows, a static review UI, hosted MCP deployment support, and production-readiness checks.
+Codex plugin workspace for Azure Board Plugin Codex, an Azure Boards MCP integration. The main plugin lives in `plugins/azure-boards` and provides Azure DevOps Work Item access, deterministic governance analytics, product operating workflows, a static review UI, hosted MCP deployment support, and production-readiness checks.
 
 ## Repository Layout
 
-- `plugins/azure-boards/`: Azure Boards Codex plugin package.
+- `plugins/azure-boards/`: Azure Board Plugin Codex package.
 - `plugins/azure-boards/scripts/`: TypeScript MCP server, hosted HTTP MCP server, tests, and release checks.
 - `plugins/azure-boards/ui/`: Static no-write review cockpit for local screenshots and demos.
 - `plugins/azure-boards/docs/`: Production readiness, hosted MCP deployment, privacy policy, terms, release handoff, and completion audit.

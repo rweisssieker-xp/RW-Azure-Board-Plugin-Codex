@@ -1,4 +1,4 @@
-# Azure Boards Codex Plugin
+# Azure Board Plugin Codex
 
 Repo-local Codex plugin for Azure Boards with individual Microsoft Entra login or token access, Work Item operations, and explainable AI tools for delivery and process management.
 
