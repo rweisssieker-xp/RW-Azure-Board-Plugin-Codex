@@ -1,9 +1,11 @@
 import { createHash } from "node:crypto";
-import { actionPlan, createProcessBaseline, roleBasedReport, watchlistReport } from "./analytics.js";
-import { auditDecisionLog } from "./evidenceLedger.js";
+import { actionPlan, createProcessBaseline, roleBasedReport, scopeCreepDetector, watchlistReport } from "./analytics.js";
+import { autonomousGovernanceAgent, decisionMemory, recommendationQualityScore } from "./decisionAssurance.js";
+import { auditDecisionLog, evidencePackCompleteness } from "./evidenceLedger.js";
+import { businessDigitalTwin, modelRiskGovernance, promptEvalSuite, roiConfidenceWorkflow } from "./enterpriseValueTrust.js";
 import { saveNamedArtifact } from "./localStore.js";
 import { benefitRealizationFollowup, handoverPackGenerator, operatingRhythmPlanner } from "./governanceOperatingSystem.js";
-import { aiSteeringCommitteePack } from "./steeringEngine.js";
+import { aiSteeringCommitteePack, changePortfolioSimulator, decisionTraceabilityGraph, outcomeRealizationCockpit, valueLeakageDetector } from "./steeringEngine.js";
 export const SNAPSHOT_KIND = "process-snapshot";
 export const BASELINE_KIND = "process-baseline";
 export const APPROVAL_QUEUE_KIND = "approval-queue";
@@ -11,6 +13,124 @@ export const AUDIT_TRAIL_KIND = "decision-audit-trail";
 export const ADMIN_CONFIG_KIND = "admin-config";
 export const DECISION_PACK_KIND = "decision-pack";
 const DEFAULT_ROLES = ["product-owner", "scrum-master", "cio", "compliance"];
+export function outcomeProofEngine(items, evidence = [], options = {}) {
+    const outcomes = outcomeRealizationCockpit(items, options);
+    const valueLeakage = valueLeakageDetector(items, options);
+    const roi = roiConfidenceWorkflow(items, evidence);
+    return {
+        ...report("Outcome Proof Engine", [...outcomes.findings, ...valueLeakage.findings].slice(0, 10), "Outcome proof compares promised value, realized benefit evidence, ROI maturity, and leakage risk after delivery.", {
+            assessedItems: items.length,
+            outcomeFindings: outcomes.findings.length,
+            leakageFindings: valueLeakage.findings.length,
+            roiFindings: roi.findings.length
+        }),
+        writePerformed: false,
+        proof: { outcomes, valueLeakage, roi, evidenceCount: evidence.length }
+    };
+}
+export function decisionMemoryLearning(items, decisions = [], outcomes = []) {
+    const memory = decisionMemory(items, decisions, outcomes);
+    const quality = recommendationQualityScore(decisions.length ? decisions : memory.memory, outcomes);
+    return {
+        ...report("Decision Memory Learning", [...memory.findings, ...quality.findings].slice(0, 10), "Decision memory learning identifies decisions, later outcomes, recommendation quality, and repeated decision patterns.", {
+            decisions: decisions.length || Number(memory.metrics?.decisions || 0),
+            outcomes: outcomes.length,
+            learningFindings: quality.findings.length
+        }),
+        writePerformed: false,
+        learning: { memory, quality }
+    };
+}
+export function boardToValueMapping(items, evidence = [], options = {}) {
+    const twin = businessDigitalTwin(items, evidence, options);
+    const leakage = valueLeakageDetector(items, options);
+    const roi = roiConfidenceWorkflow(items, evidence);
+    return {
+        ...report("Board To Value Mapping", [...twin.findings, ...leakage.findings, ...roi.findings].slice(0, 10), "Board-to-value mapping links Work Items to business impact, external KPI evidence, ROI confidence, and value leakage.", {
+            mappedItems: items.length,
+            evidence: evidence.length,
+            valueFindings: twin.findings.length + leakage.findings.length
+        }),
+        writePerformed: false,
+        valueMap: { businessDigitalTwin: twin, valueLeakage: leakage, roi }
+    };
+}
+export function autonomousGovernanceOperatingPlan(items, evidence = [], options = {}) {
+    const agent = autonomousGovernanceAgent(items, evidence, options);
+    const reminders = automatedReminderPlan(items, options);
+    const audit = auditDecisionLog(items, evidence);
+    return {
+        ...report("Autonomous Governance Operating Plan", [...agent.findings, ...reminders.findings, ...audit.findings].slice(0, 10), "Autonomous governance prepares recurring watchlists, meeting agendas, audit evidence, and follow-up prompts without scheduling or writing.", {
+            agentFindings: agent.findings.length,
+            reminders: reminders.reminders.length,
+            auditFindings: audit.findings.length
+        }),
+        writePerformed: false,
+        operatingPlan: { agent, reminders, audit }
+    };
+}
+export function complianceEvidenceScore(items, evidence = [], policy = {}) {
+    const completeness = evidencePackCompleteness(items, evidence, policy);
+    const controls = modelRiskGovernance({ llmMode: "deterministic-local", dataPolicy: "evidence-first" }, [{ name: "work-items" }, { name: "comments" }, { name: "attachments-metadata" }]);
+    const score = Math.max(0, Math.min(100, 100 - completeness.findings.length * 12));
+    return {
+        ...report("Compliance Evidence Score", [...completeness.findings, ...controls.findings].slice(0, 10), `Compliance evidence score is ${score}/100 based on required evidence, ownership, approvals, and model/data controls.`, { score, evidenceFindings: completeness.findings.length, controls: controls.findings.length }),
+        writePerformed: false,
+        scorecard: { score, completeness, controls }
+    };
+}
+export function scopeCreepRadar(currentItems, previousItems = [], options = {}) {
+    const scope = scopeCreepDetector(currentItems, previousItems);
+    const simulation = changePortfolioSimulator(currentItems, { ...options, removeIds: arrayOfNumbers(options.removeIds) });
+    return {
+        ...report("Scope Creep Radar", [...scope.findings, ...simulation.findings].slice(0, 10), "Scope creep radar compares snapshots, highlights unapproved growth, and simulates capacity or value impact.", { scopeFindings: scope.findings.length, currentItems: currentItems.length, previousItems: previousItems.length }),
+        writePerformed: false,
+        radar: { scope, simulation }
+    };
+}
+export function approvalSimulation(items, recommendations = [], options = {}) {
+    const queue = approvalQueue(items, recommendations, options);
+    const selectedIds = queue.queue.filter((entry) => entry.selected).map((entry) => stringFrom(entry.id));
+    const plan = approvalApplyPlan(queue.queue, { selectedIds, actor: stringFrom(options.actor) || "simulator", rationale: "Approval simulation." }, options);
+    const affectedOwners = Array.from(new Set(queue.queue.map((entry) => {
+        const item = items.find((candidate) => candidate.id === numberFrom(entry.workItemId));
+        return item?.assignedTo || "unassigned";
+    })));
+    return {
+        ...report("Approval Simulation", [...queue.findings, ...plan.findings].slice(0, 10), "Approval simulation previews selected recommendations, affected Work Items, owners, risks, and required verification before any apply workflow.", { queueItems: queue.queue.length, selected: selectedIds.length, affectedOwners: affectedOwners.length }),
+        writePerformed: false,
+        simulation: { queue, plan, affectedOwners }
+    };
+}
+export function executiveSteeringRoom(items, evidence = [], options = {}) {
+    const steeringPack = aiSteeringCommitteePack(items, [], options);
+    const outcomeProof = outcomeProofEngine(items, evidence, options);
+    const decisions = approvalQueue(items, [], { ...options, maxActions: positive(options.maxActions, 8) });
+    return {
+        ...report("Executive Steering Room", [...steeringPack.findings, ...outcomeProof.findings, ...decisions.findings].slice(0, 12), "Executive steering room organizes approve, park, kill, and escalate decisions with outcome proof and auditable evidence.", { steeringFindings: steeringPack.findings.length, decisionCandidates: decisions.queue.length, outcomeFindings: outcomeProof.findings.length }),
+        writePerformed: false,
+        room: { steeringPack, outcomeProof, decisionQueue: decisions, decisions: ["approve", "park", "kill", "escalate"] }
+    };
+}
+export function decisionKnowledgeGraph(items, evidence = [], options = {}) {
+    const graph = decisionTraceabilityGraph(items, evidence);
+    const audit = auditDecisionLog(items, evidence);
+    return {
+        ...report("Decision Knowledge Graph", [...graph.findings, ...audit.findings].slice(0, 10), "Decision knowledge graph connects Work Items, comments, attachments, evidence, decisions, risks, tests, and benefits for traceable governance.", { graphFindings: graph.findings.length, auditFindings: audit.findings.length }),
+        writePerformed: false,
+        graph: { traceability: graph, audit }
+    };
+}
+export function aiReadinessPromptGovernance(config = {}, prompts = [], cases = []) {
+    const admin = adminConsoleConfig(config);
+    const modelRisk = modelRiskGovernance(config, arrayOfRecords(config.dataClasses));
+    const promptEval = promptEvalSuite(prompts, cases);
+    return {
+        ...report("AI Readiness Prompt Governance", [...admin.findings, ...modelRisk.findings, ...promptEval.findings].slice(0, 10), "AI readiness and prompt governance validates model routing, data classes, prompts, policies, and LLM mode before AI-assisted board automation is enabled.", { adminFindings: admin.findings.length, modelRiskFindings: modelRisk.findings.length, promptFindings: promptEval.findings.length }),
+        writePerformed: false,
+        readiness: { admin, modelRisk, promptEval }
+    };
+}
 export function createPersistentSnapshot(name, items, evidence = [], options = {}) {
     const policy = objectFrom(options.policy);
     const snapshot = {
@@ -448,6 +568,12 @@ function objectFrom(value) {
 }
 function arrayOfStrings(value) {
     return Array.isArray(value) ? value.map(stringFrom).filter(Boolean) : [];
+}
+function arrayOfNumbers(value) {
+    return Array.isArray(value) ? value.map(numberFrom).filter((entry) => entry !== undefined) : [];
+}
+function arrayOfRecords(value) {
+    return Array.isArray(value) ? value.filter((entry) => Boolean(entry && typeof entry === "object" && !Array.isArray(entry))) : [];
 }
 function stringFrom(value) {
     return typeof value === "string" ? value.trim() : "";

@@ -42,6 +42,21 @@ if (submission) {
   checkValue(!containsPlaceholder(submission.production?.terms_of_service_url), "Submission terms URL is publisher-owned");
   checkValue(!containsPlaceholder(submission.production?.hosted_mcp_url), "Submission hosted MCP URL is production-owned");
   checkValue(!containsPlaceholder(submission.production?.microsoft_entra?.client_id), "Submission Microsoft Entra client id is production-owned");
+  const submittedToolNames = new Set(Object.keys(submission.tools ?? {}));
+  for (const toolName of [
+    "azure_boards_product_outcome_proof_engine",
+    "azure_boards_product_decision_memory_learning",
+    "azure_boards_product_board_to_value_mapping",
+    "azure_boards_product_autonomous_governance_plan",
+    "azure_boards_product_compliance_evidence_score",
+    "azure_boards_product_scope_creep_radar",
+    "azure_boards_product_approval_simulation",
+    "azure_boards_product_executive_steering_room",
+    "azure_boards_product_decision_knowledge_graph",
+    "azure_boards_product_ai_readiness_prompt_governance"
+  ]) {
+    checkValue(submittedToolNames.has(toolName), `Submission includes ${toolName}`);
+  }
 }
 
 const envTemplate = readText(".env.production.example");
@@ -102,7 +117,17 @@ if (productSource) {
     "adminConsoleConfig",
     "automatedReminderPlan",
     "decisionPackExport",
-    "decisionPackImport"
+    "decisionPackImport",
+    "outcomeProofEngine",
+    "decisionMemoryLearning",
+    "boardToValueMapping",
+    "autonomousGovernanceOperatingPlan",
+    "complianceEvidenceScore",
+    "scopeCreepRadar",
+    "approvalSimulation",
+    "executiveSteeringRoom",
+    "decisionKnowledgeGraph",
+    "aiReadinessPromptGovernance"
   ]) {
     checkValue(productSource.includes(`function ${symbol}`), `${symbol} is implemented`);
   }

@@ -1,10 +1,12 @@
 import { createHash } from "node:crypto";
 
-import { actionPlan, createProcessBaseline, roleBasedReport, watchlistReport } from "./analytics.js";
-import { auditDecisionLog } from "./evidenceLedger.js";
+import { actionPlan, createProcessBaseline, roleBasedReport, scopeCreepDetector, watchlistReport } from "./analytics.js";
+import { autonomousGovernanceAgent, decisionMemory, recommendationQualityScore } from "./decisionAssurance.js";
+import { auditDecisionLog, evidencePackCompleteness } from "./evidenceLedger.js";
+import { businessDigitalTwin, modelRiskGovernance, promptEvalSuite, roiConfidenceWorkflow } from "./enterpriseValueTrust.js";
 import { saveNamedArtifact, type NamedArtifact } from "./localStore.js";
 import { benefitRealizationFollowup, handoverPackGenerator, operatingRhythmPlanner } from "./governanceOperatingSystem.js";
-import { aiSteeringCommitteePack } from "./steeringEngine.js";
+import { aiSteeringCommitteePack, changePortfolioSimulator, decisionTraceabilityGraph, outcomeRealizationCockpit, valueLeakageDetector } from "./steeringEngine.js";
 import type { Finding, Report, WorkItemSummary } from "./types.js";
 
 export const SNAPSHOT_KIND = "process-snapshot";
@@ -15,6 +17,224 @@ export const ADMIN_CONFIG_KIND = "admin-config";
 export const DECISION_PACK_KIND = "decision-pack";
 
 const DEFAULT_ROLES = ["product-owner", "scrum-master", "cio", "compliance"];
+
+export function outcomeProofEngine(
+  items: WorkItemSummary[],
+  evidence: Record<string, unknown>[] = [],
+  options: Record<string, unknown> = {}
+): Report & { writePerformed: false; proof: Record<string, unknown> } {
+  const outcomes = outcomeRealizationCockpit(items as never, options);
+  const valueLeakage = valueLeakageDetector(items as never, options);
+  const roi = roiConfidenceWorkflow(items as never, evidence);
+  return {
+    ...report(
+      "Outcome Proof Engine",
+      [...outcomes.findings, ...valueLeakage.findings].slice(0, 10),
+      "Outcome proof compares promised value, realized benefit evidence, ROI maturity, and leakage risk after delivery.",
+      {
+        assessedItems: items.length,
+        outcomeFindings: outcomes.findings.length,
+        leakageFindings: valueLeakage.findings.length,
+        roiFindings: roi.findings.length
+      }
+    ),
+    writePerformed: false,
+    proof: { outcomes, valueLeakage, roi, evidenceCount: evidence.length }
+  };
+}
+
+export function decisionMemoryLearning(
+  items: WorkItemSummary[],
+  decisions: Record<string, unknown>[] = [],
+  outcomes: Record<string, unknown>[] = []
+): Report & { writePerformed: false; learning: Record<string, unknown> } {
+  const memory = decisionMemory(items as never, decisions, outcomes);
+  const quality = recommendationQualityScore(decisions.length ? decisions : memory.memory as Record<string, unknown>[], outcomes);
+  return {
+    ...report(
+      "Decision Memory Learning",
+      [...memory.findings, ...quality.findings].slice(0, 10),
+      "Decision memory learning identifies decisions, later outcomes, recommendation quality, and repeated decision patterns.",
+      {
+        decisions: decisions.length || Number(memory.metrics?.decisions || 0),
+        outcomes: outcomes.length,
+        learningFindings: quality.findings.length
+      }
+    ),
+    writePerformed: false,
+    learning: { memory, quality }
+  };
+}
+
+export function boardToValueMapping(
+  items: WorkItemSummary[],
+  evidence: Record<string, unknown>[] = [],
+  options: Record<string, unknown> = {}
+): Report & { writePerformed: false; valueMap: Record<string, unknown> } {
+  const twin = businessDigitalTwin(items as never, evidence, options);
+  const leakage = valueLeakageDetector(items as never, options);
+  const roi = roiConfidenceWorkflow(items as never, evidence);
+  return {
+    ...report(
+      "Board To Value Mapping",
+      [...twin.findings, ...leakage.findings, ...roi.findings].slice(0, 10),
+      "Board-to-value mapping links Work Items to business impact, external KPI evidence, ROI confidence, and value leakage.",
+      {
+        mappedItems: items.length,
+        evidence: evidence.length,
+        valueFindings: twin.findings.length + leakage.findings.length
+      }
+    ),
+    writePerformed: false,
+    valueMap: { businessDigitalTwin: twin, valueLeakage: leakage, roi }
+  };
+}
+
+export function autonomousGovernanceOperatingPlan(
+  items: WorkItemSummary[],
+  evidence: Record<string, unknown>[] = [],
+  options: Record<string, unknown> = {}
+): Report & { writePerformed: false; operatingPlan: Record<string, unknown> } {
+  const agent = autonomousGovernanceAgent(items as never, evidence, options);
+  const reminders = automatedReminderPlan(items, options);
+  const audit = auditDecisionLog(items as never, evidence);
+  return {
+    ...report(
+      "Autonomous Governance Operating Plan",
+      [...agent.findings, ...reminders.findings, ...audit.findings].slice(0, 10),
+      "Autonomous governance prepares recurring watchlists, meeting agendas, audit evidence, and follow-up prompts without scheduling or writing.",
+      {
+        agentFindings: agent.findings.length,
+        reminders: reminders.reminders.length,
+        auditFindings: audit.findings.length
+      }
+    ),
+    writePerformed: false,
+    operatingPlan: { agent, reminders, audit }
+  };
+}
+
+export function complianceEvidenceScore(
+  items: WorkItemSummary[],
+  evidence: Record<string, unknown>[] = [],
+  policy: Record<string, unknown> = {}
+): Report & { writePerformed: false; scorecard: Record<string, unknown> } {
+  const completeness = evidencePackCompleteness(items as never, evidence, policy);
+  const controls = modelRiskGovernance({ llmMode: "deterministic-local", dataPolicy: "evidence-first" }, [{ name: "work-items" }, { name: "comments" }, { name: "attachments-metadata" }]);
+  const score = Math.max(0, Math.min(100, 100 - completeness.findings.length * 12));
+  return {
+    ...report(
+      "Compliance Evidence Score",
+      [...completeness.findings, ...controls.findings].slice(0, 10),
+      `Compliance evidence score is ${score}/100 based on required evidence, ownership, approvals, and model/data controls.`,
+      { score, evidenceFindings: completeness.findings.length, controls: controls.findings.length }
+    ),
+    writePerformed: false,
+    scorecard: { score, completeness, controls }
+  };
+}
+
+export function scopeCreepRadar(
+  currentItems: WorkItemSummary[],
+  previousItems: WorkItemSummary[] = [],
+  options: Record<string, unknown> = {}
+): Report & { writePerformed: false; radar: Record<string, unknown> } {
+  const scope = scopeCreepDetector(currentItems, previousItems);
+  const simulation = changePortfolioSimulator(currentItems as never, { ...options, removeIds: arrayOfNumbers(options.removeIds) });
+  return {
+    ...report(
+      "Scope Creep Radar",
+      [...scope.findings, ...simulation.findings].slice(0, 10),
+      "Scope creep radar compares snapshots, highlights unapproved growth, and simulates capacity or value impact.",
+      { scopeFindings: scope.findings.length, currentItems: currentItems.length, previousItems: previousItems.length }
+    ),
+    writePerformed: false,
+    radar: { scope, simulation }
+  };
+}
+
+export function approvalSimulation(
+  items: WorkItemSummary[],
+  recommendations: Record<string, unknown>[] = [],
+  options: Record<string, unknown> = {}
+): Report & { writePerformed: false; simulation: Record<string, unknown> } {
+  const queue = approvalQueue(items, recommendations, options);
+  const selectedIds = queue.queue.filter((entry) => entry.selected).map((entry) => stringFrom(entry.id));
+  const plan = approvalApplyPlan(queue.queue, { selectedIds, actor: stringFrom(options.actor) || "simulator", rationale: "Approval simulation." }, options);
+  const affectedOwners = Array.from(new Set(queue.queue.map((entry) => {
+    const item = items.find((candidate) => candidate.id === numberFrom(entry.workItemId));
+    return item?.assignedTo || "unassigned";
+  })));
+  return {
+    ...report(
+      "Approval Simulation",
+      [...queue.findings, ...plan.findings].slice(0, 10),
+      "Approval simulation previews selected recommendations, affected Work Items, owners, risks, and required verification before any apply workflow.",
+      { queueItems: queue.queue.length, selected: selectedIds.length, affectedOwners: affectedOwners.length }
+    ),
+    writePerformed: false,
+    simulation: { queue, plan, affectedOwners }
+  };
+}
+
+export function executiveSteeringRoom(
+  items: WorkItemSummary[],
+  evidence: Record<string, unknown>[] = [],
+  options: Record<string, unknown> = {}
+): Report & { writePerformed: false; room: Record<string, unknown> } {
+  const steeringPack = aiSteeringCommitteePack(items as never, [], options);
+  const outcomeProof = outcomeProofEngine(items, evidence, options);
+  const decisions = approvalQueue(items, [], { ...options, maxActions: positive(options.maxActions, 8) });
+  return {
+    ...report(
+      "Executive Steering Room",
+      [...steeringPack.findings, ...outcomeProof.findings, ...decisions.findings].slice(0, 12),
+      "Executive steering room organizes approve, park, kill, and escalate decisions with outcome proof and auditable evidence.",
+      { steeringFindings: steeringPack.findings.length, decisionCandidates: decisions.queue.length, outcomeFindings: outcomeProof.findings.length }
+    ),
+    writePerformed: false,
+    room: { steeringPack, outcomeProof, decisionQueue: decisions, decisions: ["approve", "park", "kill", "escalate"] }
+  };
+}
+
+export function decisionKnowledgeGraph(
+  items: WorkItemSummary[],
+  evidence: Record<string, unknown>[] = [],
+  options: Record<string, unknown> = {}
+): Report & { writePerformed: false; graph: Record<string, unknown> } {
+  const graph = decisionTraceabilityGraph(items as never, evidence);
+  const audit = auditDecisionLog(items as never, evidence);
+  return {
+    ...report(
+      "Decision Knowledge Graph",
+      [...graph.findings, ...audit.findings].slice(0, 10),
+      "Decision knowledge graph connects Work Items, comments, attachments, evidence, decisions, risks, tests, and benefits for traceable governance.",
+      { graphFindings: graph.findings.length, auditFindings: audit.findings.length }
+    ),
+    writePerformed: false,
+    graph: { traceability: graph, audit }
+  };
+}
+
+export function aiReadinessPromptGovernance(
+  config: Record<string, unknown> = {},
+  prompts: Record<string, unknown>[] = [],
+  cases: Record<string, unknown>[] = []
+): Report & { writePerformed: false; readiness: Record<string, unknown> } {
+  const admin = adminConsoleConfig(config);
+  const modelRisk = modelRiskGovernance(config, arrayOfRecords(config.dataClasses));
+  const promptEval = promptEvalSuite(prompts, cases);
+  return {
+    ...report(
+      "AI Readiness Prompt Governance",
+      [...admin.findings, ...modelRisk.findings, ...promptEval.findings].slice(0, 10),
+      "AI readiness and prompt governance validates model routing, data classes, prompts, policies, and LLM mode before AI-assisted board automation is enabled.",
+      { adminFindings: admin.findings.length, modelRiskFindings: modelRisk.findings.length, promptFindings: promptEval.findings.length }
+    ),
+    writePerformed: false,
+    readiness: { admin, modelRisk, promptEval }
+  };
+}
 
 export function createPersistentSnapshot(
   name: string,
@@ -565,6 +785,14 @@ function objectFrom(value: unknown): Record<string, unknown> {
 
 function arrayOfStrings(value: unknown): string[] {
   return Array.isArray(value) ? value.map(stringFrom).filter(Boolean) : [];
+}
+
+function arrayOfNumbers(value: unknown): number[] {
+  return Array.isArray(value) ? value.map(numberFrom).filter((entry): entry is number => entry !== undefined) : [];
+}
+
+function arrayOfRecords(value: unknown): Record<string, unknown>[] {
+  return Array.isArray(value) ? value.filter((entry): entry is Record<string, unknown> => Boolean(entry && typeof entry === "object" && !Array.isArray(entry))) : [];
 }
 
 function stringFrom(value: unknown): string {

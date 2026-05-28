@@ -14,7 +14,7 @@ Review Azure Boards work, detect delivery and governance risk, prepare approval 
 
 ## Long Description
 
-Azure Board Plugin Codex turns Azure Boards work item data into an operational decision cockpit for product, delivery, portfolio, and compliance teams. It supports read-only board analysis, role-specific views, persistent snapshots and baselines, approval queues, audit trails, policy checks, benefit follow-ups, and decision pack exports.
+Azure Board Plugin Codex turns Azure Boards work item data into an operational decision cockpit for product, delivery, portfolio, and compliance teams. It supports read-only board analysis, role-specific views, persistent snapshots and baselines, approval queues, audit trails, policy checks, benefit follow-ups, decision pack exports, outcome proof, decision memory learning, Board-to-Value mapping, autonomous governance planning, compliance evidence scoring, scope creep detection, approval simulation, executive steering rooms, decision knowledge graphs, and AI readiness governance.
 
 Write-capable workflows use explicit preview and apply steps. Users can inspect proposed field changes, comments, state transitions, approval selections, secondary-approval needs, and verification steps before any Azure DevOps write occurs. After apply, result review compares apply results with current Work Items and produces audit events.
 
@@ -32,6 +32,7 @@ Additional screenshots to capture before marketplace submission:
 3. Decision Audit Trail: accepted, rejected, overridden, and recorded events.
 4. Role Cockpits: Product Owner, Scrum Master, CIO, and Compliance views.
 5. Decision Pack Export: Steering Pack, Audit Trail, Handover Pack, Operating Rhythm Markdown, and import/export manifest.
+6. Executive Steering Room: outcome proof, Board-to-Value map, approval simulation, and decision knowledge graph.
 
 Use `demo/erp-board-demo.json` or sanitized tenant data only.
 

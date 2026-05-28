@@ -1988,6 +1988,126 @@
         "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
         "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
       }
+    },
+    "azure_boards_product_outcome_proof_engine": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Prove whether delivered Work Items produced the expected outcome value by comparing benefits, ROI evidence, and leakage risk. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_decision_memory_learning": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Learn from past accepted, rejected, overridden, and observed decisions to expose recommendation quality and repeated decision patterns. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_board_to_value_mapping": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Map Azure Boards Work Items to business value, KPI evidence, ROI confidence, and value leakage. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_autonomous_governance_plan": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Prepare recurring governance watchlists, audit packs, meeting prompts, and follow-up plans without scheduling or applying writes. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_compliance_evidence_score": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Score whether requirements have sufficient owners, approvals, evidence, and model/data controls for compliance review. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_scope_creep_radar": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Detect unapproved scope growth by comparing current and previous snapshots and simulating capacity/value impact. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_approval_simulation": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Simulate approval impact before applying changes, including selected recommendations, affected owners, risks, and verification steps. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_executive_steering_room": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Create an executive approve, park, kill, or escalate cockpit with steering findings, outcome proof, and decision queue. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_decision_knowledge_graph": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Build a decision knowledge graph linking Work Items, evidence, comments, attachments, risks, tests, decisions, and benefits. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_ai_readiness_prompt_governance": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Validate AI readiness, prompt governance, data classes, model routing, policies, and LLM mode before board automation rollout. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
     }
   },
   "test_cases": [

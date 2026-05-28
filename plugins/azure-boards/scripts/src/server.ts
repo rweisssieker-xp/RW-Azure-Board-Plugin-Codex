@@ -49,16 +49,26 @@ import {
 } from "./productizationMoat.js";
 import {
   adminConsoleConfig,
+  aiReadinessPromptGovernance,
   approvalApplyPlan,
   approvalQueue,
   approvalResultReview,
   auditTrail,
+  approvalSimulation,
   automatedReminderPlan,
+  autonomousGovernanceOperatingPlan,
+  boardToValueMapping,
   createPersistentBaseline,
   createPersistentSnapshot,
+  complianceEvidenceScore,
+  decisionKnowledgeGraph,
+  decisionMemoryLearning,
   decisionPackExport,
   decisionPackImport,
-  roleCockpitConfig
+  executiveSteeringRoom,
+  outcomeProofEngine,
+  roleCockpitConfig,
+  scopeCreepRadar
 } from "./productOperatingSystem.js";
 import {
   aiExceptionRegister,
@@ -1413,6 +1423,66 @@ const tools: ToolDef[] = [
       required: ["artifact"]
     },
     handler: (args) => decisionPackImport(objectArg(args.artifact))
+  },
+  {
+    name: "azure_boards_product_outcome_proof_engine",
+    description: "Prove whether delivered Work Items produced the expected outcome value by comparing benefits, ROI evidence, and leakage risk. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => outcomeProofEngine(readItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_decision_memory_learning",
+    description: "Learn from past accepted, rejected, overridden, and observed decisions to expose recommendation quality and repeated decision patterns. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, decisions: { type: "array" }, outcomes: { type: "array" } }, required: ["workItems"] },
+    handler: (args) => decisionMemoryLearning(readItems(args), recordArrayArg(args.decisions || [], "decisions"), recordArrayArg(args.outcomes || [], "outcomes"))
+  },
+  {
+    name: "azure_boards_product_board_to_value_mapping",
+    description: "Map Azure Boards Work Items to business value, KPI evidence, ROI confidence, and value leakage. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => boardToValueMapping(readItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_autonomous_governance_plan",
+    description: "Prepare recurring governance watchlists, audit packs, meeting prompts, and follow-up plans without scheduling or applying writes.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => autonomousGovernanceOperatingPlan(readItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_compliance_evidence_score",
+    description: "Score whether requirements have sufficient owners, approvals, evidence, and model/data controls for compliance review. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" }, policy: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => complianceEvidenceScore(readItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.policy))
+  },
+  {
+    name: "azure_boards_product_scope_creep_radar",
+    description: "Detect unapproved scope growth by comparing current and previous snapshots and simulating capacity/value impact. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, previousWorkItems: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => scopeCreepRadar(readItems(args), readItems({ workItems: args.previousWorkItems || [] }), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_approval_simulation",
+    description: "Simulate approval impact before applying changes, including selected recommendations, affected owners, risks, and verification steps. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, recommendations: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => approvalSimulation(readItems(args), recordArrayArg(args.recommendations || [], "recommendations"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_executive_steering_room",
+    description: "Create an executive approve, park, kill, or escalate cockpit with steering findings, outcome proof, and decision queue. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => executiveSteeringRoom(readItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_decision_knowledge_graph",
+    description: "Build a decision knowledge graph linking Work Items, evidence, comments, attachments, risks, tests, decisions, and benefits. Does not write.",
+    inputSchema: { type: "object", properties: { workItems: { type: "array" }, evidence: { type: "array" }, options: { type: "object" } }, required: ["workItems"] },
+    handler: (args) => decisionKnowledgeGraph(readItems(args), recordArrayArg(args.evidence || [], "evidence"), objectArg(args.options))
+  },
+  {
+    name: "azure_boards_product_ai_readiness_prompt_governance",
+    description: "Validate AI readiness, prompt governance, data classes, model routing, policies, and LLM mode before board automation rollout. Does not write.",
+    inputSchema: { type: "object", properties: { config: { type: "object" }, prompts: { type: "array" }, cases: { type: "array" } } },
+    handler: (args) => aiReadinessPromptGovernance(objectArg(args.config), recordArrayArg(args.prompts || [], "prompts"), recordArrayArg(args.cases || [], "cases"))
   },
   {
     name: "azure_boards_store_save",

@@ -20,6 +20,7 @@ Codex plugin workspace for Azure Board Plugin Codex, an Azure Boards MCP integra
 - Role cockpits for Product Owner, Scrum Master, CIO, and Compliance.
 - Admin configuration for policies, thresholds, risk weights, data classes, LLM mode, hosted MCP, and OAuth readiness.
 - Decision Pack import/export with Steering Pack, Audit Pack, Handover Pack, and Operating Rhythm sections.
+- Advanced USP layer for outcome proof, decision memory learning, Board-to-Value mapping, autonomous governance, compliance evidence scoring, scope creep detection, approval simulation, executive steering, decision knowledge graphs, and AI readiness governance.
 - Hosted MCP transport with `/healthz`, `/mcp`, Dockerfile, and smoke-test tooling.
 
 ## Quickstart

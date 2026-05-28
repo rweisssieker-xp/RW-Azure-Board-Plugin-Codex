@@ -6,15 +6,25 @@ import path from "node:path";
 
 import {
   adminConsoleConfig,
+  aiReadinessPromptGovernance,
   approvalApplyPlan,
   approvalQueue,
   approvalResultReview,
+  approvalSimulation,
   auditTrail,
   automatedReminderPlan,
+  autonomousGovernanceOperatingPlan,
+  boardToValueMapping,
+  complianceEvidenceScore,
   createPersistentBaseline,
   createPersistentSnapshot,
+  decisionKnowledgeGraph,
+  decisionMemoryLearning,
   decisionPackExport,
   decisionPackImport,
+  executiveSteeringRoom,
+  outcomeProofEngine,
+  scopeCreepRadar,
   roleCockpitConfig
 } from "../dist/productOperatingSystem.js";
 
@@ -129,4 +139,50 @@ test("approval queue, audit trail, roles, admin, reminders, and decision pack ar
   const imported = decisionPackImport({ pack: pack.pack, markdown: pack.markdown });
   assert.equal(imported.writePerformed, false);
   assert.equal(imported.imported.ready, true);
+});
+
+test("advanced product USPs are exposed as productized no-write operating flows", () => {
+  const evidence = [{ workItemId: 501, text: "Finance owner confirmed expected annual value and audit evidence." }];
+  const decisions = [{ id: "d1", workItemId: 501, action: "accepted", rationale: "Evidence was ready.", actor: "Mira Finance" }];
+  const outcomes = [{ workItemId: 501, status: "confirmed", evidence: "Benefit observed." }];
+
+  const outcomeProof = outcomeProofEngine(items, evidence, {});
+  assert.equal(outcomeProof.writePerformed, false);
+  assert.ok(outcomeProof.proof.outcomes);
+
+  const learning = decisionMemoryLearning(items, decisions, outcomes);
+  assert.equal(learning.writePerformed, false);
+  assert.ok(learning.learning.memory);
+
+  const valueMap = boardToValueMapping(items, evidence, {});
+  assert.equal(valueMap.writePerformed, false);
+  assert.ok(valueMap.valueMap.businessDigitalTwin);
+
+  const governance = autonomousGovernanceOperatingPlan(items, evidence, {});
+  assert.equal(governance.writePerformed, false);
+  assert.ok(governance.operatingPlan.reminders);
+
+  const compliance = complianceEvidenceScore(items, evidence, { requiredEvidence: ["approval", "test"] });
+  assert.equal(compliance.writePerformed, false);
+  assert.equal(typeof compliance.scorecard.score, "number");
+
+  const scope = scopeCreepRadar(items, items.slice(0, 2), {});
+  assert.equal(scope.writePerformed, false);
+  assert.ok(scope.radar.scope);
+
+  const simulation = approvalSimulation(items, [{ id: "rec1", workItemId: 501, recommendation: "Approve controlled rollout." }], {});
+  assert.equal(simulation.writePerformed, false);
+  assert.ok(simulation.simulation.queue);
+
+  const steering = executiveSteeringRoom(items, evidence, {});
+  assert.equal(steering.writePerformed, false);
+  assert.ok(steering.room.decisions.includes("escalate"));
+
+  const graph = decisionKnowledgeGraph(items, evidence, {});
+  assert.equal(graph.writePerformed, false);
+  assert.ok(graph.graph.traceability);
+
+  const readiness = aiReadinessPromptGovernance({ llmMode: "deterministic-local", hostedMcpUrl: "https://mcp.example.com", clientId: "client" }, [{ name: "risk prompt", text: "Summarize risk." }], [{ name: "no-write case" }]);
+  assert.equal(readiness.writePerformed, false);
+  assert.ok(readiness.readiness.admin);
 });
