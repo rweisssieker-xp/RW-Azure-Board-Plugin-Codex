@@ -22,8 +22,8 @@ Write-capable workflows use explicit preview and apply steps. Users can inspect 
 
 Included screenshot:
 
-- `assets/screenshots/decision-pack.png`: sanitized static cockpit screenshot showing Decision Pack export.
-- `assets/screenshots/approval-workflow.png`: sanitized static cockpit screenshot showing approval selection, apply plan, and result review.
+- `assets/screenshots/decision-pack.svg`: sanitized static cockpit screenshot showing Decision Pack export.
+- `assets/screenshots/approval-workflow.svg`: sanitized static cockpit screenshot showing approval selection, apply plan, and result review.
 
 Additional screenshots to capture before marketplace submission:
 

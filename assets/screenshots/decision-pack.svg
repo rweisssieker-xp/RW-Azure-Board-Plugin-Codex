@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" role="img" aria-labelledby="title desc">
+  <title id="title">Azure Board Plugin Codex Decision Pack</title>
+  <desc id="desc">Sanitized product screenshot showing steering, audit, handover, and operating rhythm sections.</desc>
+  <rect width="1280" height="800" fill="#f6f8fb"/>
+  <rect x="40" y="36" width="1200" height="72" rx="8" fill="#0f172a"/>
+  <text x="72" y="82" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#ffffff">Azure Board Plugin Codex</text>
+  <text x="1040" y="82" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#bfdbfe">Decision Pack</text>
+  <rect x="40" y="132" width="280" height="620" rx="8" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="68" y="174" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#111827">Steering Pack</text>
+  <text x="68" y="218" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#374151">Decision needed</text>
+  <rect x="68" y="238" width="224" height="12" rx="6" fill="#2563eb"/>
+  <text x="68" y="288" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#374151">Outcome gaps</text>
+  <rect x="68" y="308" width="180" height="12" rx="6" fill="#f59e0b"/>
+  <text x="68" y="358" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#374151">Risk evidence</text>
+  <rect x="68" y="378" width="206" height="12" rx="6" fill="#dc2626"/>
+  <text x="68" y="452" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#111827">Export Sections</text>
+  <text x="68" y="492" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#374151">Steering Pack</text>
+  <text x="68" y="526" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#374151">Audit Pack</text>
+  <text x="68" y="560" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#374151">Handover Pack</text>
+  <text x="68" y="594" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#374151">Operating Rhythm</text>
+  <rect x="352" y="132" width="888" height="296" rx="8" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="384" y="178" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">Executive Decision Summary</text>
+  <rect x="384" y="210" width="240" height="144" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="412" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">Outcome Proof</text>
+  <text x="412" y="286" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" fill="#111827">82%</text>
+  <text x="412" y="322" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#475569">Evidence-backed value</text>
+  <rect x="656" y="210" width="240" height="144" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="684" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#15803d">Board-to-Value</text>
+  <text x="684" y="286" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" fill="#111827">14</text>
+  <text x="684" y="322" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#475569">Items mapped to KPIs</text>
+  <rect x="928" y="210" width="240" height="144" rx="8" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="956" y="248" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#c2410c">Decision Risk</text>
+  <text x="956" y="286" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" fill="#111827">3</text>
+  <text x="956" y="322" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#475569">Needs steering review</text>
+  <rect x="352" y="456" width="888" height="296" rx="8" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="384" y="502" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">Decision Pack Artifact Preview</text>
+  <rect x="384" y="536" width="824" height="44" rx="6" fill="#f8fafc"/>
+  <text x="408" y="564" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">Decision: approve high-value ERP cutover scope with compliance evidence attached</text>
+  <rect x="384" y="596" width="824" height="44" rx="6" fill="#f8fafc"/>
+  <text x="408" y="624" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">Audit: rationale, actor, timestamp, evidence references, and override status</text>
+  <rect x="384" y="656" width="824" height="44" rx="6" fill="#f8fafc"/>
+  <text x="408" y="684" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">Handover: owners, follow-ups, watchlist reminders, and verification steps</text>
+</svg>

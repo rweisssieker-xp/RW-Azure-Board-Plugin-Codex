@@ -43,8 +43,8 @@
     "composerIcon": "./assets/azure-boards-small.svg",
     "logo": "./assets/azure-boards.svg",
     "screenshots": [
-      "./assets/screenshots/decision-pack.png",
-      "./assets/screenshots/approval-workflow.png"
+      "./assets/screenshots/decision-pack.svg",
+      "./assets/screenshots/approval-workflow.svg"
     ]
   }
 }

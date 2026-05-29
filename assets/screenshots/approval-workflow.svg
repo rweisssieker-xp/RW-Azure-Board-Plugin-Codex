@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" role="img" aria-labelledby="title desc">
+  <title id="title">Azure Board Plugin Codex Approval Workflow</title>
+  <desc id="desc">Sanitized product screenshot showing approval queue selection, apply plan preview, and result review.</desc>
+  <rect width="1280" height="800" fill="#f6f8fb"/>
+  <rect x="40" y="36" width="1200" height="72" rx="8" fill="#0f172a"/>
+  <text x="72" y="82" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#ffffff">Approval Queue</text>
+  <text x="1010" y="82" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#bfdbfe">Preview. Apply. Verify.</text>
+  <rect x="40" y="132" width="360" height="620" rx="8" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="72" y="178" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">Recommendations</text>
+  <rect x="72" y="220" width="296" height="96" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+  <rect x="94" y="250" width="22" height="22" rx="4" fill="#2563eb"/>
+  <path d="M99 260 L104 266 L113 254" fill="none" stroke="#fff" stroke-width="3"/>
+  <text x="132" y="256" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#111827">Accept high-confidence close</text>
+  <text x="132" y="286" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#475569">Risk: low. Evidence: complete.</text>
+  <rect x="72" y="344" width="296" height="96" rx="8" fill="#fff7ed" stroke="#fed7aa"/>
+  <rect x="94" y="374" width="22" height="22" rx="4" fill="#f59e0b"/>
+  <text x="132" y="380" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#111827">Request compliance review</text>
+  <text x="132" y="410" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#475569">Risk: medium. Needs owner.</text>
+  <rect x="72" y="468" width="296" height="96" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+  <rect x="94" y="498" width="22" height="22" rx="4" fill="#e5e7eb" stroke="#94a3b8"/>
+  <text x="132" y="504" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#111827">Override stale priority</text>
+  <text x="132" y="534" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#475569">Risk: medium. Rationale needed.</text>
+  <rect x="432" y="132" width="808" height="286" rx="8" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="464" y="178" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">Apply Plan Preview</text>
+  <rect x="464" y="220" width="744" height="52" rx="6" fill="#f8fafc"/>
+  <text x="488" y="253" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">JSON Patch preview: add audit comment, update state, preserve evidence links</text>
+  <rect x="464" y="292" width="744" height="52" rx="6" fill="#f8fafc"/>
+  <text x="488" y="325" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">Secondary approval: compliance review required for regulated data class</text>
+  <rect x="464" y="364" width="180" height="32" rx="6" fill="#dcfce7"/>
+  <text x="492" y="386" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#166534">No write performed</text>
+  <rect x="432" y="448" width="808" height="304" rx="8" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="464" y="494" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">Result Review</text>
+  <line x1="480" y1="560" x2="1188" y2="560" stroke="#d8dee9" stroke-width="2"/>
+  <text x="480" y="542" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#475569">Work Item</text>
+  <text x="690" y="542" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#475569">Expected</text>
+  <text x="900" y="542" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#475569">Observed</text>
+  <text x="1088" y="542" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" fill="#475569">Status</text>
+  <text x="480" y="606" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">ERP-214</text>
+  <text x="690" y="606" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">Closed with audit note</text>
+  <text x="900" y="606" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">Matched</text>
+  <rect x="1088" y="584" width="82" height="32" rx="16" fill="#dcfce7"/>
+  <text x="1110" y="606" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#166534">OK</text>
+  <text x="480" y="674" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">ERP-301</text>
+  <text x="690" y="674" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">Compliance review</text>
+  <text x="900" y="674" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#111827">Pending</text>
+  <rect x="1088" y="652" width="82" height="32" rx="16" fill="#fef3c7"/>
+  <text x="1104" y="674" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#92400e">Review</text>
+</svg>
