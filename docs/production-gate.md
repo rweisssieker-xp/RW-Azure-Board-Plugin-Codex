@@ -1,9 +1,9 @@
 # Production Gate
 
-Run the production gate from `plugins/azure-boards/scripts`:
+Run the marketplace runtime gate from `scripts`:
 
 ```powershell
-npm run check:production
+npm run check:dist
 ```
 
 The gate intentionally fails while production deployment values are still placeholders. Passing requires:
@@ -17,11 +17,10 @@ The gate intentionally fails while production deployment values are still placeh
 - Reminder plans include schedule metadata.
 - `docs/release-handoff-checklist.md` covers publisher metadata, hosted MCP, OAuth, product evidence, and final gates.
 
-Prepare deployment values by copying `production-publisher-inputs.example.json` to `production-publisher-inputs.json`, replacing every placeholder with the real production value, and applying it from `plugins/azure-boards/scripts`:
+Prepare deployment values by copying `production-publisher-inputs.example.json` to `production-publisher-inputs.json`, replacing every placeholder with the real production value, and applying it in your hosted deployment process:
 
 ```powershell
-npm run apply:production-inputs -- ..\production-publisher-inputs.json
-npm run check:production
+npm run check:dist
 ```
 
 Use JSON output for release automation:

@@ -1,7 +1,7 @@
 {
   "name": "azure-boards",
-  "version": "0.1.0",
-  "description": "Azure Board Plugin Codex with Microsoft Entra login or token access, Work Item operations, persistent snapshots, approval queues, audit trails, role cockpits, and decision-pack exports.",
+  "version": "0.2.0",
+  "description": "Azure Board Plugin Codex with Microsoft Entra login or token access, Work Item operations, guided onboarding, policy pack catalog, persistent snapshots, approval queues, audit trails, role cockpits, and decision-pack exports.",
   "author": {
     "name": "Reiner Weisssieker",
     "email": "rweisssieker@gmail.com",
@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Azure Board Plugin Codex",
     "shortDescription": "Governance, approval, and delivery cockpit for Azure Boards",
-    "longDescription": "Use Azure Board Plugin Codex with individual Microsoft Entra login or token access to query, create, update, and comment on Azure Boards Work Items, plus explainable delivery and governance tools for persistent snapshots, approval queues, audit trails, role cockpits, admin policy controls, reminder plans, decision packs, delivery risk, process bottlenecks, SLA aging, governance gaps, scope creep, and executive status reporting.",
+    "longDescription": "Use Azure Board Plugin Codex with individual Microsoft Entra login or token access to query, create, update, and comment on Azure Boards Work Items, plus guided onboarding, policy pack discovery, explainable delivery and governance tools for persistent snapshots, approval queues, audit trails, role cockpits, admin policy controls, reminder plans, decision packs, delivery risk, process bottlenecks, SLA aging, governance gaps, scope creep, and executive status reporting.",
     "developerName": "Reiner Weisssieker",
     "category": "Productivity",
     "capabilities": [
@@ -32,11 +32,12 @@
       "Write"
     ],
     "websiteURL": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex",
-    "privacyPolicyURL": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/plugins/azure-boards/docs/privacy-policy.md",
-    "termsOfServiceURL": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/plugins/azure-boards/docs/terms-of-service.md",
+    "privacyPolicyURL": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/docs/privacy-policy.md",
+    "termsOfServiceURL": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/docs/terms-of-service.md",
     "defaultPrompt": [
-      "Show delivery risks and SLA issues in my Azure Boards project.",
+      "Guide my first Azure Boards review as a Product Owner and recommend the right policy pack.",
       "Build an approval queue and audit trail for these recommendations.",
+      "List built-in policy packs for release, ERP cutover, audit, Scrum, and safe apply governance.",
       "Export a CIO decision pack with steering, handover, and operating rhythm sections."
     ],
     "brandColor": "#0078D4",

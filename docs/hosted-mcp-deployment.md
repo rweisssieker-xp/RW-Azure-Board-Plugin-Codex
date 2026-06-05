@@ -8,7 +8,7 @@ The plugin supports two runtime modes:
 ## Local Hosted Smoke Test
 
 ```powershell
-cd plugins\azure-boards\scripts
+cd scripts
 npm run build
 $env:AZURE_BOARDS_MCP_HOST = "127.0.0.1"
 $env:AZURE_BOARDS_MCP_PORT = "3000"
@@ -36,7 +36,7 @@ npm run smoke:hosted -- http://127.0.0.1:3000/mcp
 
 ## Container
 
-Build from `plugins/azure-boards`:
+Build from the repository root:
 
 ```powershell
 docker build -t azure-boards-mcp .

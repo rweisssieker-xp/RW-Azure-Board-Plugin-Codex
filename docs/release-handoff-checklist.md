@@ -20,10 +20,10 @@ Use this checklist when moving the plugin from local review to a production publ
 
 ## 2. Apply Metadata
 
-Run from `plugins/azure-boards/scripts`:
+Run from `scripts`:
 
 ```powershell
-npm run apply:production-inputs -- ..\production-publisher-inputs.json
+# Apply hosted deployment values outside the marketplace package when needed.
 ```
 
 This updates:
@@ -55,17 +55,17 @@ This updates:
 
 ## 6. Final Gates
 
-Run from `plugins/azure-boards/scripts`:
+Run from `scripts`:
 
 ```powershell
 npm test
-npm run check:production
+npm run check:dist
 ```
 
 Run from the repository root:
 
 ```powershell
-python C:\Users\reinerw\.codex\skills\.system\plugin-creator\scripts\validate_plugin.py D:\temp\RW-Azure-Board-Plugin-Codex\plugins\azure-boards
+python C:\Users\reinerw\.codex\skills\.system\plugin-creator\scripts\validate_plugin.py D:\temp\RW-Azure-Board-Plugin-Codex
 ```
 
 Do not submit until all gates pass with the real production deployment values.

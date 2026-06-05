@@ -57,17 +57,18 @@ $env:AZURE_BOARDS_BEARER_TOKEN = "<access-token>"
 
 PAT takes precedence over bearer token, and bearer token takes precedence over the OAuth cache.
 
-## Build
+## Runtime
 
 ```powershell
-cd plugins\azure-boards\scripts
+cd scripts
 npm install
-npm run build
+npm run check:dist
+npm run start
 ```
 
 ## Local Review UI
 
-The plugin includes a static no-write cockpit at `plugins/azure-boards/ui/index.html`.
+The plugin includes a static no-write cockpit at `ui/index.html`.
 
 Use it to paste or upload Work Item JSON, preview key AI reports, inspect tables, review Bulk Close Preview output, and export local Markdown/JSON artifacts. The UI is browser-only: it does not call Azure DevOps, does not handle tokens, and does not perform writes. Real Azure Boards changes still require the MCP preview/apply workflow.
 
@@ -98,20 +99,23 @@ The plugin now includes productized operating flows in addition to one-off repor
 - `azure_boards_product_executive_steering_room`: assembles CIO/steering-level decisions, value risk, portfolio scenarios, and outcome gaps in one cockpit.
 - `azure_boards_product_decision_knowledge_graph`: links Work Items, evidence, decisions, outcomes, owners, and policy signals into an explainable graph.
 - `azure_boards_product_ai_readiness_prompt_governance`: reviews prompt quality, model risk, data classes, evaluation cases, and LLM-mode readiness for governed AI rollout.
+- `azure_boards_product_onboarding_wizard`: creates a role-based first-run plan with starter prompts, recommended policy pack, tool sequence, and success signal.
+- `azure_boards_product_policy_pack_catalog`: lists built-in policy packs and recommends the right pack for a role or scenario.
 
+See `docs/onboarding-wizard.md` for the first-run flow and `docs/starter-prompts.md` for role-based marketplace prompts.
 See `docs/production-readiness.md` for the hosted MCP, Microsoft Entra OAuth, publisher asset, and verification gates required before claiming production readiness.
 See `docs/hosted-mcp-deployment.md` for the hosted HTTP MCP endpoint, Dockerfile, `/healthz`, `/mcp`, and smoke-test commands.
-Run `npm run check:production` from `plugins/azure-boards/scripts` as the final release gate; it is expected to fail until the hosted MCP URL and production Microsoft Entra client id replace deployment placeholders.
+For the distributed root plugin, run `npm run check:dist` from `scripts` as the local runtime syntax check.
 
 ## Submission Artifact
 
-Submit a packaged plugin artifact, not the repository root. From the repository root:
+Submit the repository root URL for the Codex Marketplace:
 
-```powershell
-.\tools\New-AzureBoardsPluginSubmission.ps1
+```text
+https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex
 ```
 
-Use `artifacts\azure-board-plugin-codex-submission.zip` for scanner or marketplace submission. The artifact root contains `.codex-plugin/plugin.json` and excludes tests, TypeScript sources, local temp stores, and development-only scripts.
+The repository root contains `.codex-plugin/plugin.json`, excludes tests and TypeScript sources, and keeps the file count below the marketplace scan limit.
 
 ## Verify Auth Mode
 
@@ -185,6 +189,8 @@ Policy packs are versioned JSON files under `policy-packs/`. Built-in examples:
 - `kanban.json`
 - `audit.json`
 - `release-governance.json`
+- `erp-cutover.json`
+- `safe-apply-governance.json`
 
 Validate a pack before using it:
 

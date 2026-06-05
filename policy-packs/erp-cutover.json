@@ -1,0 +1,64 @@
+{
+  "$schema": "./policy-pack.schema.json",
+  "kind": "azureBoards.policyPack",
+  "version": 1,
+  "id": "erp-cutover",
+  "name": "ERP Cutover Governance Policy Pack",
+  "description": "Cutover-readiness controls for ERP programs with process criticality, rollback evidence, data migration ownership, and go/no-go decisions.",
+  "owner": "CIO",
+  "defaults": {
+    "allowedTypes": ["Epic", "Feature", "User Story", "Bug", "Task", "Risk"],
+    "requiredTags": ["ERP", "Cutover"],
+    "requiredFields": ["System.Title", "System.AssignedTo", "System.AreaPath"],
+    "staleDays": 3,
+    "slaDays": 14,
+    "blockedDays": 1,
+    "highPriorityThreshold": 2,
+    "customerKeywords": ["finance", "manufacturing", "warehouse", "integration", "master data", "compliance"],
+    "decisionKeywords": ["go/no-go", "rollback", "cutover", "approval", "sign-off"],
+    "blockedTag": "cutover-blocker",
+    "escalationTag": "cutover-escalation",
+    "evidenceTag": "cutover-evidence"
+  },
+  "policies": [
+    {
+      "id": "erp.process-owner-present",
+      "name": "Critical Process Owner Is Assigned",
+      "severity": "critical",
+      "rules": {
+        "requiredFields": ["System.AssignedTo"],
+        "requiredTags": ["Process Owner"]
+      },
+      "remediation": {
+        "owner": "CIO",
+        "action": "Assign a named business process owner before go/no-go review."
+      }
+    },
+    {
+      "id": "erp.rollback-evidence-present",
+      "name": "Rollback Evidence Is Present",
+      "severity": "critical",
+      "rules": {
+        "requiredTags": ["Rollback Ready"],
+        "evidenceRequirements": ["Rollback plan", "Data restore owner", "Integration fallback", "Business approver"]
+      },
+      "remediation": {
+        "owner": "Release Manager",
+        "action": "Attach rollback evidence and confirm accountable owners."
+      }
+    },
+    {
+      "id": "erp.master-data-risk-reviewed",
+      "name": "Master Data Risk Is Reviewed",
+      "severity": "high",
+      "rules": {
+        "requiredTags": ["Master Data Reviewed"],
+        "decisionKeywords": ["data migration", "master data", "reconciliation", "sign-off"]
+      },
+      "remediation": {
+        "owner": "Data Lead",
+        "action": "Record migration reconciliation evidence and data owner approval."
+      }
+    }
+  ]
+}

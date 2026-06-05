@@ -4,15 +4,15 @@
   "app_info": {
     "display_name": "Azure Board Plugin Codex",
     "subtitle": "Manage work items",
-    "description": "Azure Board Plugin Codex helps users query Azure Boards Work Items, inspect delivery risk, prepare governance and executive reports, generate safe change previews, and apply explicitly approved Azure DevOps updates through ChatGPT.",
+    "description": "Azure Board Plugin Codex helps users query Azure Boards Work Items, run guided onboarding, choose policy packs, inspect delivery risk, prepare governance and executive reports, generate safe change previews, and apply explicitly approved Azure DevOps updates through ChatGPT.",
     "category": "PRODUCTIVITY"
   },
   "production": {
     "publisher_name": "Reiner Weisssieker",
     "support_email": "rweisssieker@gmail.com",
     "website_url": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex",
-    "privacy_policy_url": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/plugins/azure-boards/docs/privacy-policy.md",
-    "terms_of_service_url": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/plugins/azure-boards/docs/terms-of-service.md",
+    "privacy_policy_url": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/docs/privacy-policy.md",
+    "terms_of_service_url": "https://github.com/rweisssieker-xp/RW-Azure-Board-Plugin-Codex/blob/main/docs/terms-of-service.md",
     "hosted_mcp_url": "TODO_DEPLOY_HOSTED_MCP_URL",
     "microsoft_entra": {
       "client_id": "TODO_ENTRA_CLIENT_ID",
@@ -2106,6 +2106,30 @@
       "justifications": {
         "read_only_justification": "Validate AI readiness, prompt governance, data classes, model routing, policies, and LLM mode before board automation rollout. Does not write. Returns decision-support output without modifying Azure DevOps or local stored artifacts.",
         "open_world_justification": "Only analyzes supplied or retrieved private work data and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_onboarding_wizard": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Returns role guidance, policy pack recommendations, and starter prompts without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only analyzes supplied private work context and does not publish or modify external systems.",
+        "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
+      }
+    },
+    "azure_boards_product_policy_pack_catalog": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Lists built-in policy packs and validation guidance without modifying Azure DevOps or local stored artifacts.",
+        "open_world_justification": "Only returns local package guidance and does not publish or modify external systems.",
         "destructive_justification": "Does not delete records, revoke access, or perform irreversible destructive actions."
       }
     }

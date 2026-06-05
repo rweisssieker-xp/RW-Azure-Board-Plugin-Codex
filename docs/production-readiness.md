@@ -28,7 +28,7 @@ For local use, `.mcp.json` starts `node ./scripts/dist/server.js` over stdio. Fo
 Use `.env.production.example` as the deployment configuration template. Do not commit real client ids, tenant-specific secrets, PATs, bearer tokens, or token-cache paths.
 
 See `docs/hosted-mcp-deployment.md` for `/healthz`, `/mcp`, container, and smoke-test commands.
-Run `npm run check:production` from `scripts/` before submission. The gate fails until the hosted MCP URL and production Microsoft Entra client id replace deployment placeholders; see `docs/production-gate.md`.
+Run `npm run check:dist` from `scripts/` before Codex Marketplace submission. Hosted App Directory deployment still requires a hosted MCP URL and production Microsoft Entra client id; see `docs/production-gate.md`.
 
 The hosted deployment must provide:
 
@@ -59,11 +59,10 @@ Publisher metadata is configured from the public GitHub repository and repositor
 - Terms of service covering generated decision support, write approvals, user responsibility, and audit logs.
 - Screenshots showing decision, preview, approval, apply, and verification flows without private customer data.
 
-Use `production-publisher-inputs.example.json` as the handoff template when replacing or updating publisher and deployment values. After creating a private `production-publisher-inputs.json`, run this from `plugins/azure-boards/scripts`:
+Use `production-publisher-inputs.example.json` as the handoff template when replacing or updating publisher and deployment values. After creating a private `production-publisher-inputs.json`, apply those values in your hosted deployment process and run this from `scripts`:
 
 ```powershell
-npm run apply:production-inputs -- ..\production-publisher-inputs.json
-npm run check:production
+npm run check:dist
 ```
 
 Do not commit the private input file if it contains tenant-specific identifiers that should remain internal.
@@ -73,9 +72,9 @@ Do not commit the private input file if it contains tenant-specific identifiers 
 Run these before release:
 
 ```powershell
-cd plugins\azure-boards\scripts
-npm test
-python C:\Users\reinerw\.codex\skills\.system\plugin-creator\scripts\validate_plugin.py D:\temp\RW-Azure-Board-Plugin-Codex\plugins\azure-boards
+cd scripts
+npm run check:dist
+python C:\Users\reinerw\.codex\skills\.system\plugin-creator\scripts\validate_plugin.py D:\temp\RW-Azure-Board-Plugin-Codex
 ```
 
 Use `demo/erp-board-demo.json` for screenshots and local UI review. Use live Azure DevOps smoke tests only with a non-production project or a tightly controlled test project.

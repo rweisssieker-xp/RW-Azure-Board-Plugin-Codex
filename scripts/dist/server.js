@@ -1398,7 +1398,32 @@ const tools = [
         },
         handler: (args) => naturalLanguageToWiql(args)
     },
-    aiTool("azure_boards_ai_find_duplicates", "Find similar or duplicate Work Items from a supplied result set.", findDuplicates)
+    aiTool("azure_boards_ai_find_duplicates", "Find similar or duplicate Work Items from a supplied result set.", findDuplicates),
+    {
+        name: "azure_boards_product_onboarding_wizard",
+        description: "Prepare a role-based first-run onboarding plan with starter prompts, policy pack recommendations, and safe next actions. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: {
+                role: { type: "string", description: "Product Owner, Scrum Master, CIO, Compliance, Release Manager, or Admin." },
+                scenario: { type: "string", description: "Optional goal such as release readiness, ERP cutover, audit review, or scope cleanup." },
+                workItems: { type: "array", description: "Optional compact Work Item summaries used to tailor the first-run plan." }
+            }
+        },
+        handler: (args) => productOnboardingWizard(args)
+    },
+    {
+        name: "azure_boards_product_policy_pack_catalog",
+        description: "List built-in policy packs with target role, use case, recommended first tool, and validation guidance. Does not write.",
+        inputSchema: {
+            type: "object",
+            properties: {
+                role: { type: "string" },
+                scenario: { type: "string" }
+            }
+        },
+        handler: (args) => policyPackCatalog(args)
+    }
 ];
 function aiTool(name, description, fn) {
     return {
@@ -1407,6 +1432,182 @@ function aiTool(name, description, fn) {
         inputSchema: aiSnapshotSchema(),
         handler: (args) => fn(readItems(args))
     };
+}
+function productOnboardingWizard(args) {
+    const role = normalizeText(args.role || "Product Owner");
+    const scenario = normalizeText(args.scenario || "first board review");
+    const workItems = Array.isArray(args.workItems) ? args.workItems : [];
+    const roleKey = role.toLowerCase();
+    const pack = recommendedPolicyPack(roleKey, scenario.toLowerCase());
+    const prompts = starterPromptsFor(roleKey, scenario);
+    return {
+        title: "Azure Board Plugin Codex Onboarding Wizard",
+        writePerformed: false,
+        role,
+        scenario,
+        recommendedPolicyPack: pack,
+        firstRunChecklist: [
+            "Run azure_boards_auth_status and confirm the active authentication mode.",
+            "Query a small, representative Work Item set before running advanced analysis.",
+            `Validate the ${pack.id} policy pack with azure_boards_validate_policy_pack.`,
+            "Run the recommended cockpit or watchlist tool and review evidence before action planning.",
+            "Use approval queue and apply-plan tools before any write-capable workflow.",
+            "Export a Decision Pack when a decision, audit, or handover needs a durable artifact."
+        ],
+        recommendedToolSequence: toolSequenceFor(roleKey, scenario.toLowerCase()),
+        starterPrompts: prompts,
+        sampleSize: workItems.length,
+        successSignal: workItems.length
+            ? "First role-specific report has cited board evidence, ranked risks, and at least one explicit next decision."
+            : "User can connect, choose a role, run one cockpit, validate one policy pack, and produce one auditable next action."
+    };
+}
+function policyPackCatalog(args = {}) {
+    const role = normalizeText(args.role || "");
+    const scenario = normalizeText(args.scenario || "");
+    const packs = [
+        {
+            id: "scrum",
+            file: "policy-packs/scrum.json",
+            targetRole: "Scrum Master",
+            useCase: "Sprint hygiene, stale work, blockers, ownership, and acceptance readiness.",
+            firstTool: "azure_boards_ai_watchlist_report"
+        },
+        {
+            id: "kanban",
+            file: "policy-packs/kanban.json",
+            targetRole: "Process Owner",
+            useCase: "Flow aging, WIP, blocked work, and service-level review.",
+            firstTool: "azure_boards_ai_bottleneck_mining"
+        },
+        {
+            id: "audit",
+            file: "policy-packs/audit.json",
+            targetRole: "Compliance",
+            useCase: "Evidence, ownership, approvals, audit trail, and closure governance.",
+            firstTool: "azure_boards_product_compliance_evidence_score"
+        },
+        {
+            id: "release-governance",
+            file: "policy-packs/release-governance.json",
+            targetRole: "Release Manager",
+            useCase: "Release scope approval, blockers, quality evidence, and go/no-go readiness.",
+            firstTool: "azure_boards_ai_compliance_readiness_review"
+        },
+        {
+            id: "erp-cutover",
+            file: "policy-packs/erp-cutover.json",
+            targetRole: "CIO",
+            useCase: "ERP cutover readiness, process criticality, rollback evidence, and business ownership.",
+            firstTool: "azure_boards_ai_migration_cutover_readiness"
+        },
+        {
+            id: "safe-apply-governance",
+            file: "policy-packs/safe-apply-governance.json",
+            targetRole: "Admin",
+            useCase: "Approval queue, secondary approval, apply preview, result review, and audit evidence.",
+            firstTool: "azure_boards_product_approval_queue"
+        }
+    ];
+    const filter = `${role} ${scenario}`.toLowerCase();
+    const ranked = filter.trim()
+        ? packs.map((pack) => ({ ...pack, matchScore: scorePolicyPack(pack, filter) })).sort((a, b) => b.matchScore - a.matchScore)
+        : packs.map((pack) => ({ ...pack, matchScore: 0 }));
+    return {
+        title: "Built-in Azure Boards Policy Pack Catalog",
+        writePerformed: false,
+        role: role || "any",
+        scenario: scenario || "any",
+        packs: ranked,
+        validation: "Load the selected JSON file and call azure_boards_validate_policy_pack before applying it to reports.",
+        nextStep: ranked[0]?.firstTool
+            ? `Run ${ranked[0].firstTool} with the selected policy pack and current Work Items.`
+            : "Choose a policy pack, validate it, then run the matching cockpit or compliance report."
+    };
+}
+function normalizeText(value) {
+    return String(value || "").trim() || "unspecified";
+}
+function recommendedPolicyPack(roleKey, scenarioKey) {
+    if (scenarioKey.includes("cutover") || scenarioKey.includes("erp"))
+        return { id: "erp-cutover", file: "policy-packs/erp-cutover.json" };
+    if (scenarioKey.includes("release") || scenarioKey.includes("go/no-go"))
+        return { id: "release-governance", file: "policy-packs/release-governance.json" };
+    if (scenarioKey.includes("apply") || scenarioKey.includes("approval"))
+        return { id: "safe-apply-governance", file: "policy-packs/safe-apply-governance.json" };
+    if (roleKey.includes("compliance") || scenarioKey.includes("audit"))
+        return { id: "audit", file: "policy-packs/audit.json" };
+    if (roleKey.includes("scrum"))
+        return { id: "scrum", file: "policy-packs/scrum.json" };
+    if (roleKey.includes("cio"))
+        return { id: "erp-cutover", file: "policy-packs/erp-cutover.json" };
+    return { id: "kanban", file: "policy-packs/kanban.json" };
+}
+function toolSequenceFor(roleKey, scenarioKey) {
+    if (scenarioKey.includes("apply") || scenarioKey.includes("approval")) {
+        return [
+            "azure_boards_ai_action_plan",
+            "azure_boards_product_approval_queue",
+            "azure_boards_product_approval_apply_plan",
+            "azure_boards_product_approval_result_review",
+            "azure_boards_product_audit_trail"
+        ];
+    }
+    if (roleKey.includes("cio") || scenarioKey.includes("steering")) {
+        return [
+            "azure_boards_product_executive_steering_room",
+            "azure_boards_product_board_to_value_mapping",
+            "azure_boards_product_outcome_proof_engine",
+            "azure_boards_product_decision_pack_export"
+        ];
+    }
+    if (roleKey.includes("compliance") || scenarioKey.includes("audit")) {
+        return [
+            "azure_boards_product_compliance_evidence_score",
+            "azure_boards_ai_audit_decision_log",
+            "azure_boards_product_audit_trail",
+            "azure_boards_product_decision_pack_export"
+        ];
+    }
+    return [
+        "azure_boards_ai_project_cockpit",
+        "azure_boards_ai_watchlist_report",
+        "azure_boards_ai_action_plan",
+        "azure_boards_product_approval_queue"
+    ];
+}
+function starterPromptsFor(roleKey, scenario) {
+    const common = [
+        `Build my first ${scenario} cockpit from these Work Items and cite the evidence behind each risk.`,
+        "Create an approval queue for the recommendations and mark which ones need secondary approval.",
+        "Export a Decision Pack with steering, audit, handover, and operating rhythm sections."
+    ];
+    if (roleKey.includes("cio")) {
+        return [
+            "Create an executive steering room that maps board work to business value, outcome gaps, and decisions needed.",
+            "Show which open work creates the most value leakage or compliance risk.",
+            ...common
+        ];
+    }
+    if (roleKey.includes("compliance")) {
+        return [
+            "Score compliance evidence completeness and show missing approvals, owners, and audit artifacts.",
+            "Create an audit trail from accepted, rejected, overridden, and recorded recommendations.",
+            ...common
+        ];
+    }
+    if (roleKey.includes("scrum")) {
+        return [
+            "Find stale, blocked, unowned, and aging work that needs action before the next standup.",
+            "Compare current work against the Scrum policy pack and propose the safest cleanup queue.",
+            ...common
+        ];
+    }
+    return common;
+}
+function scorePolicyPack(pack, filter) {
+    const haystack = `${pack.id} ${pack.targetRole} ${pack.useCase}`.toLowerCase();
+    return filter.split(/\s+/).filter((part) => part && haystack.includes(part)).length;
 }
 function aiSnapshotSchema(includePrevious = false) {
     return {

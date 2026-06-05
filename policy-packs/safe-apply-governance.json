@@ -1,0 +1,64 @@
+{
+  "$schema": "./policy-pack.schema.json",
+  "kind": "azureBoards.policyPack",
+  "version": 1,
+  "id": "safe-apply-governance",
+  "name": "Safe Apply Governance Policy Pack",
+  "description": "Controls for approval queues, secondary approval, apply-plan previews, result verification, and audit evidence before Azure Boards writes.",
+  "owner": "Azure Boards Admin",
+  "defaults": {
+    "allowedTypes": ["Epic", "Feature", "User Story", "Bug", "Task", "Risk"],
+    "requiredTags": ["Approval Required"],
+    "requiredFields": ["System.Title", "System.AssignedTo"],
+    "staleDays": 7,
+    "slaDays": 21,
+    "blockedDays": 2,
+    "highPriorityThreshold": 2,
+    "customerKeywords": ["customer", "production", "regulatory", "audit", "security"],
+    "decisionKeywords": ["approved", "rejected", "override", "rationale", "verification"],
+    "blockedTag": "approval-blocked",
+    "escalationTag": "secondary-approval",
+    "evidenceTag": "approval-evidence"
+  },
+  "policies": [
+    {
+      "id": "apply.preview-before-write",
+      "name": "Preview Exists Before Write",
+      "severity": "critical",
+      "rules": {
+        "requiredTags": ["Approval Required"],
+        "decisionKeywords": ["preview", "patch", "expected result"]
+      },
+      "remediation": {
+        "owner": "Product Owner",
+        "action": "Generate an approval queue and apply-plan preview before write execution."
+      }
+    },
+    {
+      "id": "apply.secondary-approval-for-risk",
+      "name": "Secondary Approval For Risky Changes",
+      "severity": "high",
+      "rules": {
+        "requiredTags": ["Secondary Approval"],
+        "evidenceRequirements": ["Approver", "Rationale", "Risk level", "Verification step"]
+      },
+      "remediation": {
+        "owner": "Compliance",
+        "action": "Record a second approver and verification action for high-risk recommendations."
+      }
+    },
+    {
+      "id": "apply.result-reviewed",
+      "name": "Result Is Reviewed After Apply",
+      "severity": "high",
+      "rules": {
+        "requiredTags": ["Result Reviewed"],
+        "decisionKeywords": ["observed", "matched", "verified", "audit"]
+      },
+      "remediation": {
+        "owner": "Scrum Master",
+        "action": "Compare apply results with current Work Items and store the audit event."
+      }
+    }
+  ]
+}

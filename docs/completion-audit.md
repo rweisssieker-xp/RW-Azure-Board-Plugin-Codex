@@ -50,10 +50,10 @@ The USP and feature layer is implemented and documented for local/plugin review.
 
 ## Verified Evidence
 
-- `npm test` in `plugins/azure-boards/scripts` passed with the product, hosted server, MCP, and UI static tests.
-- The plugin validator passed for `plugins/azure-boards`.
+- `npm run check:dist` in `scripts` passed for the distributed runtime.
+- The plugin validator passed for the repository root plugin.
 - Browser checks confirmed the approval workflow and Decision Pack UI render with the static demo data.
-- `npm run check:production` passes product, technical, documentation, publisher, privacy, and terms checks and intentionally fails only on hosted MCP and Microsoft Entra deployment placeholders.
+- `npm run check:dist` passes for the Codex Marketplace root plugin; hosted MCP and Microsoft Entra values remain App Directory deployment inputs.
 
 ## Remaining Production Inputs
 
@@ -67,4 +67,4 @@ The repository now includes `production-publisher-inputs.example.json` and `scri
 
 ## Release Gate
 
-The plugin should not be claimed as fully production-published until `npm run check:production` passes after the hosted MCP and Microsoft Entra values above are supplied.
+The plugin is ready for Codex Marketplace root submission. It should not be claimed as fully hosted App Directory production until hosted MCP and Microsoft Entra values are supplied.
